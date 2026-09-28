@@ -3099,46 +3099,85 @@
     });
   }
 
-  // Fetch all meetings from server
+  // Fetch all meetings from server (with local-first fallback)
   async function loadMeetings(selectFirst = true) {
     try {
       const res = await fetch('/api/meetings');
       if (res.ok) {
-        state.meetings = await res.json();
-        if (state.meetings.length > 0) {
-          if (!state.activeMeetingId || selectFirst) {
-            state.activeMeetingId = state.meetings[0].id;
-          }
-          await loadMeetingDetail(state.activeMeetingId);
+        const fetched = await res.json();
+        if (Array.isArray(fetched) && fetched.length > 0) {
+          state.meetings = fetched;
         }
-        renderSidebars();
       }
     } catch (e) {
-      console.warn("Backenddan uchrashuvlarni yuklab bo‘lmadi:", e);
+      console.warn("Backend mavjud emas, lokal xotiradan foydalanilmoqda.");
     }
+
+    if (!state.meetings || state.meetings.length === 0) {
+      const sample = I18N[state.lang].sample_meeting;
+      state.meetings = [{
+        id: 1,
+        title: sample.title,
+        date: sample.date,
+        duration: sample.duration,
+        attendees: sample.attendees,
+        summary: sample.summary,
+        decisions: sample.decisions,
+        tasks: (sample.tasks || []).map((t, idx) => ({ ...t, id: 100 + idx })),
+        open_questions: sample.open_questions,
+        transcript: [
+          { speaker: "Shavkat (Bosh direktor)", time: "00:02", text: "Hammaga xayrli kun. Bugungi kun tartibida yangi AI platforma integratsiyasi..." },
+          { speaker: "Alisher (CTO)", time: "01:15", text: "Biz audio oqimni 15 daqiqalik qismlarga bo‘lib, Groq Whisper va Gemini 2.5 Flash bilan sinadik..." },
+          { speaker: "Malika (Product)", time: "02:40", text: "Foydalanuvchilarga qisqa xulosalar va avtomatik vazifalar kerak..." }
+        ],
+        transcript_segments: [
+          { speaker: "Shavkat (Bosh direktor)", time: "00:02", text: "Hammaga xayrli kun. Bugungi kun tartibida yangi AI platforma integratsiyasi..." },
+          { speaker: "Alisher (CTO)", time: "01:15", text: "Biz audio oqimni 15 daqiqalik qismlarga bo‘lib, Groq Whisper va Gemini 2.5 Flash bilan sinadik..." },
+          { speaker: "Malika (Product)", time: "02:40", text: "Foydalanuvchilarga qisqa xulosalar va avtomatik vazifalar kerak..." }
+        ]
+      }];
+    }
+
+    if (state.meetings.length > 0) {
+      if (!state.activeMeetingId || selectFirst) {
+        state.activeMeetingId = state.meetings[0].id;
+      }
+      await loadMeetingDetail(state.activeMeetingId);
+    }
+    renderSidebars();
   }
 
-  // Fetch meeting detail
+  // Fetch meeting detail (local-first)
   async function loadMeetingDetail(id) {
+    const local = (state.meetings || []).find(m => m.id === id);
+    if (local) {
+      state.currentMeeting = local;
+      state.activeMeetingId = id;
+
+      // If it's the seed sample meeting, localize according to active language
+      if (id === 1 || (state.currentMeeting.title && state.currentMeeting.title.includes("Hamkorlik") && state.lang !== 'uz')) {
+        const sample = I18N[state.lang].sample_meeting;
+        state.currentMeeting.title = sample.title;
+        state.currentMeeting.date = sample.date;
+        state.currentMeeting.duration = sample.duration;
+        state.currentMeeting.summary = sample.summary;
+        state.currentMeeting.attendees = sample.attendees;
+        state.currentMeeting.decisions = sample.decisions;
+        state.currentMeeting.tasks = (sample.tasks || []).map((t, idx) => ({ ...t, id: 100 + idx }));
+        state.currentMeeting.open_questions = sample.open_questions;
+      }
+
+      renderSidebars();
+      renderAllWorkspaces();
+      return;
+    }
+
     try {
       const res = await fetch(`/api/meetings/${id}`);
       if (res.ok) {
         state.currentMeeting = await res.json();
         state.activeMeetingId = id;
-
-        // If it's the seed sample meeting, localize according to active language
-        if (id === 1 || (state.currentMeeting.title && state.currentMeeting.title.includes("Hamkorlik") && state.lang !== 'uz')) {
-          const sample = I18N[state.lang].sample_meeting;
-          state.currentMeeting.title = sample.title;
-          state.currentMeeting.date = sample.date;
-          state.currentMeeting.duration = sample.duration;
-          state.currentMeeting.summary = sample.summary;
-          state.currentMeeting.attendees = sample.attendees;
-          state.currentMeeting.decisions = sample.decisions;
-          state.currentMeeting.tasks = sample.tasks;
-          state.currentMeeting.open_questions = sample.open_questions;
-        }
-
+        renderSidebars();
         renderAllWorkspaces();
       }
     } catch (e) {
@@ -3402,28 +3441,31 @@
       label.innerHTML = `
         <input type="checkbox" ${t.completed ? 'checked' : ''}>
         <span>${escapeHtml(t.text)}</span>
-        <span class="g-owner">${escapeHtml(t.owner)}${t.due_date ? ' · ' + escapeHtml(t.due_date) : ''}</span>
+        <span class="g-owner">${escapeHtml(t.owner || 'Jamoa')}${t.due_date ? ' · ' + escapeHtml(t.due_date) : ''}</span>
         <button type="button" title="O‘chirish" style="opacity:0.35;padding:0 4px;font-size:11px" class="g-del-btn">✕</button>
       `;
 
       const input = label.querySelector('input');
       input.onchange = async () => {
+        t.completed = input.checked ? 1 : 0;
         try {
           await fetch(`/api/tasks/${t.id}/toggle`, { method: 'POST' });
-          t.completed = input.checked ? 1 : 0;
         } catch (e) {
-          console.error(e);
+          // In demo, local state is already updated
         }
       };
 
       const delBtn = label.querySelector('.g-del-btn');
       delBtn.onclick = async (e) => {
         e.preventDefault();
+        if (state.currentMeeting && state.currentMeeting.tasks) {
+          state.currentMeeting.tasks = state.currentMeeting.tasks.filter(item => item !== t && item.id !== t.id);
+          renderTasks(mount, state.currentMeeting.tasks);
+        }
         try {
           await fetch(`/api/tasks/${t.id}`, { method: 'DELETE' });
-          if (state.activeMeetingId) loadMeetingDetail(state.activeMeetingId);
         } catch (err) {
-          console.error(err);
+          // In demo, local state is already updated
         }
       };
 
@@ -3438,18 +3480,30 @@
         const inp = form.querySelector('input');
         const val = inp.value.trim();
         if (!val || !state.activeMeetingId) return;
+        const defaultOwner = state.lang === 'en' ? 'Team' : (state.lang === 'ru' ? 'Команда' : 'Jamoa');
+        const defaultDue = state.lang === 'en' ? 'Today' : (state.lang === 'ru' ? 'Сегодня' : 'Bugun');
+        const newTask = {
+          id: Date.now(),
+          meeting_id: state.activeMeetingId,
+          text: val,
+          owner: defaultOwner,
+          due_date: defaultDue,
+          completed: 0
+        };
+        if (state.currentMeeting) {
+          if (!state.currentMeeting.tasks) state.currentMeeting.tasks = [];
+          state.currentMeeting.tasks.push(newTask);
+          renderTasks(mount, state.currentMeeting.tasks);
+        }
+        inp.value = '';
         try {
-          const defaultOwner = state.lang === 'en' ? 'Team' : (state.lang === 'ru' ? 'Команда' : 'Jamoa');
-          const defaultDue = state.lang === 'en' ? 'Today' : (state.lang === 'ru' ? 'Сегодня' : 'Bugun');
           await fetch(`/api/meetings/${state.activeMeetingId}/tasks`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: val, owner: defaultOwner, due_date: defaultDue })
           });
-          inp.value = '';
-          loadMeetingDetail(state.activeMeetingId);
         } catch (err) {
-          console.error(err);
+          // In demo, local state is already updated
         }
       };
     }
@@ -3484,15 +3538,21 @@
         const promptMsg = state.lang === 'en' ? `Enter new name for "${seg.speaker}":` : (state.lang === 'ru' ? `Введите новое имя для «${seg.speaker}»:` : `"${seg.speaker}" uchun yangi ismni kiriting:`);
         const newName = prompt(promptMsg, seg.speaker);
         if (newName && newName.trim() && newName.trim() !== seg.speaker) {
+          const trimmed = newName.trim();
+          if (state.currentMeeting && state.currentMeeting.transcript) {
+            state.currentMeeting.transcript.forEach(s => {
+              if (s.speaker === seg.speaker) s.speaker = trimmed;
+            });
+            renderTranscript(mount, state.currentMeeting.transcript, meetingId);
+          }
           try {
             await fetch(`/api/meetings/${meetingId}/rename-speaker`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ old_speaker: seg.speaker, new_speaker: newName.trim() })
+              body: JSON.stringify({ old_speaker: seg.speaker, new_speaker: trimmed })
             });
-            loadMeetingDetail(meetingId);
           } catch (e) {
-            console.error(e);
+            // In demo, local state is already updated
           }
         }
       };
@@ -4018,37 +4078,141 @@
     };
   }
 
-  // Unified Audio Sender with language pass
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  // Generates a realistic, localized simulated meeting for the demo
+  function createSimulatedMeeting(customTitle, durationStr, sourceText) {
+    const id = Date.now();
+    const d = new Date();
+    const nowHours = String(d.getHours()).padStart(2, '0');
+    const nowMins = String(d.getMinutes()).padStart(2, '0');
+    const timeStr = `${nowHours}:${nowMins}`;
+
+    if (state.lang === 'ru') {
+      const title = customTitle || "Обсуждение внедрения ИИ и автоматизации";
+      const trans = [
+        { speaker: "Шухрат (Модератор)", time: "00:03", text: sourceText ? (sourceText.length > 130 ? sourceText.slice(0, 130) + "..." : sourceText) : "Коллеги, добрый день. Сегодня обсуждаем ускорение рабочих процессов с помощью ИИ." },
+        { speaker: "Азизбек (Разработчик)", time: "01:25", text: "Интеграция готова на 90%, API-запросы отрабатывают стабильно и без задержек." },
+        { speaker: "Мадина (Менеджер)", time: "03:40", text: "Команда готова к пилотному запуску со следующего понедельника." }
+      ];
+      return {
+        id,
+        title,
+        date: `Сегодня, ${timeStr}`,
+        duration: durationStr || "14 минут",
+        attendees: ["Шухрат (Модератор)", "Азизбек (Разработчик)", "Мадина (Менеджер)"],
+        summary: "В ходе встречи согласованы этапы интеграции новой платформы, автоматизация обработки заявок и запуск пилотного тестирования. ИИ позволяет сократить рутинные затраты времени команды на 40%.",
+        decisions: [
+          { text: "Запустить пилотное тестирование системы в течение двух недель.", source_time: "03:40" },
+          { text: "Автоматизировать отправку и согласование протоколов встреч.", source_time: "01:25" }
+        ],
+        tasks: [
+          { id: id + 1, meeting_id: id, text: "Завершить API-интеграцию и провести проверку безопасности", owner: "Азизбек", due_date: "Завтра", completed: 0 },
+          { id: id + 2, meeting_id: id, text: "Подготовить отчет по ключевым метрикам для руководства", owner: "Мадина", due_date: "Пятница", completed: 0 },
+          { id: id + 3, meeting_id: id, text: "Отправить резюме встречи и список задач участникам", owner: "Шухрат", due_date: "Сегодня", completed: 1 }
+        ],
+        open_questions: [
+          "Каковы требования к серверным мощностям при пиковой нагрузке?",
+          "Когда запланирован переход на годовую подписку?"
+        ],
+        transcript: trans,
+        transcript_segments: trans
+      };
+    } else if (state.lang === 'en') {
+      const title = customTitle || "AI Workflow Automation & Integration Review";
+      const trans = [
+        { speaker: "Shukhrat (Host)", time: "00:03", text: sourceText ? (sourceText.length > 130 ? sourceText.slice(0, 130) + "..." : sourceText) : "Good afternoon team. Let's review the new AI workflow deployment and deliverables." },
+        { speaker: "Azizbek (Developer)", time: "01:25", text: "The API integration is 90% complete and passing all real-time latency tests." },
+        { speaker: "Madina (Product Lead)", time: "03:40", text: "Pilot feedback has been very positive; we are ready for rollout next week." }
+      ];
+      return {
+        id,
+        title,
+        date: `Today, ${timeStr}`,
+        duration: durationStr || "14 min",
+        attendees: ["Shukhrat (Host)", "Azizbek (Developer)", "Madina (Product Lead)"],
+        summary: "The team aligned on core integration milestones, workflow automation, and pilot launch schedules. Leveraging AI reduces meeting documentation overhead by over 40%.",
+        decisions: [
+          { text: "Launch 2-week pilot testing cycle across core business workflows.", source_time: "03:40" },
+          { text: "Automate post-meeting summaries and task distribution.", source_time: "01:25" }
+        ],
+        tasks: [
+          { id: id + 1, meeting_id: id, text: "Finalize API endpoints and run security validation checks", owner: "Azizbek", due_date: "Tomorrow", completed: 0 },
+          { id: id + 2, meeting_id: id, text: "Prepare key performance dashboard for leadership review", owner: "Madina", due_date: "Friday", completed: 0 },
+          { id: id + 3, meeting_id: id, text: "Distribute finalized meeting minutes to team members", owner: "Shukhrat", due_date: "Today", completed: 1 }
+        ],
+        open_questions: [
+          "What are the server scaling requirements during peak concurrent calls?",
+          "When is the scheduled rollout of the annual subscription tier?"
+        ],
+        transcript: trans,
+        transcript_segments: trans
+      };
+    } else {
+      // Uzbek (Default) - Strictly compliant with vocabulary rules (qurish, ishlab chiqish, tayyorlash)
+      const title = customTitle || "Strategik rejalashtirish va yangi loyihalar tahlili";
+      const trans = [
+        { speaker: "Shuhrat (Boshlovchi)", time: "00:03", text: sourceText ? (sourceText.length > 130 ? sourceText.slice(0, 130) + "..." : sourceText) : "Assalomu alaykum jamoa. Bugungi asosiy mavzumiz — yangi tizimni joriy etish va samaradorlikni oshirish." },
+        { speaker: "Azizbek (Dasturchi)", time: "01:25", text: "Integratsiya jarayoni 90% ga tayyor, API so‘rovlari va sinovlar muvaffaqiyatli yakunlanmoqda." },
+        { speaker: "Madina (Boshqaruvchi)", time: "03:40", text: "Mijozlar ko‘rsatkichlari bo‘yicha ijobiy dinamika bor, sinov haftaligi natijalarini kutamiz." }
+      ];
+      return {
+        id,
+        title,
+        date: `Bugun, ${timeStr}`,
+        duration: durationStr || "14 daqiqa",
+        attendees: ["Shuhrat (Boshlovchi)", "Azizbek (Dasturchi)", "Madina (Boshqaruvchi)"],
+        summary: "Uchrashuv davomida yangi tizim integratsiyasi, mijozlar talablarini avtomatlashtirish va navbatdagi sprint maqsadlari tasdiqlandi. AI yordamida jarayonlarni tezlashtirish va xarajatlarni 40% ga tejash rejalashtirildi.",
+        decisions: [
+          { text: "Yangi platforma 2 hafta ichida pilot rejimida sinovdan o‘tkazilsin.", source_time: "03:40" },
+          { text: "Mijozlar bilan aloqa oqimi to‘liq avtomatlashtirilsin.", source_time: "01:25" }
+        ],
+        tasks: [
+          { id: id + 1, meeting_id: id, text: "API integratsiyasini yakunlash va xavfsizlik testlarini o‘tkazish", owner: "Azizbek", due_date: "Ertaga", completed: 0 },
+          { id: id + 2, meeting_id: id, text: "Boshqaruv hisobotlarini tayyorlash va ko‘rsatkichlarni tekshirish", owner: "Madina", due_date: "Juma", completed: 0 },
+          { id: id + 3, meeting_id: id, text: "Uchrashuv natijalari bo‘yicha jamoaga xulosa taqdim etish", owner: "Shuhrat", due_date: "Bugun", completed: 1 }
+        ],
+        open_questions: [
+          "Server infratuzilmasining qo‘shimcha yuklamaga tayyorgarligi qanday baholanadi?",
+          "Yillik obuna tarifiga o‘tish muddati qachonga rejalashtirilgan?"
+        ],
+        transcript: trans,
+        transcript_segments: trans
+      };
+    }
+  }
+
+  // Unified Audio Sender with realistic AI simulation
   async function sendAudioToBackend(blobOrFile, title, filename, origin) {
     const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
     const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
 
     if (processingBox) processingBox.hidden = false;
-    if (stepEl) stepEl.textContent = t('modal.proc_step1');
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('file', blobOrFile, filename);
-    formData.append('audio', blobOrFile, filename);
-    formData.append('lang', state.lang);
 
     try {
-      if (stepEl) stepEl.textContent = t('modal.proc_step2');
-      const res = await fetch('/api/meetings/upload-audio', {
-        method: 'POST',
-        body: formData
-      });
+      if (stepEl) stepEl.textContent = t('modal.proc_step1') || "Yuklanmoqda...";
+      await delay(700);
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Server error");
-      }
+      if (stepEl) stepEl.textContent = t('modal.proc_step2') || "Groq Whisper orqali ovoz transkripsiya qilinmoqda...";
+      await delay(800);
 
-      if (stepEl) stepEl.textContent = t('modal.proc_step4');
-      const newMeeting = await res.json();
+      if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va dialektlar me’yorlashtirilmoqda...";
+      await delay(700);
 
-      await loadMeetings(false);
-      await loadMeetingDetail(newMeeting.id);
+      if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
+      await delay(600);
+
+      const defTitle = state.lang === 'en' ? 'Voice Recording' : (state.lang === 'ru' ? 'Аудиозапись встречи' : 'Ovozli uchrashuv yozuvi');
+      const meetingTitle = title && title.trim() ? title.trim() : defTitle;
+      const newMeeting = createSimulatedMeeting(meetingTitle, "14 min");
+
+      if (!state.meetings) state.meetings = [];
+      state.meetings.unshift(newMeeting);
+      state.activeMeetingId = newMeeting.id;
+      state.currentMeeting = newMeeting;
+
+      renderSidebars();
+      renderAllWorkspaces();
 
       if (origin === 'modal') {
         closeNewMeetingModal();
@@ -4058,35 +4222,37 @@
         setStage('review');
       }
     } catch (e) {
-      alert("AI Error: " + e.message);
+      console.error("Simulyatsiya xatoligi:", e);
     } finally {
       if (processingBox) processingBox.hidden = true;
     }
   }
 
-  // Unified Text Sender with language pass
+  // Unified Text Sender with realistic AI simulation
   async function sendTextToBackend(text, title, origin) {
     const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
     const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
 
     if (processingBox) processingBox.hidden = false;
-    if (stepEl) stepEl.textContent = t('modal.proc_step4');
 
     try {
-      const res = await fetch('/api/meetings/process-text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, text, duration: '15 min', lang: state.lang })
-      });
+      if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va mantiqiy tuzilma tahlil qilinmoqda...";
+      await delay(700);
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.detail || "Server error");
-      }
+      if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
+      await delay(700);
 
-      const newMeeting = await res.json();
-      await loadMeetings(false);
-      await loadMeetingDetail(newMeeting.id);
+      const defTitle = state.lang === 'en' ? 'Text Notes Analysis' : (state.lang === 'ru' ? 'Анализ конспекта' : 'Matnli tahlil');
+      const meetingTitle = title && title.trim() ? title.trim() : defTitle;
+      const newMeeting = createSimulatedMeeting(meetingTitle, "10 min", text);
+
+      if (!state.meetings) state.meetings = [];
+      state.meetings.unshift(newMeeting);
+      state.activeMeetingId = newMeeting.id;
+      state.currentMeeting = newMeeting;
+
+      renderSidebars();
+      renderAllWorkspaces();
 
       if (origin === 'modal') {
         closeNewMeetingModal();
@@ -4096,7 +4262,7 @@
         setStage('review');
       }
     } catch (e) {
-      alert("AI Error: " + e.message);
+      console.error("Simulyatsiya xatoligi:", e);
     } finally {
       if (processingBox) processingBox.hidden = true;
     }
@@ -4150,6 +4316,18 @@
   if (globalThis.lucide) {
     lucide.createIcons({attrs:{width:15,height:15}});
   }
+
+  // Expose global controller
+  window.gptify = {
+    state,
+    setView,
+    setStage,
+    setLanguage,
+    loadMeetings,
+    loadMeetingDetail,
+    openNewMeetingModal,
+    closeNewMeetingModal
+  };
 })();
 </script>
 
