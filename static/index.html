@@ -1394,26 +1394,6 @@
 
 <div id="gptify-v2" aria-label="GPTify Meet">
 
-  <!-- Top View Switcher & Language Controls -->
-  <div class="g-controls">
-    <div class="g-viewtabs" aria-label="Design views">
-      <button data-view="landing" aria-pressed="true" data-i18n="views.landing">Landing</button>
-      <button data-view="product" aria-pressed="false" data-i18n="views.product">Product</button>
-      <button data-view="app" aria-pressed="false" data-i18n="views.app">Desktop app</button>
-      <button data-view="brand" aria-pressed="false" data-i18n="views.brand">Identity</button>
-    </div>
-    
-    <div style="display:flex;align-items:center;gap:8px">
-      <!-- Language Switcher: UZ / EN / RU -->
-      <div class="g-viewtabs g-langtabs" aria-label="Language selector">
-        <button data-lang="uz" aria-pressed="true">UZ</button>
-        <button data-lang="en" aria-pressed="false">EN</button>
-        <button data-lang="ru" aria-pressed="false">RU</button>
-      </div>
-      <button id="g-theme-toggle" class="g-button" style="padding:5px 9px;font-size:11px" title="Mavzuni o‘zgartirish">🌓 Rejim</button>
-    </div>
-  </div>
-
   <!-- 1. LANDING PAGE -->
   <div class="g-site" data-page="landing">
     <nav class="g-nav">
@@ -1426,9 +1406,21 @@
         <button data-jump="dataflow" data-i18n="nav.privacy">Maxfiylik</button>
         <button data-jump="pricing" data-i18n="nav.pricing">Narxlar</button>
       </div>
-      <button class="g-button g-dark" data-open-app>
-        <span data-i18n="nav.app_btn">Desktop ilova</span> <i data-lucide="arrow-up-right" aria-hidden="true"></i>
-      </button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <!-- Language Switcher: UZ / EN / RU -->
+        <div class="g-viewtabs g-langtabs" style="margin:0" aria-label="Language selector">
+          <button data-lang="uz" aria-pressed="true">UZ</button>
+          <button data-lang="en" aria-pressed="false">EN</button>
+          <button data-lang="ru" aria-pressed="false">RU</button>
+        </div>
+        <a href="https://t.me/GPTifyUzAdminbot" target="_blank" rel="noopener" style="padding:7px 12px;font-size:12.5px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#f0f9ff;border:1px solid #bae6fd;color:#0284c7;font-weight:600">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0284c7"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          <span>@GPTifyUzAdminbot</span>
+        </a>
+        <button class="g-btn-green" data-open-app style="padding:8px 16px;font-size:13px;border-radius:8px">
+          <span data-i18n="hero.cta_trial">Bepul sinash</span>
+        </button>
+      </div>
     </nav>
 
     <header class="g-hero-split">
