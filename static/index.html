@@ -2259,16 +2259,33 @@
             <i data-lucide="shield-check" style="width:13px;height:13px;color:#00b874"></i>
             <span data-i18n="lead_modal.trust_note">Karta talab qilinmaydi · 14 kun bepul demo</span>
           </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin:6px 0 2px">
+            <span style="flex:1;height:1px;background:var(--g-line)"></span>
+            <span style="font-size:11px;color:var(--g-muted);text-transform:uppercase;letter-spacing:0.5px" data-i18n="lead_modal.or_text">YOKI</span>
+            <span style="flex:1;height:1px;background:var(--g-line)"></span>
+          </div>
+
+          <a href="https://t.me/GPTifyUzAdminbot?start=demo_meet" target="_blank" rel="noopener" style="width:100%;justify-content:center;padding:11px 14px;font-size:13px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-sizing:border-box;background:#f0f9ff;border:1px solid #bae6fd;color:#0284c7;font-weight:600">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#0284c7"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+            <span data-i18n="lead_modal.btn_telegram">Telegram orqali yozish (@GPTifyUzAdminbot)</span>
+          </a>
         </form>
 
         <!-- Success confirmation state -->
         <div id="lead-success-state" style="text-align:center;padding:20px 10px" hidden>
           <div style="width:48px;height:48px;border-radius:50%;background:#ecfdf5;border:1px solid #a7f3d0;display:inline-flex;align-items:center;justify-content:center;color:#00b874;font-size:24px;margin-bottom:12px">✓</div>
           <h3 style="margin:0 0 6px;font-size:16px;font-weight:700" data-i18n="lead_modal.success_title">Xush kelibsiz!</h3>
-          <p style="font-size:13px;color:var(--g-muted);margin:0 0 18px" id="lead-success-msg" data-i18n="lead_modal.success_desc">Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.</p>
-          <button id="lead-goto-app-btn" class="g-btn-green" style="width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:8px">
+          <p style="font-size:13px;color:var(--g-muted);margin:0 0 16px" id="lead-success-msg" data-i18n="lead_modal.success_desc">Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.</p>
+          <button id="lead-goto-app-btn" class="g-btn-green" style="width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:8px;margin-bottom:12px">
             <span data-i18n="lead_modal.btn_open_demo">Demoni ochish →</span>
           </button>
+          <div style="padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px">
+            <span style="color:var(--g-muted)" data-i18n="lead_modal.admin_support">Savollaringiz bormi?</span>
+            <a href="https://t.me/GPTifyUzAdminbot?start=support" target="_blank" rel="noopener" style="color:#0284c7;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px">
+              <span>@GPTifyUzAdminbot</span> →
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -2480,9 +2497,12 @@
         f_tool: "Asosan qaysi vositadan foydalanasiz?",
         btn_submit: "Sinovni boshlash / Demoni ochish →",
         trust_note: "Karta talab qilinmaydi · 14 kun bepul demo",
+        or_text: "YOKI",
+        btn_telegram: "Telegram orqali yozish (@GPTifyUzAdminbot)",
         success_title: "Xush kelibsiz!",
         success_desc: "Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.",
-        btn_open_demo: "Demoni ochish →"
+        btn_open_demo: "Demoni ochish →",
+        admin_support: "Savollaringiz bormi?"
       },
       sample_meeting: {
         title: "Hamkorlik uchrashuvi",
@@ -2699,9 +2719,12 @@
         f_tool: "Primary meeting tool you use",
         btn_submit: "Start Free Trial / Open Demo →",
         trust_note: "No credit card required · 14-day free demo",
+        or_text: "OR",
+        btn_telegram: "Chat on Telegram (@GPTifyUzAdminbot)",
         success_title: "Welcome aboard!",
         success_desc: "Your 14-day free trial has been activated. Opening your demo workspace...",
-        btn_open_demo: "Open Demo Workspace →"
+        btn_open_demo: "Open Demo Workspace →",
+        admin_support: "Have questions?"
       },
       sample_meeting: {
         title: "Partnership Meeting",
@@ -2918,9 +2941,12 @@
         f_tool: "Основной инструмент для встреч",
         btn_submit: "Начать бесплатный период / Открыть демо →",
         trust_note: "Привязка карты не требуется · 14 дней бесплатно",
+        or_text: "ИЛИ",
+        btn_telegram: "Написать в Telegram (@GPTifyUzAdminbot)",
         success_title: "Добро пожаловать!",
         success_desc: "Вам предоставлен 14-дневный бесплатный доступ. Переходим в демо-пространство...",
-        btn_open_demo: "Открыть демо-версию →"
+        btn_open_demo: "Открыть демо-версию →",
+        admin_support: "Есть вопросы?"
       },
       sample_meeting: {
         title: "Партнерская встреча",

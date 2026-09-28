@@ -279,18 +279,32 @@ async def create_lead(req: CreateLeadRequest):
     # Send Telegram notification if credentials available
     try:
         if ai_engine.TELEGRAM_BOT_TOKEN and ai_engine.TELEGRAM_DEFAULT_CHAT:
+            contact_clean = req.contact.strip()
             msg = (
                 f"🔔 <b>Yangi mijoz demoga yozildi!</b>\n\n"
                 f"👤 <b>Ism:</b> {req.name.strip()}\n"
-                f"📱 <b>Kontakt:</b> {req.contact.strip()}\n"
+                f"📱 <b>Kontakt:</b> {contact_clean}\n"
                 f"🏢 <b>Kompaniya:</b> {req.company.strip() if req.company else 'Ko‘rsatilmagan'}\n"
                 f"🎙 <b>Vosita:</b> {req.meeting_tool or 'Google Meet'}\n"
-                f"⏰ <b>Vaqt:</b> {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                f"⏰ <b>Vaqt:</b> {datetime.now().strftime('%Y-%m-%d %H:%M')}\n\n"
+                f"🤖 <i>Manzil: @GPTifyUzAdminbot orqali qabul qilindi</i>"
             )
+            payload = {
+                "chat_id": ai_engine.TELEGRAM_DEFAULT_CHAT,
+                "text": msg,
+                "parse_mode": "HTML"
+            }
+            if contact_clean.startswith("@"):
+                tg_user = contact_clean.lstrip("@").strip()
+                payload["reply_markup"] = {
+                    "inline_keyboard": [[
+                        {"text": f"💬 {contact_clean} ga yozish", "url": f"https://t.me/{tg_user}"}
+                    ]]
+                }
             async with httpx.AsyncClient(timeout=5.0) as client:
                 await client.post(
                     f"https://api.telegram.org/bot{ai_engine.TELEGRAM_BOT_TOKEN}/sendMessage",
-                    json={"chat_id": ai_engine.TELEGRAM_DEFAULT_CHAT, "text": msg, "parse_mode": "HTML"}
+                    json=payload
                 )
     except Exception as e:
         print(f"Telegram notification error: {e}")
