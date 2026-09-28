@@ -1413,12 +1413,12 @@
           <button data-lang="en" aria-pressed="false">EN</button>
           <button data-lang="ru" aria-pressed="false">RU</button>
         </div>
-        <a href="https://t.me/GPTifyUzAdminbot" target="_blank" rel="noopener" style="padding:7px 12px;font-size:12.5px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#f0f9ff;border:1px solid #bae6fd;color:#0284c7;font-weight:600">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0284c7"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-          <span>@GPTifyUzAdminbot</span>
-        </a>
-        <button class="g-btn-green" data-open-app style="padding:8px 16px;font-size:13px;border-radius:8px">
-          <span data-i18n="hero.cta_trial">Bepul sinash</span>
+        <button class="g-btn-subtle" data-open-lead="contact" style="padding:8px 14px;font-size:13px;border-radius:8px;font-weight:600;display:inline-flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span data-i18n="nav.contact">Bog‘lanish</span>
+        </button>
+        <button class="g-btn-green" data-open-lead="demo" style="padding:8px 16px;font-size:13px;border-radius:8px">
+          <span data-i18n="hero.cta_trial">Bepul sinab ko‘rish</span>
         </button>
       </div>
     </nav>
@@ -2258,16 +2258,16 @@
             <span style="flex:1;height:1px;background:var(--g-line)"></span>
           </div>
 
-          <a href="https://t.me/GPTifyUzAdminbot?start=demo_meet" target="_blank" rel="noopener" style="width:100%;justify-content:center;padding:11px 14px;font-size:13px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-sizing:border-box;background:#f0f9ff;border:1px solid #bae6fd;color:#0284c7;font-weight:600">
+          <a href="https://t.me/GPTifyUzAdminbot?start=contact" target="_blank" rel="noopener" style="width:100%;justify-content:center;padding:11px 14px;font-size:13px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;box-sizing:border-box;background:#f0f9ff;border:1px solid #bae6fd;color:#0284c7;font-weight:600">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="#0284c7"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-            <span data-i18n="lead_modal.btn_telegram">Telegram orqali yozish (@GPTifyUzAdminbot)</span>
+            <span data-i18n="lead_modal.btn_telegram">Telegram orqali bog‘lanish</span>
           </a>
         </form>
 
         <!-- Success confirmation state -->
         <div id="lead-success-state" style="text-align:center;padding:20px 10px" hidden>
           <div style="width:48px;height:48px;border-radius:50%;background:#ecfdf5;border:1px solid #a7f3d0;display:inline-flex;align-items:center;justify-content:center;color:#00b874;font-size:24px;margin-bottom:12px">✓</div>
-          <h3 style="margin:0 0 6px;font-size:16px;font-weight:700" data-i18n="lead_modal.success_title">Xush kelibsiz!</h3>
+          <h3 style="margin:0 0 6px;font-size:16px;font-weight:700" id="lead-success-title" data-i18n="lead_modal.success_title">Xush kelibsiz!</h3>
           <p style="font-size:13px;color:var(--g-muted);margin:0 0 16px" id="lead-success-msg" data-i18n="lead_modal.success_desc">Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.</p>
           <button id="lead-goto-app-btn" class="g-btn-green" style="width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:8px;margin-bottom:12px">
             <span data-i18n="lead_modal.btn_open_demo">Demoni ochish →</span>
@@ -2275,7 +2275,7 @@
           <div style="padding:10px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:8px">
             <span style="color:var(--g-muted)" data-i18n="lead_modal.admin_support">Savollaringiz bormi?</span>
             <a href="https://t.me/GPTifyUzAdminbot?start=support" target="_blank" rel="noopener" style="color:#0284c7;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px">
-              <span>@GPTifyUzAdminbot</span> →
+              <span data-i18n="lead_modal.btn_support_link">Bog‘lanish</span> →
             </a>
           </div>
         </div>
@@ -2291,8 +2291,7 @@
   // Full Trilingual Dictionary (UZ, EN, RU)
   const I18N = {
     uz: {
-      views: { landing: "Landing", product: "Product", app: "Desktop ilova", brand: "Identity" },
-      nav: { features: "Imkoniyatlar", privacy: "Maxfiylik", pricing: "Narxlar", app_btn: "Desktop ilova" },
+      nav: { features: "Imkoniyatlar", privacy: "Maxfiylik", pricing: "Narxlar", contact: "Bog‘lanish", cta_trial: "Bepul sinab ko‘rish" },
       hero: {
         h1_line1: "Uchrashuv<br>tugaydi.",
         h1_line2: "Bayonnoma<br>tayyor.",
@@ -2482,19 +2481,26 @@
       },
       lead_modal: {
         title: "14 kun bepul sinash · Demoga kirish",
+        title_contact: "Biz bilan bog‘lanish · Konsultatsiya",
         subtitle: "Darhol to‘liq imkoniyatli demo muhitiga o‘tish uchun ma’lumotingizni qoldiring",
+        subtitle_contact: "Savollaringiz bormi yoki jamoangiz uchun joriy qilmoqchimisiz? Ma’lumotingizni qoldiring",
         f_name: "Ism va familiyangiz *",
         f_contact: "Telegram username yoki telefon raqamingiz *",
         f_company: "Kompaniya yoki loyiha nomi (ixtiyoriy)",
         f_tool: "Asosan qaysi vositadan foydalanasiz?",
         btn_submit: "Sinovni boshlash / Demoni ochish →",
+        btn_submit_contact: "Murojaatni yuborish →",
         trust_note: "Karta talab qilinmaydi · 14 kun bepul demo",
+        trust_note_contact: "Ma’lumotlaringiz maxfiy saqlanadi · Tezkor javob",
         or_text: "YOKI",
-        btn_telegram: "Telegram orqali yozish (@GPTifyUzAdminbot)",
+        btn_telegram: "Telegram orqali bog‘lanish",
         success_title: "Xush kelibsiz!",
+        success_title_contact: "Murojaatingiz qabul qilindi!",
         success_desc: "Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.",
+        success_desc_contact: "Mutaxassisimiz tez orada siz bilan Telegram yoki telefon orqali bog‘lanadi.",
         btn_open_demo: "Demoni ochish →",
-        admin_support: "Savollaringiz bormi?"
+        admin_support: "Savollaringiz bormi?",
+        btn_support_link: "Bog‘lanish"
       },
       sample_meeting: {
         title: "Hamkorlik uchrashuvi",
@@ -2514,7 +2520,7 @@
 
     en: {
       views: { landing: "Landing", product: "Product", app: "Desktop app", brand: "Identity" },
-      nav: { features: "Features", privacy: "Privacy", pricing: "Pricing", app_btn: "Desktop App" },
+      nav: { features: "Features", privacy: "Privacy", pricing: "Pricing", contact: "Contact", cta_trial: "Try for free" },
       hero: {
         h1_line1: "Meeting<br>ends.",
         h1_line2: "Minutes<br>ready.",
@@ -2704,19 +2710,26 @@
       },
       lead_modal: {
         title: "14-Day Free Trial · Request Demo",
+        title_contact: "Contact Us · Consultation",
         subtitle: "Leave your contact details to immediately access the interactive demo workspace",
+        subtitle_contact: "Have questions or looking to implement for your team? Leave your details below",
         f_name: "Full Name *",
         f_contact: "Telegram username or phone number *",
         f_company: "Company or Team Name (optional)",
         f_tool: "Primary meeting tool you use",
         btn_submit: "Start Free Trial / Open Demo →",
+        btn_submit_contact: "Send Inquiry →",
         trust_note: "No credit card required · 14-day free demo",
+        trust_note_contact: "Your data is kept strictly confidential · Quick reply",
         or_text: "OR",
-        btn_telegram: "Chat on Telegram (@GPTifyUzAdminbot)",
+        btn_telegram: "Contact via Telegram",
         success_title: "Welcome aboard!",
+        success_title_contact: "Inquiry received!",
         success_desc: "Your 14-day free trial has been activated. Opening your demo workspace...",
+        success_desc_contact: "Our team will reach out to you shortly via Telegram or phone.",
         btn_open_demo: "Open Demo Workspace →",
-        admin_support: "Have questions?"
+        admin_support: "Have questions?",
+        btn_support_link: "Contact"
       },
       sample_meeting: {
         title: "Partnership Meeting",
@@ -2736,7 +2749,7 @@
 
     ru: {
       views: { landing: "Лендинг", product: "Продукт", app: "Десктоп-приложение", brand: "Айдентика" },
-      nav: { features: "Возможности", privacy: "Приватность", pricing: "Тарифы", app_btn: "Десктоп-приложение" },
+      nav: { features: "Возможности", privacy: "Приватность", pricing: "Тарифы", contact: "Связаться", cta_trial: "Попробовать бесплатно" },
       hero: {
         h1_line1: "Встреча<br>завершена.",
         h1_line2: "Протокол<br>готов.",
@@ -2926,19 +2939,26 @@
       },
       lead_modal: {
         title: "14 дней бесплатно · Доступ к демо",
+        title_contact: "Связаться с нами · Консультация",
         subtitle: "Укажите контактные данные для мгновенного перехода в интерактивное демо",
+        subtitle_contact: "Есть вопросы или хотите внедрить для команды? Оставьте контакты",
         f_name: "Ваше имя и фамилия *",
         f_contact: "Telegram или номер телефона *",
         f_company: "Компания или название команды (необязательно)",
         f_tool: "Основной инструмент для встреч",
         btn_submit: "Начать бесплатный период / Открыть демо →",
+        btn_submit_contact: "Отправить заявку →",
         trust_note: "Привязка карты не требуется · 14 дней бесплатно",
+        trust_note_contact: "Конфиденциальность гарантирована · Быстрый ответ",
         or_text: "ИЛИ",
-        btn_telegram: "Написать в Telegram (@GPTifyUzAdminbot)",
+        btn_telegram: "Связаться в Telegram",
         success_title: "Добро пожаловать!",
+        success_title_contact: "Заявка принята!",
         success_desc: "Вам предоставлен 14-дневный бесплатный доступ. Переходим в демо-пространство...",
+        success_desc_contact: "Наш специалист свяжется с вами в Telegram или по телефону в ближайшее время.",
         btn_open_demo: "Открыть демо-версию →",
-        admin_support: "Есть вопросы?"
+        admin_support: "Есть вопросы?",
+        btn_support_link: "Связаться"
       },
       sample_meeting: {
         title: "Партнерская встреча",
@@ -3629,12 +3649,35 @@
   const leadSuccess = document.getElementById('lead-success-state');
   const leadGotoAppBtn = document.getElementById('lead-goto-app-btn');
 
-  function openDemoSignupModal() {
-    if (leadModal) {
-      if (leadForm) leadForm.hidden = false;
-      if (leadSuccess) leadSuccess.hidden = true;
-      leadModal.hidden = false;
+  let currentLeadMode = 'demo';
+
+  function openLeadModal(mode = 'demo') {
+    currentLeadMode = mode;
+    if (!leadModal) return;
+    const titleEl = leadModal.querySelector('[data-i18n="lead_modal.title"]');
+    const subEl = leadModal.querySelector('[data-i18n="lead_modal.subtitle"]');
+    const submitBtnSpan = document.querySelector('#lead-submit-btn span');
+    const trustSpan = leadModal.querySelector('[data-i18n="lead_modal.trust_note"]');
+    
+    if (mode === 'contact') {
+      if (titleEl) titleEl.textContent = t('lead_modal.title_contact');
+      if (subEl) subEl.textContent = t('lead_modal.subtitle_contact');
+      if (submitBtnSpan) submitBtnSpan.textContent = t('lead_modal.btn_submit_contact');
+      if (trustSpan) trustSpan.textContent = t('lead_modal.trust_note_contact');
+    } else {
+      if (titleEl) titleEl.textContent = t('lead_modal.title');
+      if (subEl) subEl.textContent = t('lead_modal.subtitle');
+      if (submitBtnSpan) submitBtnSpan.textContent = t('lead_modal.btn_submit');
+      if (trustSpan) trustSpan.textContent = t('lead_modal.trust_note');
     }
+
+    if (leadForm) leadForm.hidden = false;
+    if (leadSuccess) leadSuccess.hidden = true;
+    leadModal.hidden = false;
+    setTimeout(() => {
+      const inp = document.getElementById('lead-name-input');
+      if (inp) inp.focus();
+    }, 80);
   }
 
   function closeDemoSignupModal() {
@@ -3650,19 +3693,15 @@
     };
   }
 
-  function handleDemoAccess() {
-    const existing = localStorage.getItem('gptify_demo_user');
-    if (existing) {
-      setView('app');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      openDemoSignupModal();
-    }
-  }
+  root.querySelectorAll('[data-open-lead]').forEach(btn => {
+    btn.onclick = () => {
+      openLeadModal(btn.dataset.openLead || 'demo');
+    };
+  });
 
   root.querySelectorAll('[data-open-app]').forEach(btn => {
     btn.onclick = () => {
-      handleDemoAccess();
+      openLeadModal('demo');
     };
   });
 
@@ -3678,31 +3717,42 @@
       if (!name || !contact) return;
 
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span>...</span>';
+      submitBtn.innerHTML = '<span>Yuborilmoqda...</span>';
+
+      const sourceName = currentLeadMode === 'contact' ? 'Bog‘lanish / Konsultatsiya' : 'Bepul sinab ko‘rish (Demo)';
 
       try {
         await fetch('/api/leads', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, contact, company, meeting_tool: tool })
+          body: JSON.stringify({ name, contact, company, meeting_tool: tool, source: sourceName })
         });
       } catch (err) {
-        console.warn("Lead save fallback to local:", err);
+        console.warn("Lead delivery error:", err);
       }
 
       // Persist signup state
-      localStorage.setItem('gptify_demo_user', JSON.stringify({ name, contact, company }));
+      localStorage.setItem('gptify_demo_user', JSON.stringify({ name, contact, company, source: sourceName }));
 
       // Show success
       leadForm.hidden = true;
       leadSuccess.hidden = false;
+      const successTitle = document.getElementById('lead-success-title');
+      const successMsg = document.getElementById('lead-success-msg');
+      if (currentLeadMode === 'contact') {
+        if (successTitle) successTitle.textContent = t('lead_modal.success_title_contact');
+        if (successMsg) successMsg.textContent = t('lead_modal.success_desc_contact');
+      } else {
+        if (successTitle) successTitle.textContent = t('lead_modal.success_title');
+        if (successMsg) successMsg.textContent = t('lead_modal.success_desc');
+      }
 
-      // Auto redirect to demo after 1.6s
-      setTimeout(() => {
-        closeDemoSignupModal();
-        setView('app');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 1600);
+      submitBtn.disabled = false;
+      if (currentLeadMode === 'contact') {
+        submitBtn.innerHTML = `<span>${t('lead_modal.btn_submit_contact')}</span>`;
+      } else {
+        submitBtn.innerHTML = `<span>${t('lead_modal.btn_submit')}</span>`;
+      }
     };
   }
 
