@@ -20,11 +20,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Name and contact are required' });
     }
 
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
+    const token = process.env.TELEGRAM_BOT_TOKEN || '8652296582:AAGr4AShAy8dHKBil5pM3R07t4m8upOjNhM';
+    const chatId = process.env.TELEGRAM_ADMIN_CHAT_ID || '5077641672';
 
     if (!token || !chatId) {
-      // If env vars not set in Vercel, return success with notice
       console.warn("TELEGRAM_BOT_TOKEN or TELEGRAM_ADMIN_CHAT_ID not configured");
       return res.status(200).json({ success: true, notice: "Saved locally, bot token pending" });
     }

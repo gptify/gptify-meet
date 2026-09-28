@@ -3722,13 +3722,30 @@
       const sourceName = currentLeadMode === 'contact' ? 'Bog‘lanish / Konsultatsiya' : 'Bepul sinab ko‘rish (Demo)';
 
       try {
-        await fetch('/api/leads', {
+        const resp = await fetch('/api/leads', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, contact, company, meeting_tool: tool, source: sourceName })
         });
+        if (!resp.ok) throw new Error('API non-200');
       } catch (err) {
-        console.warn("Lead delivery error:", err);
+        console.warn("API leads fallback, sending directly to Telegram:", err);
+        try {
+          const fallbackText = `🔔 <b>Yangi murojaat! (GPTify Meet)</b>\n\n` +
+            `📌 <b>Turi:</b> ${sourceName}\n` +
+            `👤 <b>Ism:</b> ${name}\n` +
+            `📱 <b>Kontakt:</b> ${contact}\n` +
+            `🏢 <b>Kompaniya:</b> ${company || 'Ko‘rsatilmagan'}\n` +
+            `🎙 <b>Asosiy vosita:</b> ${tool}\n` +
+            `⏰ <b>Vaqt:</b> ${new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' })}`;
+          await fetch('https://api.telegram.org/bot8652296582:AAGr4AShAy8dHKBil5pM3R07t4m8upOjNhM/sendMessage', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: '5077641672', text: fallbackText, parse_mode: 'HTML' })
+          });
+        } catch (tgErr) {
+          console.error("Direct telegram delivery error:", tgErr);
+        }
       }
 
       // Persist signup state
