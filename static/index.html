@@ -1,0 +1,4072 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPTify Meet — Uchrashuvingiz — o‘zingizda. Natijasi — jamoangizga.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    color-scheme: light dark;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: light-dark(#f4f4f7, #09090c);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  body {
+    box-sizing: border-box;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  @media (max-width: 700px) {
+    body { padding: 6px; }
+  }
+
+  /* Core Design Source Styles */
+  #gptify-v2 {
+    --g-bg: light-dark(#ffffff, #0d0d11);
+    --g-surface: light-dark(#f8f8fb, #15151c);
+    --g-ink: light-dark(#17171f, #f2f2f8);
+    --g-muted: light-dark(#6e6e80, #a4a4b6);
+    --g-line: light-dark(#e9e9f0, #292933);
+    --g-accent: #7051ef;
+    --g-tint: light-dark(#f1edff, #241e3e);
+    --g-violet: light-dark(#6845dc, #b6a2ff);
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--g-ink);
+    color-scheme: light dark;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #gptify-v2 * { box-sizing: border-box; }
+  #gptify-v2 [hidden] { display: none !important; }
+  #gptify-v2 button, #gptify-v2 input, #gptify-v2 select, #gptify-v2 textarea { font: inherit; }
+  #gptify-v2 button { cursor: pointer; background: none; border: 0; color: inherit; }
+  #gptify-v2 button:focus-visible { outline: 3px solid #b8a7ff; outline-offset: 3px; }
+  
+  #gptify-v2 .g-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  #gptify-v2 .g-viewtabs {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    background: var(--g-surface);
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    padding: 4px;
+  }
+  #gptify-v2 .g-viewtabs button {
+    padding: 7px 13px;
+    color: var(--g-muted);
+    border-radius: 6px;
+    font-size: 12px;
+    transition: all 0.15s ease;
+  }
+  #gptify-v2 .g-viewtabs button[aria-pressed=true] {
+    background: var(--g-bg);
+    color: var(--g-ink);
+    box-shadow: 0 1px 4px #00000012;
+    font-weight: 550;
+  }
+  #gptify-v2 .g-langtabs button {
+    padding: 5px 9px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  #gptify-v2 .g-caption {
+    font-size: 11px;
+    color: var(--g-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  #gptify-v2 .g-site {
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  #gptify-v2 .g-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 21px 34px;
+    border-bottom: 1px solid var(--g-line);
+  }
+  #gptify-v2 .g-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 20px;
+    font-weight: 750;
+    letter-spacing: -.8px;
+    white-space: nowrap;
+  }
+  #gptify-v2 .g-logo span:last-child {
+    font-weight: 450;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: var(--g-accent);
+    color: white;
+    transform: rotate(-7deg);
+    flex-shrink: 0;
+  }
+  #gptify-v2 .g-symbol b {
+    display: block;
+    width: 4px;
+    height: 12px;
+    border-radius: 3px;
+    background: currentColor;
+  }
+  #gptify-v2 .g-symbol b:nth-child(2) { height: 21px; }
+  #gptify-v2 .g-symbol b:nth-child(3) { height: 16px; }
+  #gptify-v2 .g-navlinks {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    color: var(--g-muted);
+    font-size: 12px;
+  }
+  #gptify-v2 .g-navlinks button:hover {
+    color: var(--g-ink);
+  }
+  #gptify-v2 .g-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--g-line);
+    border-radius: 8px;
+    padding: 11px 17px;
+    background: var(--g-bg);
+    font-size: 12px;
+    font-weight: 550;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+  #gptify-v2 .g-button:hover {
+    background: var(--g-surface);
+  }
+  #gptify-v2 .g-button.g-primary {
+    background: var(--g-accent);
+    color: #fff;
+    border-color: var(--g-accent);
+    box-shadow: 0 3px 8px #7051ef23, inset 0 1px 0 #ffffff22;
+  }
+  #gptify-v2 .g-button.g-primary:hover {
+    filter: brightness(1.06);
+  }
+  #gptify-v2 .g-button.g-dark {
+    background: var(--g-surface);
+    color: var(--g-ink);
+    border-color: var(--g-line);
+  }
+  #gptify-v2 .g-button.g-dark:hover {
+    background: var(--g-bg);
+    border-color: var(--g-muted);
+  }
+  /* Hero Split Layout (Light Background with Emerald Accent & Live Dark Mockup) */
+  #gptify-v2 .g-hero-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: 44px;
+    padding: 64px 38px 72px;
+    position: relative;
+    background: radial-gradient(circle at 85% 30%, rgba(0, 184, 116, 0.08), transparent 55%),
+                radial-gradient(circle at 10% 70%, rgba(112, 81, 239, 0.04), transparent 45%);
+  }
+  @media (max-width: 960px) {
+    #gptify-v2 .g-hero-split {
+      grid-template-columns: 1fr;
+      padding: 38px 20px 48px;
+      gap: 38px;
+    }
+  }
+  #gptify-v2 .g-hero-left {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #gptify-v2 .g-hero-left h1 {
+    font-family: inherit;
+    font-size: clamp(40px, 5.6vw, 68px);
+    font-weight: 850;
+    line-height: 1.04;
+    letter-spacing: -2.8px;
+    margin: 0 0 24px;
+    color: var(--g-ink);
+    text-align: left;
+  }
+  #gptify-v2 .g-hero-left h1 .g-green-highlight {
+    color: #00b874;
+    display: inline;
+  }
+  #gptify-v2 .g-hero-left .g-lede {
+    font-size: 15.5px;
+    line-height: 1.68;
+    color: var(--g-muted);
+    max-width: 490px;
+    margin: 0 0 28px;
+    text-align: left;
+  }
+  #gptify-v2 .g-hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  #gptify-v2 .g-btn-green,
+  #gptify-v2 .g-hero-cta .g-btn-green {
+    background: #00b874;
+    color: #052618;
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 13px 22px;
+    border-radius: 9px;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 184, 116, 0.32);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  }
+  #gptify-v2 .g-btn-green:hover,
+  #gptify-v2 .g-hero-cta .g-btn-green:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 184, 116, 0.42);
+  }
+  #gptify-v2 .g-hero-cta .g-btn-subtle {
+    background: #ffffff;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 13px 22px;
+    border-radius: 9px;
+    border: 1px solid #cbd5e1;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+  #gptify-v2 .g-hero-cta .g-btn-subtle:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    transform: translateY(-1px);
+  }
+  #gptify-v2 .g-micro {
+    font-size: 11px;
+    color: var(--g-muted);
+    margin-top: 6px;
+  }
+
+  /* Right column: Live Meeting Mockup Card (Light & Transparent - No Black) */
+  #gptify-v2 .g-hero-right {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+  #gptify-v2 .g-hero-right::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, rgba(0, 184, 116, 0.12), transparent 70%);
+    filter: blur(28px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  #gptify-v2 .g-live-mockup {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 530px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 20px 45px -10px rgba(0, 184, 116, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    color: #1e293b;
+  }
+  #gptify-v2 .g-live-topbar {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid #f1f5f9;
+    background: #f8fafc;
+    font-size: 11px;
+    color: #64748b;
+    user-select: none;
+  }
+  #gptify-v2 .g-live-dots {
+    display: flex;
+    gap: 6px;
+  }
+  #gptify-v2 .g-live-dots b {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  #gptify-v2 .g-live-dots b:nth-child(1) { background: #fda4af; }
+  #gptify-v2 .g-live-dots b:nth-child(2) { background: #fde047; }
+  #gptify-v2 .g-live-dots b:nth-child(3) { background: #86efac; }
+  #gptify-v2 .g-live-body {
+    padding: 24px 26px 26px;
+    background: #ffffff;
+  }
+  #gptify-v2 .g-live-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  #gptify-v2 .g-live-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.3px;
+  }
+  #gptify-v2 .g-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #047857;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    white-space: nowrap;
+  }
+  #gptify-v2 .g-live-badge .g-pulse-dot {
+    width: 6.5px;
+    height: 6.5px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 6px #10b981;
+    animation: g-live-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes g-live-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.8); }
+  }
+
+  /* Waveform audio bars */
+  #gptify-v2 .g-live-waveform {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 58px;
+    margin: 12px 0 20px;
+    padding: 0 4px;
+  }
+  #gptify-v2 .g-wave-bar {
+    width: 3.5px;
+    background: #00b874;
+    border-radius: 3px;
+    box-shadow: 0 0 4px rgba(0, 184, 116, 0.25);
+    animation: g-wave-anim 1.5s ease-in-out infinite;
+    animation-delay: calc(var(--d) * 0.045s);
+    transform-origin: center;
+  }
+  @keyframes g-wave-anim {
+    0%, 100% { transform: scaleY(0.5); opacity: 0.85; }
+    50% { transform: scaleY(1.05); opacity: 1; }
+  }
+
+  /* Live transcript dialogue */
+  #gptify-v2 .g-live-dialogue {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    text-align: left;
+  }
+  #gptify-v2 .g-live-line {
+    color: #475569;
+  }
+  #gptify-v2 .g-live-line strong {
+    color: #0f172a;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  /* Extraction 2x2 grid */
+  #gptify-v2 .g-live-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    text-align: left;
+  }
+  #gptify-v2 .g-live-tile {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+    padding: 12px 14px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  #gptify-v2 .g-live-tile:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+  }
+  #gptify-v2 .g-live-tile-label {
+    font-size: 9.5px;
+    font-weight: 800;
+    color: #047857;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  #gptify-v2 .g-live-tile-val {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.4;
+  }
+  #gptify-v2 .g-preview-wrap {
+    background: linear-gradient(180deg, var(--g-bg), var(--g-tint));
+    padding: 22px 36px 31px;
+  }
+  #gptify-v2 .g-window {
+    border: 1px solid var(--g-line);
+    background: var(--g-bg);
+    border-radius: 11px;
+    box-shadow: 0 22px 55px #29205217, 0 2px 8px #2920520c;
+    overflow: hidden;
+    text-align: left;
+  }
+  #gptify-v2 .g-titlebar {
+    height: 32px;
+    background: var(--g-surface);
+    border-bottom: 1px solid var(--g-line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 13px;
+    font-size: 10px;
+    color: var(--g-muted);
+    user-select: none;
+  }
+  #gptify-v2 .g-dots {
+    display: flex;
+    gap: 5px;
+  }
+  #gptify-v2 .g-dots b {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: light-dark(#d6d6e1, #454554);
+  }
+  #gptify-v2 .g-shell {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    min-height: 480px;
+  }
+  #gptify-v2 .g-side {
+    padding: 20px 12px;
+    background: var(--g-surface);
+    border-right: 1px solid var(--g-line);
+    display: flex;
+    flex-direction: column;
+  }
+  #gptify-v2 .g-side .g-logo {
+    font-size: 15px;
+    letter-spacing: -.5px;
+    margin: 0 6px 22px;
+  }
+  #gptify-v2 .g-side .g-symbol {
+    width: 23px;
+    height: 23px;
+    gap: 2px;
+    border-radius: 7px;
+  }
+  #gptify-v2 .g-side .g-symbol b {
+    width: 3px;
+    height: 9px;
+  }
+  #gptify-v2 .g-side .g-symbol b:nth-child(2) { height: 16px; }
+  #gptify-v2 .g-side .g-symbol b:nth-child(3) { height: 12px; }
+  #gptify-v2 .g-side button {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border-radius: 6px;
+    padding: 8px 9px;
+    width: 100%;
+    font-size: 11px;
+    text-align: left;
+    color: var(--g-muted);
+    transition: all 0.15s ease;
+  }
+  #gptify-v2 .g-side button:hover {
+    color: var(--g-ink);
+  }
+  #gptify-v2 .g-side svg {
+    height: 14px;
+    width: 14px;
+    flex-shrink: 0;
+  }
+  #gptify-v2 .g-side button.g-selected {
+    background: var(--g-tint);
+    color: var(--g-violet);
+    font-weight: 550;
+  }
+  #gptify-v2 .g-side .g-new {
+    justify-content: center;
+    color: var(--g-ink);
+    border: 1px solid var(--g-line);
+    background: var(--g-bg);
+    margin-bottom: 13px;
+    font-weight: 550;
+  }
+  #gptify-v2 .g-side .g-new:hover {
+    border-color: var(--g-accent);
+    color: var(--g-violet);
+  }
+  #gptify-v2 .g-sectionlabel {
+    font-size: 9px;
+    letter-spacing: 1.2px;
+    color: var(--g-muted);
+    margin: 21px 9px 9px;
+  }
+  #gptify-v2 .g-meetings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  #gptify-v2 .g-meetings-list button {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #gptify-v2 .g-side .g-bottom {
+    margin-top: auto;
+    padding: 22px 8px 0;
+    font-size: 10px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-local {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: light-dark(#268568, #6bd6ae);
+  }
+  #gptify-v2 .g-local:before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    border-radius: 50%;
+  }
+  #gptify-v2 .g-apphead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 21px;
+    border-bottom: 1px solid var(--g-line);
+    font-size: 10px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-apphead .g-button {
+    padding: 6px 9px;
+    font-size: 10px;
+  }
+  #gptify-v2 .g-workspace {
+    padding: 24px 25px 16px;
+  }
+  #gptify-v2 .g-workspace h2 {
+    font-size: 23px;
+    letter-spacing: -.8px;
+    line-height: 1.3;
+    margin: 8px 0 9px;
+    font-weight: 600;
+  }
+  #gptify-v2 .g-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 10px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-avs {
+    display: flex;
+    padding-left: 5px;
+  }
+  #gptify-v2 .g-av {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 23px;
+    height: 23px;
+    background: var(--g-tint);
+    color: var(--g-violet);
+    border-radius: 50%;
+    border: 2px solid var(--g-bg);
+    margin-left: -5px;
+    font-size: 8px;
+    font-weight: 600;
+  }
+  #gptify-v2 .g-av:nth-child(2) {
+    background: light-dark(#e6f2ee, #233831);
+    color: light-dark(#417460, #9dceb9);
+  }
+  #gptify-v2 .g-av:nth-child(3) {
+    background: light-dark(#faeddf, #3d3025);
+    color: light-dark(#956c3f, #daba94);
+  }
+  #gptify-v2 .g-av:nth-child(4) {
+    background: light-dark(#edf2fa, #252e3d);
+    color: light-dark(#3f6895, #94b2da);
+  }
+  #gptify-v2 .g-apptabs {
+    display: flex;
+    gap: 23px;
+    border-bottom: 1px solid var(--g-line);
+    margin: 21px 0 20px;
+  }
+  #gptify-v2 .g-apptabs button {
+    font-size: 11px;
+    padding: 0 0 11px;
+    color: var(--g-muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease;
+  }
+  #gptify-v2 .g-apptabs button[aria-pressed=true] {
+    color: var(--g-violet);
+    border-color: var(--g-accent);
+    font-weight: 550;
+  }
+  #gptify-v2 .g-docgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 23px;
+  }
+  #gptify-v2 .g-doc h3 {
+    font-size: 12px;
+    margin: 0 0 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  #gptify-v2 .g-doc p {
+    font-size: 11px;
+    line-height: 1.85;
+    color: var(--g-muted);
+    margin: 0 0 18px;
+  }
+  #gptify-v2 .g-decision {
+    background: var(--g-tint);
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  #gptify-v2 .g-source {
+    color: var(--g-violet);
+    font-size: 9px;
+    border-radius: 4px;
+    padding: 2px 5px !important;
+    background: var(--g-bg) !important;
+    margin-left: 5px;
+    border: 1px solid var(--g-line);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  #gptify-v2 .g-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--g-line);
+    font-size: 10px;
+  }
+  #gptify-v2 .g-task input {
+    accent-color: var(--g-accent);
+    margin: 3px 0 0;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+  }
+  #gptify-v2 .g-task .g-owner {
+    margin-left: auto;
+    white-space: nowrap;
+    color: var(--g-muted);
+    font-size: 9px;
+  }
+  #gptify-v2 .g-task input:checked + span {
+    text-decoration: line-through;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-context {
+    border-left: 1px solid var(--g-line);
+    padding-left: 17px;
+    font-size: 10px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-context h4 {
+    font-size: 10px;
+    font-weight: 550;
+    color: var(--g-ink);
+    margin: 0 0 10px;
+  }
+  #gptify-v2 .g-context p {
+    margin: 6px 0 19px;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  #gptify-v2 .g-chip {
+    display: inline-block;
+    border: 1px solid var(--g-line);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    margin: 0 3px 7px 0;
+    background: var(--g-surface);
+  }
+  #gptify-v2 .g-footerline {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 15px;
+    font-size: 9px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-flowbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--g-muted);
+    flex-wrap: wrap;
+  }
+  #gptify-v2 .g-flowbar strong {
+    color: var(--g-violet);
+    font-weight: 500;
+  }
+  #gptify-v2 .g-platforms {
+    text-align: center;
+    padding: 30px 20px 37px;
+    border-bottom: 1px solid var(--g-line);
+  }
+  #gptify-v2 .g-platforms > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    font-size: 17px;
+    letter-spacing: -.4px;
+    font-weight: 600;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-platforms > div span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #gptify-v2 .g-section {
+    padding: 54px 40px;
+  }
+  #gptify-v2 .g-eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: var(--g-violet);
+    text-transform: uppercase;
+  }
+  #gptify-v2 .g-section h2 {
+    font-size: 34px;
+    letter-spacing: -1.4px;
+    line-height: 1.2;
+    font-weight: 600;
+    margin: 12px 0 13px;
+  }
+  #gptify-v2 .g-section .g-sub {
+    font-size: 13px;
+    color: var(--g-muted);
+    margin: 0 0 29px;
+  }
+  #gptify-v2 .g-bento {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 15px;
+  }
+  #gptify-v2 .g-tile {
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+    padding: 24px;
+    background: var(--g-surface);
+    overflow: hidden;
+  }
+  #gptify-v2 .g-tile h3 {
+    font-size: 18px;
+    letter-spacing: -.5px;
+    margin: 15px 0 7px;
+    font-weight: 600;
+  }
+  #gptify-v2 .g-tile p {
+    color: var(--g-muted);
+    font-size: 12px;
+    margin: 0;
+    max-width: 340px;
+  }
+  #gptify-v2 .g-record {
+    border: 1px solid var(--g-line);
+    background: var(--g-bg);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0 3px;
+    box-shadow: 0 8px 16px #00000005;
+  }
+  #gptify-v2 .g-record .g-recicon {
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #fff0f0;
+    color: #db535b;
+  }
+  #gptify-v2 .g-wave {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    height: 26px;
+    flex: 1;
+    justify-content: center;
+    color: var(--g-violet);
+  }
+  #gptify-v2 .g-wave b {
+    width: 3px;
+    height: var(--h);
+    border-radius: 2px;
+    background: currentColor;
+    animation: wavePulse 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes wavePulse {
+    0% { height: 6px; }
+    100% { height: var(--h); }
+  }
+  #gptify-v2 .g-lockvisual {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 22px;
+    padding: 17px;
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-bg);
+  }
+  #gptify-v2 .g-lockvisual svg {
+    color: var(--g-violet);
+    width: 26px;
+    height: 26px;
+  }
+  #gptify-v2 .g-telegram {
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 16px;
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    font-size: 11px;
+  }
+  #gptify-v2 .g-telegram strong {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+    margin-bottom: 7px;
+    color: var(--g-violet);
+  }
+  #gptify-v2 .g-searchsample {
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-bg);
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-searchsample mark {
+    background: var(--g-tint);
+    color: var(--g-violet);
+  }
+  #gptify-v2 .g-pricing {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    background: var(--g-surface);
+    border-top: 1px solid var(--g-line);
+    align-items: center;
+  }
+  #gptify-v2 .g-pricebox {
+    padding: 25px;
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+  }
+  #gptify-v2 .g-price {
+    font-size: 38px;
+    letter-spacing: -1.8px;
+    font-weight: 600;
+    margin: 15px 0 0;
+  }
+  #gptify-v2 .g-price small {
+    font-size: 12px;
+    letter-spacing: 0;
+    color: var(--g-muted);
+    font-weight: 400;
+  }
+  #gptify-v2 .g-checklist {
+    font-size: 12px;
+    color: var(--g-muted);
+    display: grid;
+    gap: 8px;
+    margin: 20px 0;
+  }
+  #gptify-v2 .g-website-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 26px 35px;
+    border-top: 1px solid var(--g-line);
+  }
+  #gptify-v2 .g-website-footer .g-logo {
+    font-size: 16px;
+  }
+  #gptify-v2 .g-website-footer small {
+    font-size: 10px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-producthero {
+    text-align: left;
+    padding: 50px 40px 38px;
+  }
+  #gptify-v2 .g-producthero h1 {
+    margin: 18px 0;
+    max-width: 700px;
+    font-size: 49px;
+  }
+  #gptify-v2 .g-producthero .g-lede {
+    margin: 0;
+    max-width: 560px;
+  }
+  #gptify-v2 .g-stages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+  #gptify-v2 .g-stages button {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-bg);
+    font-size: 12px;
+    transition: all 0.15s ease;
+  }
+  #gptify-v2 .g-stages button[aria-pressed=true] {
+    background: var(--g-tint);
+    border-color: var(--g-violet);
+  }
+  #gptify-v2 .g-stages small {
+    display: block;
+    color: var(--g-muted);
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  #gptify-v2 .g-stage {
+    padding: 0 40px 40px;
+  }
+  #gptify-v2 .g-capture {
+    padding: 30px;
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+    background: var(--g-surface);
+    max-width: 600px;
+    margin: auto;
+  }
+  #gptify-v2 .g-capture h3 {
+    font-size: 20px;
+    margin: 0 0 10px;
+  }
+  #gptify-v2 .g-field {
+    display: block;
+    font-size: 11px;
+    color: var(--g-muted);
+    margin: 17px 0;
+  }
+  #gptify-v2 select, #gptify-v2 .g-field input, #gptify-v2 .g-field textarea {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--g-line);
+    background: var(--g-bg);
+    color: var(--g-ink);
+    border-radius: 7px;
+    padding: 10px;
+    margin-top: 7px;
+  }
+  #gptify-v2 .g-transcript p {
+    padding: 13px 0;
+    border-bottom: 1px solid var(--g-line);
+    font-size: 12px;
+    line-height: 1.9;
+  }
+  #gptify-v2 .g-transcript small {
+    display: block;
+    color: var(--g-violet);
+    font-size: 10px;
+  }
+  #gptify-v2 .g-share {
+    padding: 18px;
+    margin-top: 18px;
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    background: var(--g-surface);
+  }
+  #gptify-v2 .g-share h3 {
+    margin: 0;
+    font-size: 14px;
+  }
+  #gptify-v2 .g-toast {
+    font-size: 11px;
+    color: var(--g-violet);
+    margin-top: 12px;
+  }
+  #gptify-v2 .g-brandhero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--g-line);
+  }
+  #gptify-v2 .g-brandcell {
+    background: var(--g-surface);
+    padding: 65px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #gptify-v2 .g-brandcell .g-logo {
+    font-size: 31px;
+    letter-spacing: -1.3px;
+  }
+  #gptify-v2 .g-appicon {
+    width: 112px;
+    height: 112px;
+    border-radius: 28px;
+    background: var(--g-accent);
+    display: grid;
+    place-items: center;
+    box-shadow: inset 0 1px 1px #ffffff50, 0 18px 30px #7051ef25;
+  }
+  #gptify-v2 .g-appicon .g-symbol {
+    transform: scale(2.2) rotate(-7deg);
+  }
+  #gptify-v2 .g-brandgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+  #gptify-v2 .g-swatches {
+    display: flex;
+    gap: 9px;
+  }
+  #gptify-v2 .g-swatches span {
+    height: 65px;
+    flex: 1;
+    border-radius: 8px;
+    border: 1px solid var(--g-line);
+  }
+  #gptify-v2 .g-brandgrid h3 {
+    font-size: 14px;
+  }
+  #gptify-v2 .g-brandgrid p {
+    font-size: 12px;
+    color: var(--g-muted);
+  }
+
+  /* Boundary & Dataflow */
+  #gptify-v2 .g-boundary {
+    border: 1px solid var(--g-line);
+    border-radius: 14px;
+    background: var(--g-surface);
+    padding: 25px;
+    margin-top: 25px;
+  }
+  #gptify-v2 .g-boundaryhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+    font-size: 12px;
+    font-weight: 550;
+  }
+  #gptify-v2 .g-dataflow {
+    display: grid;
+    grid-template-columns: 1fr 25px 1fr 25px 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+  #gptify-v2 .g-datanode {
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    border-radius: 9px;
+    padding: 21px 15px;
+    text-align: center;
+  }
+  #gptify-v2 .g-datanode svg {
+    color: var(--g-violet);
+    margin-bottom: 10px;
+  }
+  #gptify-v2 .g-datanode strong {
+    display: block;
+    font-size: 13px;
+  }
+  #gptify-v2 .g-datanode small {
+    display: block;
+    font-size: 11px;
+    color: var(--g-muted);
+    margin-top: 4px;
+  }
+  #gptify-v2 .g-arrow {
+    text-align: center;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-sharebranch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 16px 0 25px;
+    font-size: 12px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-sharebranch strong {
+    color: var(--g-ink);
+  }
+  #gptify-v2 .g-privacyfaq {
+    border-top: 1px solid var(--g-line);
+    padding: 15px 0;
+    font-size: 12px;
+  }
+  #gptify-v2 .g-privacyfaq summary {
+    cursor: pointer;
+    font-weight: 550;
+  }
+  #gptify-v2 .g-privacyfaq p {
+    color: var(--g-muted);
+    max-width: 710px;
+    margin: 12px 0 0;
+  }
+  #gptify-v2 .g-example {
+    display: grid;
+    grid-template-columns: 1fr 35px 1fr;
+    gap: 14px;
+    align-items: center;
+    margin-top: 28px;
+  }
+  #gptify-v2 .g-spoken {
+    font-size: 18px;
+    line-height: 1.7;
+    letter-spacing: -.3px;
+    margin: 18px 0;
+    color: var(--g-ink);
+  }
+  #gptify-v2 .g-proofline {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 8px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--g-line);
+    font-size: 12px;
+  }
+  #gptify-v2 .g-proofline span:first-child {
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-mini-privacy {
+    margin-top: 15px;
+    border-top: 1px solid var(--g-line);
+    padding-top: 12px;
+    font-size: 11px;
+    color: var(--g-muted);
+  }
+  #gptify-v2 .g-mini-privacy summary {
+    color: var(--g-violet);
+    cursor: pointer;
+  }
+  #gptify-v2 .g-mini-privacy p {
+    font-size: 11px;
+    line-height: 1.7;
+  }
+  #gptify-v2 .g-exporttext {
+    padding: 12px;
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.8;
+    margin-top: 12px;
+  }
+
+  /* Modal System */
+  .g-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+    padding: 16px;
+  }
+  .g-modal-card {
+    background: var(--g-bg);
+    border: 1px solid var(--g-line);
+    border-radius: 12px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    max-width: 580px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .g-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--g-line);
+    background: var(--g-surface);
+  }
+  .g-modal-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .g-modal-body {
+    padding: 22px;
+    max-height: 75vh;
+    overflow-y: auto;
+  }
+  .g-tab-pills {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    background: var(--g-surface);
+    padding: 3px;
+    border-radius: 8px;
+  }
+  .g-tab-pills button {
+    flex: 1;
+    padding: 7px;
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--g-muted);
+  }
+  .g-tab-pills button[aria-pressed=true] {
+    background: var(--g-bg);
+    color: var(--g-ink);
+    font-weight: 550;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  /* Audio player inline */
+  .g-audio-player-wrap {
+    margin: 12px 0 16px;
+    padding: 10px 14px;
+    background: var(--g-surface);
+    border: 1px solid var(--g-line);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .g-audio-player-wrap audio {
+    flex: 1;
+    height: 32px;
+  }
+
+  /* Responsive Rules */
+  @media(min-width: 800px) {
+    #gptify-v2 [data-page=app] .g-shell { grid-template-columns: 190px 1fr; }
+    #gptify-v2 [data-page=app] .g-workspace { padding: 35px; }
+    #gptify-v2 [data-page=app] .g-doc p { font-size: 13px; }
+    #gptify-v2 [data-page=app] .g-task { font-size: 12px; }
+    #gptify-v2 [data-page=app] .g-docgrid { grid-template-columns: minmax(0, 1fr) 175px; gap: 30px; }
+    #gptify-v2 [data-page=app] .g-workspace h2 { font-size: 29px; }
+  }
+  @media(max-width: 700px) {
+    #gptify-v2 .g-nav { padding: 18px; }
+    #gptify-v2 .g-navlinks { display: none; }
+    #gptify-v2 .g-nav > .g-button { font-size: 11px; padding: 8px 10px; }
+    #gptify-v2 .g-logo { font-size: 17px; }
+    #gptify-v2 h1 { letter-spacing: -1.8px; }
+    #gptify-v2 .g-preview-wrap { padding: 15px 12px 23px; }
+    #gptify-v2 .g-shell { grid-template-columns: 1fr; }
+    #gptify-v2 .g-side { display: none; }
+    #gptify-v2 .g-docgrid { grid-template-columns: 1fr; }
+    #gptify-v2 .g-context { display: none; }
+    #gptify-v2 .g-workspace { padding: 20px; }
+    #gptify-v2 .g-section { padding: 35px 20px; }
+    #gptify-v2 .g-section h2 { font-size: 29px; }
+    #gptify-v2 .g-bento, #gptify-v2 .g-pricing, #gptify-v2 .g-brandgrid { grid-template-columns: 1fr; }
+    #gptify-v2 .g-platforms > div { font-size: 14px; gap: 18px; }
+    #gptify-v2 .g-producthero { padding: 35px 20px; }
+    #gptify-v2 .g-producthero h1 { font-size: 38px; }
+    #gptify-v2 .g-stage { padding: 0 15px 25px; }
+    #gptify-v2 .g-stages { gap: 6px; }
+    #gptify-v2 .g-stages button { padding: 10px; font-size: 11px; }
+    #gptify-v2 .g-stages small { display: none; }
+    #gptify-v2 .g-brandhero { grid-template-columns: 1fr; }
+    #gptify-v2 .g-brandcell { padding: 40px 20px; }
+    #gptify-v2 .g-hero { padding-top: 37px; }
+    #gptify-v2 .g-trust { gap: 12px; }
+    #gptify-v2 .g-task { flex-wrap: wrap; }
+    #gptify-v2 .g-apphead { padding: 12px; }
+    #gptify-v2 .g-apptabs { gap: 17px; }
+    #gptify-v2 .g-caption { display: none; }
+    #gptify-v2 .g-website-footer { padding: 20px; flex-wrap: wrap; }
+  }
+  @media(max-width: 600px) {
+    #gptify-v2 .g-dataflow, #gptify-v2 .g-example { grid-template-columns: 1fr; }
+    #gptify-v2 .g-arrow { transform: rotate(90deg); }
+    #gptify-v2 .g-boundary { padding: 17px; }
+    #gptify-v2 .g-sharebranch { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div id="gptify-v2" aria-label="GPTify Meet">
+
+  <!-- Top View Switcher & Language Controls -->
+  <div class="g-controls">
+    <div class="g-viewtabs" aria-label="Design views">
+      <button data-view="landing" aria-pressed="true" data-i18n="views.landing">Landing</button>
+      <button data-view="product" aria-pressed="false" data-i18n="views.product">Product</button>
+      <button data-view="app" aria-pressed="false" data-i18n="views.app">Desktop app</button>
+      <button data-view="brand" aria-pressed="false" data-i18n="views.brand">Identity</button>
+    </div>
+    
+    <div style="display:flex;align-items:center;gap:8px">
+      <!-- Language Switcher: UZ / EN / RU -->
+      <div class="g-viewtabs g-langtabs" aria-label="Language selector">
+        <button data-lang="uz" aria-pressed="true">UZ</button>
+        <button data-lang="en" aria-pressed="false">EN</button>
+        <button data-lang="ru" aria-pressed="false">RU</button>
+      </div>
+      <button id="g-theme-toggle" class="g-button" style="padding:5px 9px;font-size:11px" title="Mavzuni o‘zgartirish">🌓 Rejim</button>
+    </div>
+  </div>
+
+  <!-- 1. LANDING PAGE -->
+  <div class="g-site" data-page="landing">
+    <nav class="g-nav">
+      <div class="g-logo">
+        <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
+        gptify<span>meet</span>
+      </div>
+      <div class="g-navlinks">
+        <button data-nav="product" data-i18n="nav.features">Imkoniyatlar</button>
+        <button data-jump="dataflow" data-i18n="nav.privacy">Maxfiylik</button>
+        <button data-jump="pricing" data-i18n="nav.pricing">Narxlar</button>
+      </div>
+      <button class="g-button g-dark" data-open-app>
+        <span data-i18n="nav.app_btn">Desktop ilova</span> <i data-lucide="arrow-up-right" aria-hidden="true"></i>
+      </button>
+    </nav>
+
+    <header class="g-hero-split">
+      <div class="g-hero-left">
+        <h1>
+          <span data-i18n="hero.h1_line1">Uchrashuv<br>tugaydi.</span><br>
+          <span class="g-green-highlight" data-i18n="hero.h1_line2">Bayonnoma<br>tayyor.</span>
+        </h1>
+        <p class="g-lede" data-i18n="hero.lede">
+          Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. GPTify Meet o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.
+        </p>
+        <div class="g-hero-cta">
+          <button class="g-btn-green" data-open-app>
+            <span data-i18n="hero.cta_trial">Bepul sinab ko‘rish →</span>
+          </button>
+          <button class="g-btn-subtle" data-jump="dataflow">
+            <span data-i18n="hero.cta_privacy">Qanday ishlashini ko‘ring</span>
+          </button>
+        </div>
+        <div class="g-micro" data-i18n="hero.micro">Windows va macOS uchun · Karta talab qilinmaydi</div>
+      </div>
+
+      <div class="g-hero-right">
+        <div class="g-live-mockup" data-open-app style="cursor:pointer" title="Desktop ilovani ochish">
+          <div class="g-live-topbar">
+            <div class="g-live-dots"><b></b><b></b><b></b></div>
+            <span data-i18n="hero.preview_top">GPTify Meet · Jonli uchrashuv</span>
+            <span>12:48</span>
+          </div>
+          <div class="g-live-body">
+            <div class="g-live-head">
+              <div class="g-live-title" data-i18n="hero.preview_title">Haftalik savdo yig‘ilishi</div>
+              <div class="g-live-badge">
+                <span class="g-pulse-dot"></span>
+                <span data-i18n="hero.preview_recording">yozilmoqda</span>
+              </div>
+            </div>
+
+            <!-- Glowing animated waveform -->
+            <div class="g-live-waveform" aria-hidden="true">
+              <span class="g-wave-bar" style="height:10px;--d:1"></span>
+              <span class="g-wave-bar" style="height:14px;--d:2"></span>
+              <span class="g-wave-bar" style="height:20px;--d:3"></span>
+              <span class="g-wave-bar" style="height:16px;--d:4"></span>
+              <span class="g-wave-bar" style="height:26px;--d:5"></span>
+              <span class="g-wave-bar" style="height:32px;--d:6"></span>
+              <span class="g-wave-bar" style="height:22px;--d:7"></span>
+              <span class="g-wave-bar" style="height:40px;--d:8"></span>
+              <span class="g-wave-bar" style="height:50px;--d:9"></span>
+              <span class="g-wave-bar" style="height:42px;--d:10"></span>
+              <span class="g-wave-bar" style="height:58px;--d:11"></span>
+              <span class="g-wave-bar" style="height:48px;--d:12"></span>
+              <span class="g-wave-bar" style="height:32px;--d:13"></span>
+              <span class="g-wave-bar" style="height:54px;--d:14"></span>
+              <span class="g-wave-bar" style="height:60px;--d:15"></span>
+              <span class="g-wave-bar" style="height:44px;--d:16"></span>
+              <span class="g-wave-bar" style="height:56px;--d:17"></span>
+              <span class="g-wave-bar" style="height:46px;--d:18"></span>
+              <span class="g-wave-bar" style="height:38px;--d:19"></span>
+              <span class="g-wave-bar" style="height:52px;--d:20"></span>
+              <span class="g-wave-bar" style="height:58px;--d:21"></span>
+              <span class="g-wave-bar" style="height:40px;--d:22"></span>
+              <span class="g-wave-bar" style="height:30px;--d:23"></span>
+              <span class="g-wave-bar" style="height:44px;--d:24"></span>
+              <span class="g-wave-bar" style="height:48px;--d:25"></span>
+              <span class="g-wave-bar" style="height:32px;--d:26"></span>
+              <span class="g-wave-bar" style="height:24px;--d:27"></span>
+              <span class="g-wave-bar" style="height:18px;--d:28"></span>
+              <span class="g-wave-bar" style="height:22px;--d:29"></span>
+              <span class="g-wave-bar" style="height:16px;--d:30"></span>
+              <span class="g-wave-bar" style="height:12px;--d:31"></span>
+              <span class="g-wave-bar" style="height:8px;--d:32"></span>
+            </div>
+
+            <!-- Live transcript snippet -->
+            <div class="g-live-dialogue">
+              <div class="g-live-line">
+                <strong data-i18n="hero.preview_speaker1">Shukhrat:</strong> <span data-i18n="hero.preview_text1">Yangi taklifni dushanbagacha mijozga yuboramiz.</span>
+              </div>
+              <div class="g-live-line">
+                <strong data-i18n="hero.preview_speaker2">Aziza:</strong> <span data-i18n="hero.preview_text2">Narxlar jadvali va shartnoma loyihasini men tayyorlayman.</span>
+              </div>
+            </div>
+
+            <!-- 2x2 AI Extraction Grid -->
+            <div class="g-live-grid">
+              <div class="g-live-tile">
+                <div class="g-live-tile-label" data-i18n="hero.card1_lbl">QAROR</div>
+                <div class="g-live-tile-val" data-i18n="hero.card1_val">Taklif dushanba kuni yuboriladi</div>
+              </div>
+              <div class="g-live-tile">
+                <div class="g-live-tile-label" data-i18n="hero.card2_lbl">MAS’UL</div>
+                <div class="g-live-tile-val" data-i18n="hero.card2_val">Aziza · 28-sentabr</div>
+              </div>
+              <div class="g-live-tile">
+                <div class="g-live-tile-label" data-i18n="hero.card3_lbl">KEYINGI QADAM</div>
+                <div class="g-live-tile-val" data-i18n="hero.card3_val">Shartnoma loyihasini tekshirish</div>
+              </div>
+              <div class="g-live-tile">
+                <div class="g-live-tile-label" data-i18n="hero.card4_lbl">RISK</div>
+                <div class="g-live-tile-val" data-i18n="hero.card4_val">Narx tasdig‘i kutilmoqda</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Supported Platforms Grid -->
+    <div class="g-platforms">
+      <span class="g-micro" data-i18n="platforms.label">SIZ ISHLATADIGAN UCHRASHUV VOSITALARI BILAN</span>
+      <div>
+        <span><i data-lucide="video" aria-hidden="true"></i> Zoom</span>
+        <span><i data-lucide="video" aria-hidden="true"></i> Google Meet</span>
+        <span><i data-lucide="users" aria-hidden="true"></i> Teams</span>
+        <span><i data-lucide="send" aria-hidden="true"></i> Telegram</span>
+      </div>
+    </div>
+
+    <!-- Privacy Boundary & Dataflow Section -->
+    <section class="g-section" data-section="dataflow">
+      <div class="g-eyebrow" data-i18n="privacy.eyebrow">Maxfiylik — ishlash tamoyili</div>
+      <h2 data-i18n="privacy.h2">Suhbat bulutga emas,<br>aniq natijaga aylanadi.</h2>
+      <p class="g-sub" data-i18n="privacy.sub">Lokal rejimda audio, transkripsiya va bayonnoma qurilmangizda qayta ishlanadi va saqlanadi.</p>
+      
+      <div class="g-boundary">
+        <div class="g-boundaryhead">
+          <span><i data-lucide="laptop" aria-hidden="true"></i> &nbsp; <span data-i18n="privacy.box_title">Sizning kompyuteringiz</span></span>
+          <span class="g-local" data-i18n="privacy.mode_badge">Lokal rejim</span>
+        </div>
+        <div class="g-dataflow">
+          <div class="g-datanode">
+            <i data-lucide="mic" aria-hidden="true"></i>
+            <strong data-i18n="privacy.node_convo">Suhbat</strong>
+            <small data-i18n="privacy.node_convo_sub">Mikrofon + tizim ovozi</small>
+          </div>
+          <span class="g-arrow">→</span>
+          <div class="g-datanode">
+            <i data-lucide="cpu" aria-hidden="true"></i>
+            <strong data-i18n="privacy.node_ai">Lokal AI</strong>
+            <small data-i18n="privacy.node_ai_sub">Transkripsiya + bayonnoma</small>
+          </div>
+          <span class="g-arrow">→</span>
+          <div class="g-datanode">
+            <i data-lucide="folder-lock" aria-hidden="true"></i>
+            <strong data-i18n="privacy.node_archive">Shaxsiy arxiv</strong>
+            <small data-i18n="privacy.node_archive_sub">Audio, matn va qarorlar</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-sharebranch">
+        <span data-i18n="privacy.share_branch_text">Faqat siz tanlaganingizda</span>
+        <span>→</span>
+        <button class="g-button" data-privacy-share>
+          <i data-lucide="send" aria-hidden="true"></i> <span data-i18n="privacy.share_btn">Telegram eksportini ko‘rish</span>
+        </button>
+      </div>
+
+      <details class="g-privacyfaq">
+        <summary data-i18n="privacy.faq1_q">Qaysi ma’lumotlar kompyuterdan chiqadi?</summary>
+        <p data-i18n="privacy.faq1_a">Lokal qayta ishlashda uchrashuv audiosi va matni tashqi AI xizmatiga yuborilmaydi. Telegram eksportini tanlasangiz, faqat siz ko‘rib chiqqan bayonnomangiz tanlangan qabul qiluvchiga yuboriladi.</p>
+      </details>
+      <details class="g-privacyfaq">
+        <summary data-i18n="privacy.faq2_q">Bulutli AI ishlatsam nima o‘zgaradi?</summary>
+        <p data-i18n="privacy.faq2_a">Bulutli rejim alohida tanlanadi. Yoqishdan oldin xizmat nomi va unga yuboriladigan ma’lumot ko‘rsatiladi. Lokal maxfiylik va’dasi bulutli qayta ishlashga tatbiq etilmaydi.</p>
+      </details>
+      <details class="g-privacyfaq">
+        <summary data-i18n="privacy.faq3_q">Ilova butunlay internetsiz ishlaydimi?</summary>
+        <p data-i18n="privacy.faq3_a">Lokal modellar qurilmaga yuklangach, uchrashuvni qayta ishlash internetga bog‘liq bo‘lmaydi. Faqat yangilanishlar va Telegram eksporti uchun internet kerak bo‘ladi.</p>
+      </details>
+    </section>
+
+    <!-- Example Comparison Section -->
+    <section class="g-section" style="background:var(--g-surface);border-block:1px solid var(--g-line)">
+      <div class="g-eyebrow" data-i18n="example.eyebrow">O‘zbekcha suhbat → jamoa uchun aniq reja</div>
+      <h2 data-i18n="example.h2">So‘zma-so‘z matndan<br>foydaliroq natija.</h2>
+      <p class="g-sub" data-i18n="example.sub">Kim, nima va qachon? Muhim kelishuvlar alohida ajratiladi.</p>
+      <div class="g-example">
+        <div class="g-tile" style="background:var(--g-bg)">
+          <span class="g-pill" data-i18n="example.pill">Suhbatdan parcha · namuna</span>
+          <p class="g-spoken" data-i18n="example.quote">“Birinchi oktabrdan boshlaymiz. Taklifni men yigirma sakkizinchigacha yuboraman. Budjetni keyin yana kelishamiz.”</p>
+          <span class="g-micro" data-i18n="example.speaker">Aziza Karimova · 12:48</span>
+        </div>
+        <span class="g-arrow">→</span>
+        <div class="g-tile" style="background:var(--g-bg)">
+          <span class="g-eyebrow" data-i18n="example.col2_eyebrow">AI bayonnoma</span>
+          <div class="g-proofline"><span data-i18n="example.p1_label">Qaror</span><strong data-i18n="example.p1_val">Sinov loyihasi 1-oktabrda boshlanadi</strong></div>
+          <div class="g-proofline"><span data-i18n="example.p2_label">Vazifa</span><span data-i18n="example.p2_val">Tijorat taklifini yuborish</span></div>
+          <div class="g-proofline"><span data-i18n="example.p3_label">Mas’ul</span><span data-i18n="example.p3_val">Aziza Karimova</span></div>
+          <div class="g-proofline"><span data-i18n="example.p4_label">Muddat</span><span data-i18n="example.p4_val">28-sentabr</span></div>
+          <div class="g-proofline"><span data-i18n="example.p5_label">Ochiq savol</span><span data-i18n="example.p5_val">Budjet tasdiqlanmagan</span></div>
+          <button class="g-button g-primary" data-privacy-share style="margin-top:17px">
+            <i data-lucide="send" aria-hidden="true"></i> <span data-i18n="example.tg_btn">Telegram xabarini ko‘rish</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Features Grid Section -->
+    <section class="g-section">
+      <div class="g-eyebrow" data-i18n="bento.eyebrow">Uchrashuvdan keyingi ishlar — tayyor</div>
+      <h2 data-i18n="bento.h2">Yaxshi suhbat.<br>Undan ham yaxshi natija.</h2>
+      <p class="g-sub" data-i18n="bento.sub">Yozuvdan jamoaviy harakatgacha — bitta ilovada.</p>
+      <div class="g-bento">
+        <article class="g-tile">
+          <i data-lucide="audio-lines" aria-hidden="true"></i>
+          <h3 data-i18n="bento.card1_title">Uchrashuvga yana bir bot kerak emas.</h3>
+          <p data-i18n="bento.card1_p">Mikrofon va kompyuter ovozini yozib oling. Onlayn yoki bir xonada — suhbatga e’tibor bering.</p>
+          <div class="g-record">
+            <span class="g-recicon"><i data-lucide="mic" aria-hidden="true"></i></span>
+            <div>
+              <strong style="font-size:11px" data-i18n="bento.card1_status">Yozib olinmoqda</strong>
+              <div class="g-micro" style="margin:0" data-i18n="bento.card1_sub">24:08 · Mikrofon + tizim</div>
+            </div>
+            <div class="g-wave" aria-label="Audio signal illustration">
+              <b style="--h:9px"></b><b style="--h:18px"></b><b style="--h:12px"></b><b style="--h:26px"></b>
+              <b style="--h:19px"></b><b style="--h:11px"></b><b style="--h:22px"></b><b style="--h:15px"></b>
+            </div>
+          </div>
+        </article>
+
+        <article class="g-tile" data-section="privacy">
+          <i data-lucide="shield-check" aria-hidden="true"></i>
+          <h3 data-i18n="bento.card2_title">Maxfiy suhbat. Lokal AI.</h3>
+          <p data-i18n="bento.card2_p">Lokal rejimda audio va matn kompyuteringizda qayta ishlanadi. Ulashishni o‘zingiz boshqarasiz.</p>
+          <div class="g-lockvisual">
+            <i data-lucide="laptop" aria-hidden="true"></i>
+            <div>
+              <strong style="font-size:11px" data-i18n="bento.card2_device">Sizning kompyuteringiz</strong><br>
+              <span class="g-local" data-i18n="bento.card2_active">Lokal qayta ishlash faol</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="g-tile">
+          <i data-lucide="send" aria-hidden="true"></i>
+          <h3 data-i18n="bento.card3_title">Jamoangiz Telegramdami?</h3>
+          <p data-i18n="bento.card3_p">Bayonnomani tekshiring. Guruhni tanlang. Tayyor hisobotni bir tugma bilan ulashing.</p>
+          <div class="g-telegram">
+            <strong><i data-lucide="send" aria-hidden="true"></i> <span data-i18n="bento.card3_chat">Loyiha jamoasi</span></strong>
+            <span data-i18n="bento.card3_head">Haftalik reja · 26-sentabr</span><br>
+            <span style="color:var(--g-muted)">✓ Sinov loyihasi 1-oktabrda boshlanadi.<br>□ Aziza — tijorat taklifi, 28-sentabr.</span>
+          </div>
+        </article>
+
+        <article class="g-tile">
+          <i data-lucide="search" aria-hidden="true"></i>
+          <h3 data-i18n="bento.card4_title">“Nimaga kelishgandik?”</h3>
+          <p data-i18n="bento.card4_p">O‘tgan uchrashuvlardan kerakli qaror, ism yoki raqamni toping. Hammasi bir joyda.</p>
+          <div class="g-searchsample">
+            <span data-i18n="bento.card4_search">⌕ &nbsp; sinov loyihasi</span>
+            <hr style="border:0;border-top:1px solid var(--g-line);margin:12px 0">
+            <strong style="color:var(--g-ink)">Hamkorlik uchrashuvi</strong><br>
+            <mark data-i18n="bento.card4_res">Sinov loyihasi 1-oktabrda boshlanadi.</mark>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="g-section g-pricing" data-section="pricing">
+      <div>
+        <div class="g-eyebrow" data-i18n="pricing.eyebrow">Oddiy va tushunarli narx</div>
+        <h2 data-i18n="pricing.h2">Kamroq konspekt.<br>Ko‘proq natija.</h2>
+        <p class="g-sub" data-i18n="pricing.sub">14 kun barcha asosiy imkoniyatlarni sinab ko‘ring.</p>
+        <div class="g-viewtabs" style="width:fit-content">
+          <button data-bill="month" aria-pressed="true" data-i18n="pricing.month">Oylik</button>
+          <button data-bill="year" aria-pressed="false" data-i18n="pricing.year">Yillik · 19% tejam</button>
+        </div>
+      </div>
+      <div class="g-pricebox">
+        <div style="display:flex;justify-content:space-between">
+          <strong>GPTify Pro</strong>
+          <span class="g-pill" data-i18n="pricing.badge">Shaxsiy foydalanish</span>
+        </div>
+        <div class="g-price" data-price>195 000 <small data-i18n="pricing.per_month">so‘m / oy</small></div>
+        <div class="g-micro" data-billing-note data-i18n="pricing.note_month">Oylik to‘lov</div>
+        <div class="g-checklist">
+          <span>✓ &nbsp; <span data-i18n="pricing.feat1">Botlarsiz yozuv va lokal transkripsiya</span></span>
+          <span>✓ &nbsp; <span data-i18n="pricing.feat2">Aniq bayonnoma va vazifalar</span></span>
+          <span>✓ &nbsp; <span data-i18n="pricing.feat3">Audio import va Telegram eksport</span></span>
+        </div>
+        <button class="g-button g-primary" data-open-app style="width:100%">
+          <span data-i18n="pricing.cta">Bepul sinovni boshlash →</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="g-website-footer">
+      <div class="g-logo">gptify<span>meet</span></div>
+      <small>Windows · macOS</small>
+      <small>GPTify.co · B2B AI yechimlari</small>
+    </footer>
+  </div>
+
+  <!-- 2. PRODUCT STAGES WALKTHROUGH -->
+  <div class="g-site" data-page="product" hidden>
+    <nav class="g-nav">
+      <div class="g-logo">
+        <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
+        gptify<span>meet</span>
+      </div>
+      <button class="g-button g-dark" data-nav="app">
+        <span data-i18n="nav.app_btn">Ilovani ko‘rish ↗</span>
+      </button>
+    </nav>
+
+    <header class="g-producthero">
+      <div class="g-eyebrow" data-i18n="product.eyebrow">Uchrashuvning har bir bosqichi uchun</div>
+      <h1>
+        <span data-i18n="product.h1_1">Suhbatni yozib oling.</span><br>
+        <span class="g-accent-text" data-i18n="product.h1_2">Keyingi qadamni aniqlang.</span>
+      </h1>
+      <p class="g-lede" data-i18n="product.lede">Uchta oddiy bosqich. Uchrashuv tugagach, jamoangiz nima qilishini biladi.</p>
+      <div class="g-stages">
+        <button data-stage="capture" aria-pressed="false">
+          <span data-i18n="product.s1">01 &nbsp; Yozib olish</span>
+          <small data-i18n="product.s1_sub">Mikrofon + audio yuklash</small>
+        </button>
+        <button data-stage="review" aria-pressed="true">
+          <span data-i18n="product.s2">02 &nbsp; AI bayonnoma</span>
+          <small data-i18n="product.s2_sub">Qarorlar, mas’ullar, muddatlar</small>
+        </button>
+        <button data-stage="share" aria-pressed="false">
+          <span data-i18n="product.s3">03 &nbsp; Ulashish</span>
+          <small data-i18n="product.s3_sub">Telegram uchun tayyor hisobot</small>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stage 02: Review -->
+    <div class="g-stage" data-stage-panel="review">
+      <div data-app-mount="product"></div>
+    </div>
+
+    <!-- Stage 01: Capture & Record (Fully Live Wired) -->
+    <div class="g-stage" data-stage-panel="capture" hidden>
+      <div class="g-capture">
+        <span class="g-local" data-i18n="app.status_local">Lokal AI tayyor</span>
+        <h3 style="margin-top:12px" data-i18n="app.new_meeting">Yangi uchrashuv</h3>
+        
+        <div class="g-tab-pills" style="margin-top:14px">
+          <button type="button" data-capture-mode="mic" aria-pressed="true" data-i18n="modal.tab_mic">🎙️ Ovoz yozish</button>
+          <button type="button" data-capture-mode="file" aria-pressed="false" data-i18n="modal.tab_file">📁 Audio fayl</button>
+          <button type="button" data-capture-mode="text" aria-pressed="false" data-i18n="modal.tab_text">📝 Matn kiritish</button>
+        </div>
+
+        <label class="g-field">
+          <span data-i18n="modal.f_title">Uchrashuv nomi</span>
+          <input id="prod-meeting-title" value="Hamkorlik uchrashuvi">
+        </label>
+
+        <!-- Mode A: Microphone Recording -->
+        <div id="prod-mic-box">
+          <div style="border:1px solid var(--g-line);padding:18px;border-radius:9px;background:var(--g-bg);text-align:center;margin:16px 0">
+            <div id="prod-rec-time" style="font-size:24px;font-weight:650;letter-spacing:-0.5px;color:var(--g-ink);margin-bottom:8px">00:00</div>
+            <div id="prod-rec-status-text" class="g-micro" style="margin:0 0 14px" data-i18n="modal.rec_ready">Mikrofon yozuvi to‘xtatilgan</div>
+            <div class="g-cta" style="margin:0">
+              <button id="prod-start-rec" class="g-button g-primary" style="padding:10px 20px">
+                <i data-lucide="mic" aria-hidden="true"></i> <span data-i18n="modal.btn_start">Yozuvni boshlash</span>
+              </button>
+              <button id="prod-stop-rec" class="g-button" style="padding:10px 20px" hidden>
+                <span data-i18n="modal.btn_stop">⏹ To‘xtatish va tahlil qilish</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode B: File Upload -->
+        <div id="prod-file-box" hidden>
+          <div style="border:2px dashed var(--g-line);padding:24px;border-radius:9px;background:var(--g-bg);text-align:center;margin:16px 0">
+            <input type="file" id="prod-file-input" accept="audio/*,.mp3,.wav,.m4a,.webm" style="display:none">
+            <i data-lucide="upload-cloud" style="width:32px;height:32px;color:var(--g-violet);margin-bottom:8px"></i>
+            <div style="font-weight:600;font-size:12px" data-i18n="modal.file_head">Audio faylni tanlang</div>
+            <div class="g-micro" style="margin:4px 0 14px" data-i18n="modal.file_sub">MP3, WAV, M4A yoki WebM (50 MB gacha)</div>
+            <button type="button" class="g-button" onclick="document.getElementById('prod-file-input').click()" data-i18n="modal.btn_browse">Faylni ko‘rsatish</button>
+            <div id="prod-file-name" class="g-micro" style="color:var(--g-violet);font-weight:550;margin-top:8px"></div>
+          </div>
+          <button id="prod-upload-btn" class="g-button g-primary" style="width:100%" disabled data-i18n="modal.btn_analyze_file">AI bilan tahlil qilish</button>
+        </div>
+
+        <!-- Mode C: Text Paste -->
+        <div id="prod-text-box" hidden>
+          <label class="g-field">
+            <span data-i18n="modal.f_text_label">Transkripsiya yoki suhbat matni</span>
+            <textarea id="prod-text-input" rows="5" placeholder="Suhbat matnini bu yerga joylashtiring..."></textarea>
+          </label>
+          <button id="prod-text-btn" class="g-button g-primary" style="width:100%" data-i18n="modal.btn_analyze_text">AI bayonnoma tuzish</button>
+        </div>
+
+        <div id="prod-process-overlay" class="g-toast" style="margin-top:14px;padding:10px;background:var(--g-tint);border-radius:6px" hidden>
+          <strong style="color:var(--g-violet)">⏳ AI:</strong>
+          <span id="prod-process-step" data-i18n="modal.proc_step1">Audio yuklanmoqda...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 03: Share -->
+    <div class="g-stage" data-stage-panel="share" hidden>
+      <div class="g-capture">
+        <div class="g-eyebrow">Telegram eksport</div>
+        <h3 style="margin-top:12px" data-i18n="product.share_ready">Jamoaga yuborishga tayyor.</h3>
+        <label class="g-field">
+          <span data-i18n="product.recipient">Qabul qiluvchi</span>
+          <select id="prod-share-channel">
+            <option>Loyiha jamoasi (Guruh)</option>
+            <option>Saqlangan xabarlar</option>
+            <option>Mijoz bilan chat</option>
+          </select>
+        </label>
+        <div class="g-telegram" id="prod-share-preview">
+          <strong id="prod-share-preview-title">Hamkorlik uchrashuvi</strong>
+          <div id="prod-share-preview-body">
+            Qaror: sinov loyihasi 1-oktabrda boshlanadi.<br>
+            Aziza: tijorat taklifini 28-sentabrgacha yuborish.<br>
+            Sardor: texnik talablarni 30-sentabrgacha tasdiqlash.
+          </div>
+        </div>
+        <p class="g-micro" data-i18n="product.share_disclaimer">Faqat tekshirilgan bayonnoma yuboriladi. Audio va to‘liq transkripsiya ulashilmaydi.</p>
+        <div style="display:flex;gap:8px;margin-top:16px">
+          <button class="g-button g-primary" id="prod-share-tg-btn">
+            <i data-lucide="send" aria-hidden="true"></i> <span data-i18n="app.open_tg">Telegramda ochish</span>
+          </button>
+          <button class="g-button" id="prod-share-copy-btn" data-i18n="app.btn_copy">
+            Nusxa olish
+          </button>
+        </div>
+        <div class="g-toast" id="prod-share-status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. FULL DESKTOP APP VIEW -->
+  <div class="g-site" data-page="app" hidden>
+    <div data-app-mount="full"></div>
+  </div>
+
+  <!-- 4. BRAND IDENTITY VIEW -->
+  <div class="g-site" data-page="brand" hidden>
+    <div class="g-brandhero">
+      <div class="g-brandcell">
+        <div class="g-logo">
+          <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
+          gptify<span>meet</span>
+        </div>
+      </div>
+      <div class="g-brandcell">
+        <div class="g-appicon">
+          <span class="g-symbol" aria-label="Three-bar voice mark"><b></b><b></b><b></b></span>
+        </div>
+      </div>
+    </div>
+    <div class="g-section">
+      <div class="g-eyebrow">Identity system</div>
+      <h2>Clear. Focused. Intelligent.</h2>
+      <div class="g-brandgrid">
+        <div>
+          <h3>A voice-first symbol</h3>
+          <p>Three rounded audio bars, tilted slightly forward. A compact signature that works in the menu bar, app icon, and recording control.</p>
+          <h3>Inter / 450 · 550 · 650</h3>
+          <p>Confident headlines, readable notes, and compact controls. Consistent 8 px spacing and restrained corner radii.</p>
+        </div>
+        <div>
+          <h3>Violet, ink, and white</h3>
+          <div class="g-swatches">
+            <span style="background:#7051ef"></span>
+            <span style="background:#17171f"></span>
+            <span style="background:#f8f8fb"></span>
+            <span style="background:#f1edff"></span>
+          </div>
+          <p>#7051EF · #17171F · #F8F8FB · #F1EDFF</p>
+          <h3>GPTify Meet</h3>
+          <p>Pragmatic B2B AI workflow systems by GPTify.co.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESKTOP APP MASTER TEMPLATE -->
+  <template id="gptify-app-template">
+    <div class="g-window">
+      <!-- Titlebar -->
+      <div class="g-titlebar">
+        <span class="g-dots"><b></b><b></b><b></b></span>
+        <span data-i18n="app.app_title">GPTify Meet — Ish stoli ilovasi</span>
+        <span class="g-app-status-badge" data-i18n="app.status_local">Lokal AI faol</span>
+      </div>
+
+      <!-- App Shell -->
+      <div class="g-shell">
+        <!-- Sidebar -->
+        <aside class="g-side">
+          <div class="g-logo">
+            <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
+            gptify<span>meet</span>
+          </div>
+          
+          <button class="g-new" data-app-action="new-meeting">
+            <i data-lucide="plus" aria-hidden="true"></i> <span data-i18n="app.new_meeting">Yangi uchrashuv</span>
+          </button>
+          
+          <button class="g-selected" data-app-tab="summary">
+            <i data-lucide="files" aria-hidden="true"></i> <span data-i18n="app.tab_meetings">Uchrashuvlar</span>
+          </button>
+          
+          <button data-app-tab="tasks">
+            <i data-lucide="square-check" aria-hidden="true"></i> <span data-i18n="app.tab_tasks">Vazifalar</span>
+          </button>
+          
+          <button data-app-tab="search">
+            <i data-lucide="search" aria-hidden="true"></i> <span data-i18n="app.tab_search">Qidiruv</span>
+          </button>
+
+          <div class="g-sectionlabel" data-i18n="app.sec_today">BUGUN</div>
+          <div class="g-meetings-list" data-meetings-today>
+            <!-- Dynamic meeting items rendered here -->
+          </div>
+
+          <div class="g-sectionlabel" data-i18n="app.sec_earlier">OLDINGI UCHRASHUVLAR</div>
+          <div class="g-meetings-list" data-meetings-earlier>
+            <!-- Earlier meetings rendered here -->
+          </div>
+
+          <div class="g-sectionlabel" data-i18n="app.sec_workspace">ISH MAYDONI</div>
+          <span style="padding:0 9px;font-size:11px;color:var(--g-muted)" data-i18n="app.ws_name">Shaxsiy uchrashuvlar</span>
+
+          <div class="g-bottom">
+            <span class="g-local" data-i18n="app.status_bottom_1">Lokal AI faol</span><br>
+            <span data-i18n="app.status_bottom_2">Ma’lumotlar qurilmangizda</span>
+          </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <div>
+          <!-- Breadcrumb & Header Action -->
+          <div class="g-apphead">
+            <span data-app-breadcrumb>Uchrashuvlar &nbsp; / &nbsp; Hamkorlik uchrashuvi</span>
+            <div style="display:flex;gap:6px">
+              <button class="g-button" data-app-action="share">
+                <i data-lucide="send" aria-hidden="true"></i> <span data-i18n="app.btn_share">Ulashish</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="g-workspace">
+            <span class="g-eyebrow" style="font-size:9px" data-i18n="app.badge_ready">BAYONNOMA TAYYOR</span>
+            <h2 data-meeting-title>Hamkorlik uchrashuvi</h2>
+            
+            <div class="g-meta">
+              <span data-meeting-date>26-sentabr, 2026</span>
+              <span data-meeting-duration>32 daqiqa</span>
+              <span class="g-avs" data-meeting-avatars>
+                <span class="g-av">AK</span>
+                <span class="g-av">SA</span>
+                <span class="g-av">DR</span>
+              </span>
+              <span data-meeting-count>3 ishtirokchi</span>
+            </div>
+
+            <!-- Optional Audio Player Row -->
+            <div class="g-audio-player-wrap" data-audio-player-wrap hidden>
+              <i data-lucide="volume-2" style="color:var(--g-violet);width:16px;height:16px"></i>
+              <audio controls data-audio-element style="flex:1;height:28px"></audio>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="g-apptabs">
+              <button data-subtab="summary" aria-pressed="true" data-i18n="app.subtab_summary">AI bayonnoma</button>
+              <button data-subtab="transcript" aria-pressed="false" data-i18n="app.subtab_transcript">Transkripsiya</button>
+              <button data-subtab="tasks" aria-pressed="false"><span data-i18n="app.subtab_tasks">Vazifalar</span> <span data-tasks-badge style="color:var(--g-muted)">3</span></button>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="g-docgrid">
+              <div class="g-doc">
+                
+                <!-- Panel 1: AI Summary & Action Items -->
+                <div data-doc-panel="summary">
+                  <h3><i data-lucide="sparkles" aria-hidden="true"></i> <span data-i18n="app.h_summary">Qisqacha xulosa</span></h3>
+                  <p data-summary-text>
+                    Jamoa yangi hamkor bilan sinov loyihasi doirasini kelishib oldi. Tijorat taklifi va texnik talablar ish boshlanishidan oldin tasdiqlanadi.
+                  </p>
+
+                  <h3 data-i18n="app.h_decision">Asosiy qaror</h3>
+                  <div data-decisions-container>
+                    <div class="g-decision">
+                      <span>Sinov loyihasi 1-oktabrda boshlanadi.</span>
+                      <button class="g-source" data-jump-to-time="12:48">12:48 ↗</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Items / Tasks Block -->
+                <div data-tasks-panel>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin:0 0 8px">
+                    <h3 style="margin:0" data-i18n="app.h_tasks">Keyingi qadamlar</h3>
+                    <span class="g-micro" style="margin:0" data-tasks-stats>3 ta vazifa</span>
+                  </div>
+                  
+                  <div data-tasks-list>
+                    <!-- Tasks rendered here -->
+                  </div>
+
+                  <!-- Quick Add Task Form -->
+                  <form data-quick-add-task style="display:flex;gap:6px;margin-top:14px">
+                    <input type="text" placeholder="+ Yangi vazifa matni..." data-i18n-placeholder="app.add_task_ph" style="flex:1;border:1px solid var(--g-line);padding:6px 9px;border-radius:6px;font-size:11px;background:var(--g-bg);color:var(--g-ink)">
+                    <button type="submit" class="g-button" style="padding:6px 10px;font-size:10px" data-i18n="app.btn_add">Qo‘shish</button>
+                  </form>
+                </div>
+
+                <!-- Panel 2: Transcript -->
+                <div class="g-transcript" data-doc-panel="transcript" hidden>
+                  <div data-transcript-container>
+                    <!-- Segments rendered here -->
+                  </div>
+                </div>
+
+                <!-- Panel 3: Search Panel -->
+                <div data-doc-panel="search" hidden>
+                  <label class="g-field">
+                    <span data-i18n="app.tab_search">Uchrashuv matnidan qidirish</span>
+                    <input data-search-input placeholder="Qaror, ism yoki muddat...">
+                  </label>
+                  <div data-search-results style="font-size:11px;color:var(--g-muted);margin-top:12px;line-height:1.7">
+                    Masalan: sinov, Aziza yoki budjet.
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right Context Column -->
+              <aside class="g-context">
+                <h4 data-i18n="app.h_about">Uchrashuv haqida</h4>
+                <div data-chips-container>
+                  <span class="g-chip">Hamkorlik</span>
+                  <span class="g-chip">Sinov loyihasi</span>
+                </div>
+
+                <h4 style="margin-top:17px" data-i18n="app.h_attendees">Ishtirokchilar</h4>
+                <p data-attendees-list>
+                  Aziza Karimova<br>
+                  Sardor Aliyev<br>
+                  Dilshod Rahimov
+                </p>
+
+                <h4 data-i18n="app.h_open_q">Ochiq savol</h4>
+                <p data-open-questions>
+                  Yakuniy budjet hali tasdiqlanmagan.
+                </p>
+
+                <span class="g-local" data-i18n="app.chip_private">Faqat sizga ko‘rinadi</span>
+                
+                <div data-privacy-accordion-slot style="margin-top:14px"></div>
+              </aside>
+            </div>
+
+            <!-- In-Workspace Telegram Share Panel -->
+            <div class="g-share" data-workspace-share hidden>
+              <h3 data-i18n="app.share_title">Telegramga ulashish</h3>
+              <label class="g-field">
+                <span data-i18n="product.recipient">Qabul qiluvchi</span>
+                <select>
+                  <option>Loyiha jamoasi</option>
+                  <option>Saqlangan xabarlar</option>
+                  <option>Boshqa chat</option>
+                </select>
+              </label>
+              
+              <div data-share-preview-slot></div>
+
+              <p class="g-micro" data-i18n="product.share_disclaimer">Faqat tekshirilgan bayonnoma ulashiladi.</p>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <a href="#" target="_blank" class="g-button g-primary" data-telegram-link>
+                  <i data-lucide="send"></i> <span data-i18n="app.open_tg">Telegramda ochish</span>
+                </a>
+                <button class="g-button" data-copy-telegram data-i18n="app.btn_copy">Nusxa olish</button>
+                <button class="g-button" data-close-share data-i18n="app.btn_close">Yopish</button>
+              </div>
+              <div class="g-toast" data-share-toast aria-live="polite"></div>
+            </div>
+
+            <div class="g-footerline">
+              <span data-i18n="app.footer_ai">AI tayyorlagan · Ulashishdan oldin tekshiring</span>
+              <span data-active-lang-badge>O‘zbekcha</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- PRIVACY DETAILS TEMPLATE -->
+  <template id="gptify-privacy-detail">
+    <details class="g-mini-privacy">
+      <summary data-i18n="app.privacy_title">Lokal rejim · ma’lumotlar nazorati</summary>
+      <p>
+        <strong data-i18n="app.privacy_device">Shu qurilmada:</strong> <span data-i18n="app.privacy_device_sub">audio, transkripsiya va AI bayonnoma.</span><br>
+        <strong data-i18n="app.privacy_ext">Tashqi xizmat:</strong> <span data-i18n="app.privacy_ext_sub">faqat siz boshlagan Telegram eksporti.</span><br>
+        <strong data-i18n="app.privacy_cloud">Bulutli AI:</strong> <span data-i18n="app.privacy_cloud_sub">o‘chiq.</span>
+      </p>
+      <label class="g-field">
+        <span data-i18n="app.cleanup_label">Avtomatik tozalash</span>
+        <select>
+          <option data-i18n="app.cleanup_opt1">Qo‘lda o‘chirilguncha saqlash</option>
+          <option data-i18n="app.cleanup_opt2">30 kundan keyin</option>
+          <option data-i18n="app.cleanup_opt3">90 kundan keyin</option>
+        </select>
+      </label>
+      <span class="g-micro">Lokal SQLite ma’lumotlar bazasi himoyalangan.</span>
+    </details>
+  </template>
+
+  <!-- RECORDING / NEW MEETING MODAL -->
+  <div id="g-new-meeting-modal" class="g-modal-overlay" hidden>
+    <div class="g-modal-card">
+      <div class="g-modal-header">
+        <h3><i data-lucide="plus" style="vertical-align:middle;margin-right:4px"></i> <span data-i18n="modal.modal_title">Yangi uchrashuv qo‘shish</span></h3>
+        <button id="modal-close-btn" class="g-button" style="padding:4px 8px">✕</button>
+      </div>
+      <div class="g-modal-body">
+        <div class="g-tab-pills">
+          <button type="button" data-modal-mode="mic" aria-pressed="true" data-i18n="modal.tab_mic">🎙️ Ovoz yozish</button>
+          <button type="button" data-modal-mode="file" aria-pressed="false" data-i18n="modal.tab_file">📁 Audio fayl</button>
+          <button type="button" data-modal-mode="text" aria-pressed="false" data-i18n="modal.tab_text">📝 Matn kiritish</button>
+        </div>
+
+        <label class="g-field">
+          <span data-i18n="modal.f_title">Uchrashuv mavzusi / sarlavha</span>
+          <input id="modal-title-input" placeholder="Masalan: Mahsulot rejasi muhokamasi" data-i18n-placeholder="modal.ph_title" value="Yangi uchrashuv">
+        </label>
+
+        <!-- Mode A: Microphone Recording -->
+        <div id="modal-mic-section">
+          <div style="border:1px solid var(--g-line);padding:24px;border-radius:10px;background:var(--g-surface);text-align:center;margin:16px 0">
+            <div id="modal-timer-display" style="font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--g-ink);margin-bottom:8px">00:00</div>
+            <div id="modal-status-text" class="g-micro" style="margin:0 0 16px" data-i18n="modal.rec_ready">Mikrofon tayyor</div>
+            <div class="g-cta" style="margin:0">
+              <button id="modal-start-rec-btn" class="g-button g-primary" style="padding:10px 22px">
+                <i data-lucide="mic"></i> <span data-i18n="modal.btn_start">Yozishni boshlash</span>
+              </button>
+              <button id="modal-stop-rec-btn" class="g-button" style="padding:10px 22px" hidden>
+                <span data-i18n="modal.btn_stop">⏹ To‘xtatish va AI tahlil qilish</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode B: Audio File Upload -->
+        <div id="modal-file-section" hidden>
+          <div id="modal-drop-zone" style="border:2px dashed var(--g-line);padding:28px;border-radius:10px;background:var(--g-surface);text-align:center;margin:16px 0;cursor:pointer">
+            <input type="file" id="modal-file-picker" accept="audio/*,.mp3,.wav,.m4a,.webm" style="display:none">
+            <i data-lucide="upload-cloud" style="width:36px;height:36px;color:var(--g-violet);margin-bottom:10px"></i>
+            <div style="font-weight:600;font-size:13px" data-i18n="modal.file_head">Audio faylni tanlang yoki bu yerga tashlang</div>
+            <div class="g-micro" style="margin:4px 0 14px" data-i18n="modal.file_sub">MP3, WAV, M4A, WebM formatlari (50 MB gacha)</div>
+            <button type="button" class="g-button" onclick="document.getElementById('modal-file-picker').click()" data-i18n="modal.btn_browse">Faylni ko‘rsatish</button>
+            <div id="modal-selected-filename" class="g-micro" style="color:var(--g-violet);font-weight:600;margin-top:10px"></div>
+          </div>
+          <button id="modal-analyze-file-btn" class="g-button g-primary" style="width:100%" disabled data-i18n="modal.btn_analyze_file">AI bilan tahlil qilish</button>
+        </div>
+
+        <!-- Mode C: Text Paste -->
+        <div id="modal-text-section" hidden>
+          <label class="g-field">
+            <span data-i18n="modal.f_text_label">Transkripsiya yoki uchrashuv konspekti</span>
+            <textarea id="modal-transcript-text" rows="6" placeholder="Spikerlar gaplari yoki uchrashuv yozuvini kiriting..." data-i18n-placeholder="modal.ph_text"></textarea>
+          </label>
+          <button id="modal-analyze-text-btn" class="g-button g-primary" style="width:100%" data-i18n="modal.btn_analyze_text">AI bayonnoma tuzish</button>
+        </div>
+
+        <!-- Processing Indicator -->
+        <div id="modal-processing-box" style="margin-top:16px;padding:14px;background:var(--g-tint);border-radius:8px;text-align:center" hidden>
+          <div style="font-weight:600;color:var(--g-violet);margin-bottom:4px" data-i18n="modal.proc_title">AI uchrashuvni tahlil qilmoqda...</div>
+          <div id="modal-processing-step" class="g-micro" style="color:var(--g-muted)" data-i18n="modal.proc_step2">Groq Whisper orqali ovoz transkripsiya qilinmoqda...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMO SIGNUP / LEAD CAPTURE MODAL -->
+  <div id="g-demo-lead-modal" class="g-modal-overlay" hidden>
+    <div class="g-modal-card" style="max-width:480px">
+      <div class="g-modal-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00b874"></span>
+            <h3 style="margin:0;font-size:15px;font-weight:700" data-i18n="lead_modal.title">14 kun bepul sinash · Demoga kirish</h3>
+          </div>
+          <div class="g-micro" style="margin:2px 0 0" data-i18n="lead_modal.subtitle">Darhol to‘liq imkoniyatli demo muhitiga o‘tish uchun ma’lumotingizni qoldiring</div>
+        </div>
+        <button id="lead-modal-close-btn" class="g-button" style="padding:4px 8px">✕</button>
+      </div>
+
+      <div class="g-modal-body" style="padding:22px">
+        <form id="g-lead-capture-form" style="display:flex;flex-direction:column;gap:14px">
+          <label class="g-field">
+            <span style="font-weight:600;font-size:12px" data-i18n="lead_modal.f_name">Ism va familiyangiz *</span>
+            <input id="lead-name-input" type="text" placeholder="Masalan: Jamshid Aliyev" required style="border:1px solid var(--g-line);padding:9px 12px;border-radius:8px;font-size:12px;background:var(--g-bg);color:var(--g-ink)">
+          </label>
+
+          <label class="g-field">
+            <span style="font-weight:600;font-size:12px" data-i18n="lead_modal.f_contact">Telegram username yoki telefon raqamingiz *</span>
+            <input id="lead-contact-input" type="text" placeholder="@username yoki +998 90 123 45 67" required style="border:1px solid var(--g-line);padding:9px 12px;border-radius:8px;font-size:12px;background:var(--g-bg);color:var(--g-ink)">
+          </label>
+
+          <label class="g-field">
+            <span style="font-weight:600;font-size:12px" data-i18n="lead_modal.f_company">Kompaniya yoki loyiha nomi (ixtiyoriy)</span>
+            <input id="lead-company-input" type="text" placeholder="Masalan: Savdo jamoasi, IT jamoa yoki Konsalting" style="border:1px solid var(--g-line);padding:9px 12px;border-radius:8px;font-size:12px;background:var(--g-bg);color:var(--g-ink)">
+          </label>
+
+          <label class="g-field">
+            <span style="font-weight:600;font-size:12px" data-i18n="lead_modal.f_tool">Asosan qaysi vositadan foydalanasiz?</span>
+            <select id="lead-tool-select" style="border:1px solid var(--g-line);padding:9px 12px;border-radius:8px;font-size:12px;background:var(--g-bg);color:var(--g-ink)">
+              <option value="Google Meet">Google Meet</option>
+              <option value="Zoom">Zoom</option>
+              <option value="Oflayn / Ofisda">Oflayn / Xonada (Jonli)</option>
+              <option value="Telegram qo‘ng‘iroqlari">Telegram qo‘ng‘iroqlari</option>
+              <option value="Microsoft Teams">Microsoft Teams</option>
+            </select>
+          </label>
+
+          <button type="submit" id="lead-submit-btn" class="g-btn-green" style="width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:8px;margin-top:6px">
+            <span data-i18n="lead_modal.btn_submit">Sinovni boshlash / Demoni ochish →</span>
+          </button>
+
+          <div style="text-align:center;font-size:11px;color:var(--g-muted);display:flex;align-items:center;justify-content:center;gap:6px">
+            <i data-lucide="shield-check" style="width:13px;height:13px;color:#00b874"></i>
+            <span data-i18n="lead_modal.trust_note">Karta talab qilinmaydi · 14 kun bepul demo</span>
+          </div>
+        </form>
+
+        <!-- Success confirmation state -->
+        <div id="lead-success-state" style="text-align:center;padding:20px 10px" hidden>
+          <div style="width:48px;height:48px;border-radius:50%;background:#ecfdf5;border:1px solid #a7f3d0;display:inline-flex;align-items:center;justify-content:center;color:#00b874;font-size:24px;margin-bottom:12px">✓</div>
+          <h3 style="margin:0 0 6px;font-size:16px;font-weight:700" data-i18n="lead_modal.success_title">Xush kelibsiz!</h3>
+          <p style="font-size:13px;color:var(--g-muted);margin:0 0 18px" id="lead-success-msg" data-i18n="lead_modal.success_desc">Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.</p>
+          <button id="lead-goto-app-btn" class="g-btn-green" style="width:100%;justify-content:center;padding:12px;font-size:14px;border-radius:8px">
+            <span data-i18n="lead_modal.btn_open_demo">Demoni ochish →</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- COMPREHENSIVE I18N DICTIONARY & LOGIC -->
+<script>
+(()=>{
+  // Full Trilingual Dictionary (UZ, EN, RU)
+  const I18N = {
+    uz: {
+      views: { landing: "Landing", product: "Product", app: "Desktop ilova", brand: "Identity" },
+      nav: { features: "Imkoniyatlar", privacy: "Maxfiylik", pricing: "Narxlar", app_btn: "Desktop ilova" },
+      hero: {
+        h1_line1: "Uchrashuv<br>tugaydi.",
+        h1_line2: "Bayonnoma<br>tayyor.",
+        lede: "Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. GPTify Meet o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.",
+        cta_trial: "Bepul sinab ko‘rish →",
+        cta_privacy: "Qanday ishlashini ko‘ring",
+        micro: "Windows va macOS uchun · Karta talab qilinmaydi",
+        preview_top: "GPTify Meet · Jonli uchrashuv",
+        preview_title: "Haftalik savdo yig‘ilishi",
+        preview_recording: "yozilmoqda",
+        preview_speaker1: "Shukhrat:",
+        preview_text1: "Yangi taklifni dushanbagacha mijozga yuboramiz.",
+        preview_speaker2: "Aziza:",
+        preview_text2: "Narxlar jadvali va shartnoma loyihasini men tayyorlayman.",
+        card1_lbl: "QAROR",
+        card1_val: "Taklif dushanba kuni yuboriladi",
+        card2_lbl: "MAS’UL",
+        card2_val: "Aziza · 28-sentabr",
+        card3_lbl: "KEYINGI QADAM",
+        card3_val: "Shartnoma loyihasini tekshirish",
+        card4_lbl: "RISK",
+        card4_val: "Narx tasdig‘i kutilmoqda"
+      },
+      platforms: { label: "SIZ ISHLATADIGAN UCHRASHUV VOSITALARI BILAN" },
+      privacy: {
+        eyebrow: "Maxfiylik — ishlash tamoyili",
+        h2: "Suhbat bulutga emas,<br>aniq natijaga aylanadi.",
+        sub: "Lokal rejimda audio, transkripsiya va bayonnoma qurilmangizda qayta ishlanadi va saqlanadi.",
+        box_title: "Sizning kompyuteringiz",
+        mode_badge: "Lokal rejim",
+        node_convo: "Suhbat",
+        node_convo_sub: "Mikrofon + tizim ovozi",
+        node_ai: "Lokal AI",
+        node_ai_sub: "Transkripsiya + bayonnoma",
+        node_archive: "Shaxsiy arxiv",
+        node_archive_sub: "Audio, matn va qarorlar",
+        share_branch_text: "Faqat siz tanlaganingizda",
+        share_btn: "Telegram eksportini ko‘rish",
+        faq1_q: "Qaysi ma’lumotlar kompyuterdan chiqadi?",
+        faq1_a: "Lokal qayta ishlashda uchrashuv audiosi va matni tashqi AI xizmatiga yuborilmaydi. Telegram eksportini tanlasangiz, faqat siz ko‘rib chiqqan bayonnomangiz tanlangan qabul qiluvchiga yuboriladi.",
+        faq2_q: "Bulutli AI ishlatsam nima o‘zgaradi?",
+        faq2_a: "Bulutli rejim alohida tanlanadi. Yoqishdan oldin xizmat nomi va unga yuboriladigan ma’lumot ko‘rsatiladi. Lokal maxfiylik va’dasi bulutli qayta ishlashga tatbiq etilmaydi.",
+        faq3_q: "Ilova butunlay internetsiz ishlaydimi?",
+        faq3_a: "Lokal modellar qurilmaga yuklangach, uchrashuvni qayta ishlash internetga bog‘liq bo‘lmaydi. Faqat yangilanishlar va Telegram eksporti uchun internet kerak bo‘ladi."
+      },
+      example: {
+        eyebrow: "O‘zbekcha suhbat → jamoa uchun aniq reja",
+        h2: "So‘zma-so‘z matndan<br>foydaliroq natija.",
+        sub: "Kim, nima va qachon? Muhim kelishuvlar alohida ajratiladi.",
+        pill: "Suhbatdan parcha · namuna",
+        quote: "“Birinchi oktabrdan boshlaymiz. Taklifni men yigirma sakkizinchigacha yuboraman. Budjetni keyin yana kelishamiz.”",
+        speaker: "Aziza Karimova · 12:48",
+        col2_eyebrow: "AI bayonnoma",
+        p1_label: "Qaror",
+        p1_val: "Sinov loyihasi 1-oktabrda boshlanadi",
+        p2_label: "Vazifa",
+        p2_val: "Tijorat taklifini yuborish",
+        p3_label: "Mas’ul",
+        p3_val: "Aziza Karimova",
+        p4_label: "Muddat",
+        p4_val: "28-sentabr",
+        p5_label: "Ochiq savol",
+        p5_val: "Budjet tasdiqlanmagan",
+        tg_btn: "Telegram xabarini ko‘rish"
+      },
+      bento: {
+        eyebrow: "Uchrashuvdan keyingi ishlar — tayyor",
+        h2: "Yaxshi suhbat.<br>Undan ham yaxshi natija.",
+        sub: "Yozuvdan jamoaviy harakatgacha — bitta ilovada.",
+        card1_title: "Uchrashuvga yana bir bot kerak emas.",
+        card1_p: "Mikrofon va kompyuter ovozini yozib oling. Onlayn yoki bir xonada — suhbatga e’tibor bering.",
+        card1_status: "Yozib olinmoqda",
+        card1_sub: "24:08 · Mikrofon + tizim",
+        card2_title: "Maxfiy suhbat. Lokal AI.",
+        card2_p: "Lokal rejimda audio va matn kompyuteringizda qayta ishlanadi. Ulashishni o‘zingiz boshqarasiz.",
+        card2_device: "Sizning kompyuteringiz",
+        card2_active: "Lokal qayta ishlash faol",
+        card3_title: "Jamoangiz Telegramdami?",
+        card3_p: "Bayonnomani tekshiring. Guruhni tanlang. Tayyor hisobotni bir tugma bilan ulashing.",
+        card3_chat: "Loyiha jamoasi",
+        card3_head: "Haftalik reja · 26-sentabr",
+        card4_title: "“Nimaga kelishgandik?”",
+        card4_p: "O‘tgan uchrashuvlardan kerakli qaror, ism yoki raqamni toping. Hammasi bir joyda.",
+        card4_search: "⌕   sinov loyihasi",
+        card4_res: "Sinov loyihasi 1-oktabrda boshlanadi."
+      },
+      pricing: {
+        eyebrow: "Oddiy va tushunarli narx",
+        h2: "Kamroq konspekt.<br>Ko‘proq natija.",
+        sub: "14 kun barcha asosiy imkoniyatlarni sinab ko‘ring.",
+        month: "Oylik",
+        year: "Yillik · 19% tejam",
+        badge: "Shaxsiy foydalanish",
+        per_month: "so‘m / oy",
+        per_year: "so‘m / yil",
+        note_month: "Oylik to‘lov",
+        note_year: "Yiliga 440 000 so‘m tejaysiz",
+        feat1: "Botlarsiz yozuv va lokal transkripsiya",
+        feat2: "Aniq bayonnoma va vazifalar",
+        feat3: "Audio import va Telegram eksport",
+        cta: "Bepul sinovni boshlash →"
+      },
+      product: {
+        eyebrow: "Uchrashuvning har bir bosqichi uchun",
+        h1_1: "Suhbatni yozib oling.",
+        h1_2: "Keyingi qadamni aniqlang.",
+        lede: "Uchta oddiy bosqich. Uchrashuv tugagach, jamoangiz nima qilishini biladi.",
+        s1: "01   Yozib olish",
+        s1_sub: "Mikrofon + audio yuklash",
+        s2: "02   AI bayonnoma",
+        s2_sub: "Qarorlar, mas’ullar, muddatlar",
+        s3: "03   Ulashish",
+        s3_sub: "Telegram uchun tayyor hisobot",
+        share_ready: "Jamoaga yuborishga tayyor.",
+        recipient: "Qabul qiluvchi",
+        share_disclaimer: "Faqat tekshirilgan bayonnoma yuboriladi. Audio va to‘liq transkripsiya ulashilmaydi."
+      },
+      app: {
+        app_title: "GPTify Meet — Ish stoli ilovasi",
+        status_local: "Lokal AI faol",
+        new_meeting: "Yangi uchrashuv",
+        tab_meetings: "Uchrashuvlar",
+        tab_tasks: "Vazifalar",
+        tab_search: "Qidiruv",
+        sec_today: "BUGUN",
+        sec_earlier: "OLDINGI UCHRASHUVLAR",
+        sec_workspace: "ISH MAYDONI",
+        ws_name: "Shaxsiy uchrashuvlar",
+        status_bottom_1: "Lokal AI faol",
+        status_bottom_2: "Ma’lumotlar qurilmangizda",
+        btn_share: "Ulashish",
+        badge_ready: "BAYONNOMA TAYYOR",
+        subtab_summary: "AI bayonnoma",
+        subtab_transcript: "Transkripsiya",
+        subtab_tasks: "Vazifalar",
+        h_summary: "Qisqacha xulosa",
+        h_decision: "Asosiy qaror",
+        h_tasks: "Keyingi qadamlar",
+        add_task_ph: "+ Yangi vazifa matni...",
+        btn_add: "Qo‘shish",
+        h_about: "Uchrashuv haqida",
+        h_attendees: "Ishtirokchilar",
+        h_open_q: "Ochiq savol",
+        chip_private: "Faqat sizga ko‘rinadi",
+        privacy_title: "Lokal rejim · ma’lumotlar nazorati",
+        privacy_device: "Shu qurilmada:",
+        privacy_device_sub: "audio, transkripsiya va AI bayonnoma.",
+        privacy_ext: "Tashqi xizmat:",
+        privacy_ext_sub: "faqat siz boshlagan Telegram eksporti.",
+        privacy_cloud: "Bulutli AI:",
+        privacy_cloud_sub: "o‘chiq.",
+        cleanup_label: "Avtomatik tozalash",
+        cleanup_opt1: "Qo‘lda o‘chirilguncha saqlash",
+        cleanup_opt2: "30 kundan keyin",
+        cleanup_opt3: "90 kundan keyin",
+        share_title: "Telegramga ulashish",
+        open_tg: "Telegramda ochish",
+        btn_copy: "Nusxa olish",
+        btn_close: "Yopish",
+        footer_ai: "AI tayyorlagan · Ulashishdan oldin tekshiring",
+        lang_indicator: "O‘zbekcha"
+      },
+      modal: {
+        modal_title: "Yangi uchrashuv qo‘shish",
+        tab_mic: "🎙️ Ovoz yozish",
+        tab_file: "📁 Audio fayl",
+        tab_text: "📝 Matn kiritish",
+        f_title: "Uchrashuv mavzusi / sarlavha",
+        ph_title: "Masalan: Mahsulot rejasi muhokamasi",
+        rec_ready: "Mikrofon tayyor",
+        rec_active: "🔴 Yozib olinmoqda (Mikrofon faol)...",
+        rec_stop_status: "Yozuv yakunlandi. AI tahlil qilmoqda...",
+        btn_start: "Yozishni boshlash",
+        btn_stop: "⏹ To‘xtatish va AI tahlil qilish",
+        file_head: "Audio faylni tanlang yoki bu yerga tashlang",
+        file_sub: "MP3, WAV, M4A, WebM formatlari (50 MB gacha)",
+        btn_browse: "Faylni ko‘rsatish",
+        btn_analyze_file: "AI bilan tahlil qilish",
+        f_text_label: "Transkripsiya yoki uchrashuv konspekti",
+        ph_text: "Spikerlar gaplari yoki uchrashuv yozuvini kiriting...",
+        btn_analyze_text: "AI bayonnoma tuzish",
+        proc_title: "AI uchrashuvni tahlil qilmoqda...",
+        proc_step1: "Audio yuklanmoqda...",
+        proc_step2: "Groq Whisper orqali ovoz transkripsiya qilinmoqda...",
+        proc_step3: "AI grammatika tahriri...",
+        proc_step4: "Bayonnoma va vazifalar shakllantirilmoqda..."
+      },
+      lead_modal: {
+        title: "14 kun bepul sinash · Demoga kirish",
+        subtitle: "Darhol to‘liq imkoniyatli demo muhitiga o‘tish uchun ma’lumotingizni qoldiring",
+        f_name: "Ism va familiyangiz *",
+        f_contact: "Telegram username yoki telefon raqamingiz *",
+        f_company: "Kompaniya yoki loyiha nomi (ixtiyoriy)",
+        f_tool: "Asosan qaysi vositadan foydalanasiz?",
+        btn_submit: "Sinovni boshlash / Demoni ochish →",
+        trust_note: "Karta talab qilinmaydi · 14 kun bepul demo",
+        success_title: "Xush kelibsiz!",
+        success_desc: "Sizga 14 kunlik bepul sinov huquqi berildi. Darhol demoni boshlashingiz mumkin.",
+        btn_open_demo: "Demoni ochish →"
+      },
+      sample_meeting: {
+        title: "Hamkorlik uchrashuvi",
+        date: "26-sentabr, 2026",
+        duration: "32 daqiqa",
+        attendees: ["Aziza Karimova", "Sardor Aliyev", "Dilshod Rahimov"],
+        summary: "Jamoa yangi hamkor bilan sinov loyihasi doirasini kelishib oldi. Tijorat taklifi va texnik talablar ish boshlanishidan oldin tasdiqlanadi.",
+        decisions: [{ text: "Sinov loyihasi 1-oktabrda boshlanadi.", source_time: "12:48" }],
+        tasks: [
+          { text: "Tijorat taklifini yuborish", owner: "Aziza", due_date: "28-sen", completed: 0 },
+          { text: "Texnik talablarni tasdiqlash", owner: "Sardor", due_date: "30-sen", completed: 0 },
+          { text: "Sinov natijalarini ko‘rib chiqish", owner: "Mas’ul yo‘q", due_date: "8-okt", completed: 0 }
+        ],
+        open_questions: ["Yakuniy budjet hali tasdiqlanmagan."]
+      }
+    },
+
+    en: {
+      views: { landing: "Landing", product: "Product", app: "Desktop app", brand: "Identity" },
+      nav: { features: "Features", privacy: "Privacy", pricing: "Pricing", app_btn: "Desktop App" },
+      hero: {
+        h1_line1: "Meeting<br>ends.",
+        h1_line2: "Minutes<br>ready.",
+        lede: "Capture Zoom, Meet, Teams, or in-person meetings with zero bots. GPTify Meet extracts multilingual transcripts, decisive outcomes, and action items locally on your computer.",
+        cta_trial: "Try for free →",
+        cta_privacy: "See how it works",
+        micro: "For Windows & macOS · No credit card required",
+        preview_top: "GPTify Meet · Live meeting",
+        preview_title: "Weekly Sales Review",
+        preview_recording: "recording",
+        preview_speaker1: "Shukhrat:",
+        preview_text1: "We will deliver the updated proposal to the client by Monday.",
+        preview_speaker2: "Aziza:",
+        preview_text2: "I will finalize the pricing schedule and draft agreement.",
+        card1_lbl: "DECISION",
+        card1_val: "Proposal will be sent on Monday",
+        card2_lbl: "ASSIGNEE",
+        card2_val: "Aziza · Sep 28",
+        card3_lbl: "NEXT STEP",
+        card3_val: "Review draft agreement",
+        card4_lbl: "RISK",
+        card4_val: "Pending final pricing approval"
+      },
+      platforms: { label: "WORKS WITH THE TOOLS YOU ALREADY USE" },
+      privacy: {
+        eyebrow: "Privacy by design",
+        h2: "Conversations turn into action,<br>not cloud data.",
+        sub: "In local mode, audio, transcription, and meeting minutes are processed and stored strictly on your device.",
+        box_title: "Your computer",
+        mode_badge: "Local mode",
+        node_convo: "Conversation",
+        node_convo_sub: "Microphone + System Audio",
+        node_ai: "Local AI",
+        node_ai_sub: "Transcription + Minutes",
+        node_archive: "Private Archive",
+        node_archive_sub: "Audio, text, and decisions",
+        share_branch_text: "Only when you choose",
+        share_btn: "View Telegram export",
+        faq1_q: "What data leaves your computer?",
+        faq1_a: "In local mode, meeting audio and transcripts are never sent to external AI servers. When you export to Telegram, only the finalized minutes are sent to your chosen chat.",
+        faq2_q: "What changes if cloud AI is used?",
+        faq2_a: "Cloud mode is strictly opt-in. Before enabling, the provider and transmitted payload are clearly shown. Local privacy guarantees apply only to local processing.",
+        faq3_q: "Does the app work completely offline?",
+        faq3_a: "Once local models are installed on your machine, processing meetings requires no internet connection. Network access is only needed for updates and Telegram export."
+      },
+      example: {
+        eyebrow: "From spoken words to clear action",
+        h2: "Far more actionable<br>than verbatim transcripts.",
+        sub: "Who, what, and by when? Key agreements and deliverables stand out instantly.",
+        pill: "Audio excerpt · Sample",
+        quote: "“Let's start on October 1st. I will send over the proposal by the 28th. We will finalize the budget later.”",
+        speaker: "Aziza Karimova · 12:48",
+        col2_eyebrow: "AI Minutes",
+        p1_label: "Decision",
+        p1_val: "Pilot project launches on October 1",
+        p2_label: "Task",
+        p2_val: "Send commercial proposal",
+        p3_label: "Assignee",
+        p3_val: "Aziza Karimova",
+        p4_label: "Due date",
+        p4_val: "September 28",
+        p5_label: "Open question",
+        p5_val: "Final budget pending confirmation",
+        tg_btn: "View Telegram message"
+      },
+      bento: {
+        eyebrow: "Post-meeting work — automated",
+        h2: "Great conversation.<br>Even better outcomes.",
+        sub: "From voice recording to synchronized team execution in one app.",
+        card1_title: "No bots needed in your meeting.",
+        card1_p: "Record mic and system audio directly. Whether in-room or on video calls — stay present.",
+        card1_status: "Recording in progress",
+        card1_sub: "24:08 · Mic + System audio",
+        card2_title: "Private audio. Local AI.",
+        card2_p: "Audio and transcript are processed strictly on your computer. You control what gets shared.",
+        card2_device: "Your computer",
+        card2_active: "Local processing active",
+        card3_title: "Your team lives on Telegram?",
+        card3_p: "Review the minutes. Select the chat. Share the clean summary with a single click.",
+        card3_chat: "Project Team",
+        card3_head: "Weekly Sync · Sept 26",
+        card4_title: "“What did we agree on?”",
+        card4_p: "Instantly recall past decisions, names, or numbers across all previous sessions.",
+        card4_search: "⌕   pilot project",
+        card4_res: "Pilot project launches on October 1st."
+      },
+      pricing: {
+        eyebrow: "Transparent pricing",
+        h2: "Less note-taking.<br>More momentum.",
+        sub: "Try all core capabilities free for 14 days.",
+        month: "Monthly",
+        year: "Annual · Save 19%",
+        badge: "Individual & Team",
+        per_month: "UZS / mo",
+        per_year: "UZS / yr",
+        note_month: "Billed monthly",
+        note_year: "Save 440,000 UZS per year",
+        feat1: "Bot-free recording & local speech engine",
+        feat2: "Structured minutes & clear action items",
+        feat3: "Audio import & one-click Telegram export",
+        cta: "Start free trial →"
+      },
+      product: {
+        eyebrow: "For every stage of your meeting",
+        h1_1: "Capture the conversation.",
+        h1_2: "Define the next steps.",
+        lede: "Three straightforward steps. When your meeting ends, your team knows exactly what to do.",
+        s1: "01   Capture",
+        s1_sub: "Microphone & file upload",
+        s2: "02   AI Minutes",
+        s2_sub: "Decisions, assignees, deadlines",
+        s3: "03   Share",
+        s3_sub: "Ready report for Telegram",
+        share_ready: "Ready to share with your team.",
+        recipient: "Recipient",
+        share_disclaimer: "Only verified meeting minutes are sent. Audio and raw transcripts remain private."
+      },
+      app: {
+        app_title: "GPTify Meet — Desktop App",
+        status_local: "Local AI active",
+        new_meeting: "New meeting",
+        tab_meetings: "Meetings",
+        tab_tasks: "Tasks",
+        tab_search: "Search",
+        sec_today: "TODAY",
+        sec_earlier: "PAST MEETINGS",
+        sec_workspace: "WORKSPACE",
+        ws_name: "Personal Meetings",
+        status_bottom_1: "Local AI active",
+        status_bottom_2: "Data stays on your device",
+        btn_share: "Share",
+        badge_ready: "MINUTES READY",
+        subtab_summary: "AI Minutes",
+        subtab_transcript: "Transcript",
+        subtab_tasks: "Tasks",
+        h_summary: "Executive Summary",
+        h_decision: "Key Decision",
+        h_tasks: "Next Steps",
+        add_task_ph: "+ New action item...",
+        btn_add: "Add",
+        h_about: "About Meeting",
+        h_attendees: "Attendees",
+        h_open_q: "Open Questions",
+        chip_private: "Visible only to you",
+        privacy_title: "Local Mode · Data Sovereignty",
+        privacy_device: "On this device:",
+        privacy_device_sub: "audio, transcript, and AI summary.",
+        privacy_ext: "External services:",
+        privacy_ext_sub: "only Telegram export when triggered.",
+        privacy_cloud: "Cloud AI:",
+        privacy_cloud_sub: "disabled.",
+        cleanup_label: "Automatic data retention",
+        cleanup_opt1: "Keep until deleted manually",
+        cleanup_opt2: "After 30 days",
+        cleanup_opt3: "After 90 days",
+        share_title: "Share to Telegram",
+        open_tg: "Open in Telegram",
+        btn_copy: "Copy text",
+        btn_close: "Close",
+        footer_ai: "Generated by AI · Please review before sharing",
+        lang_indicator: "English"
+      },
+      modal: {
+        modal_title: "Add New Meeting",
+        tab_mic: "🎙️ Record Audio",
+        tab_file: "📁 Audio File",
+        tab_text: "📝 Paste Text",
+        f_title: "Meeting Title / Topic",
+        ph_title: "e.g., Product Roadmap Sync",
+        rec_ready: "Microphone ready",
+        rec_active: "🔴 Recording in progress (Mic active)...",
+        rec_stop_status: "Recording stopped. AI analyzing...",
+        btn_start: "Start Recording",
+        btn_stop: "⏹ Stop & Analyze with AI",
+        file_head: "Select audio file or drag & drop here",
+        file_sub: "MP3, WAV, M4A, WebM formats (up to 50 MB)",
+        btn_browse: "Browse File",
+        btn_analyze_file: "Analyze with AI",
+        f_text_label: "Transcript or Meeting Notes",
+        ph_text: "Paste speech transcript or meeting discussion notes...",
+        btn_analyze_text: "Generate AI Minutes",
+        proc_title: "AI is analyzing meeting...",
+        proc_step1: "Uploading audio...",
+        proc_step2: "Whisper transcribing audio...",
+        proc_step3: "Grammar & dialect normalization...",
+        proc_step4: "Generating minutes & action items..."
+      },
+      lead_modal: {
+        title: "14-Day Free Trial · Request Demo",
+        subtitle: "Leave your contact details to immediately access the interactive demo workspace",
+        f_name: "Full Name *",
+        f_contact: "Telegram username or phone number *",
+        f_company: "Company or Team Name (optional)",
+        f_tool: "Primary meeting tool you use",
+        btn_submit: "Start Free Trial / Open Demo →",
+        trust_note: "No credit card required · 14-day free demo",
+        success_title: "Welcome aboard!",
+        success_desc: "Your 14-day free trial has been activated. Opening your demo workspace...",
+        btn_open_demo: "Open Demo Workspace →"
+      },
+      sample_meeting: {
+        title: "Partnership Meeting",
+        date: "Sep 26, 2026",
+        duration: "32 minutes",
+        attendees: ["Aziza Karimova", "Sardor Aliyev", "Dilshod Rahimov"],
+        summary: "The team agreed on the pilot project scope with the new partner. Commercial proposal and technical specifications will be approved prior to project kickoff.",
+        decisions: [{ text: "Pilot project launches on October 1st.", source_time: "12:48" }],
+        tasks: [
+          { text: "Send commercial proposal", owner: "Aziza", due_date: "Sep 28", completed: 0 },
+          { text: "Approve technical specs", owner: "Sardor", due_date: "Sep 30", completed: 0 },
+          { text: "Review pilot results", owner: "Unassigned", due_date: "Oct 8", completed: 0 }
+        ],
+        open_questions: ["Final project budget pending confirmation."]
+      }
+    },
+
+    ru: {
+      views: { landing: "Лендинг", product: "Продукт", app: "Десктоп-приложение", brand: "Айдентика" },
+      nav: { features: "Возможности", privacy: "Приватность", pricing: "Тарифы", app_btn: "Десктоп-приложение" },
+      hero: {
+        h1_line1: "Встреча<br>завершена.",
+        h1_line2: "Протокол<br>готов.",
+        lede: "Записывайте Zoom, Meet, Teams или живые встречи без сторонних ботов. GPTify Meet готовит точную расшифровку, решения и задачи прямо на вашем компьютере.",
+        cta_trial: "Попробовать бесплатно →",
+        cta_privacy: "Как это работает",
+        micro: "Для Windows и macOS · Без привязки карты",
+        preview_top: "GPTify Meet · Живая встреча",
+        preview_title: "Еженедельный созвон по продажам",
+        preview_recording: "идет запись",
+        preview_speaker1: "Шухрат:",
+        preview_text1: "Новое предложение отправим клиенту до понедельника.",
+        preview_speaker2: "Азиза:",
+        preview_text2: "Таблицу цен и проект договора подготовлю я.",
+        card1_lbl: "РЕШЕНИЕ",
+        card1_val: "Предложение отправят в понедельник",
+        card2_lbl: "ОТВЕТСТВЕННЫЙ",
+        card2_val: "Азиза · 28 сентября",
+        card3_lbl: "СЛЕДУЮЩИЙ ШАГ",
+        card3_val: "Проверить проект договора",
+        card4_lbl: "РИСК",
+        card4_val: "Ожидается подтверждение цены"
+      },
+      platforms: { label: "СОВМЕСТИМО С ВАШИМИ ПРИВЫЧНЫМИ ИНСТРУМЕНТАМИ" },
+      privacy: {
+        eyebrow: "Приватность как основа",
+        h2: "Разговоры превращаются в действия,<br>а не в данные в облаке.",
+        sub: "В локальном режиме аудио, расшифровка и протоколы обрабатываются и хранятся исключительно на вашем устройстве.",
+        box_title: "Ваш компьютер",
+        mode_badge: "Локальный режим",
+        node_convo: "Разговор",
+        node_convo_sub: "Микрофон + звук системы",
+        node_ai: "Локальный ИИ",
+        node_ai_sub: "Транскрипция + протокол",
+        node_archive: "Личный архив",
+        node_archive_sub: "Аудио, текст и решения",
+        share_branch_text: "Только по вашему выбору",
+        share_btn: "Посмотреть экспорт в Telegram",
+        faq1_q: "Какие данные покидают ваш компьютер?",
+        faq1_a: "При локальной обработке аудио и текст встреч не отправляются сторонним ИИ-сервисам. При экспорте в Telegram отправляется только проверенный вами протокол выбранному получателю.",
+        faq2_q: "Что меняется при использовании облачного ИИ?",
+        faq2_a: "Облачный режим включается отдельно с явным подтверждением. Локальные гарантии конфиденциальности распространяются только на локальную обработку.",
+        faq3_q: "Работает ли приложение полностью без интернета?",
+        faq3_a: "После загрузки локальных моделей обработка встреч не требует подключения к интернету. Сеть нужна только для обновлений и отправки в Telegram."
+      },
+      example: {
+        eyebrow: "Живая речь → четкий план для команды",
+        h2: "Гораздо полезнее,<br>чем дословная стенограмма.",
+        sub: "Кто, что и к какому сроку? Ключевые решения и задачи выделены сразу.",
+        pill: "Фрагмент встречи · Пример",
+        quote: "«Начинаем с первого октября. Коммерческое предложение я отправлю до двадцать восьмого. Бюджет согласуем позже.»",
+        speaker: "Азиза Каримова · 12:48",
+        col2_eyebrow: "ИИ-протокол",
+        p1_label: "Решение",
+        p1_val: "Пилотный проект стартует 1 октября",
+        p2_label: "Задача",
+        p2_val: "Отправить коммерческое предложение",
+        p3_label: "Ответственный",
+        p3_val: "Азиза Каримова",
+        p4_label: "Срок",
+        p4_val: "28 сентября",
+        p5_label: "Вопрос",
+        p5_val: "Итоговый бюджет пока не утвержден",
+        tg_btn: "Посмотреть сообщение Telegram"
+      },
+      bento: {
+        eyebrow: "Итоги встречи готовы мгновенно",
+        h2: "Отличный разговор.<br>Еще лучший результат.",
+        sub: "От аудиозаписи до слаженных действий команды — в одном приложении.",
+        card1_title: "Больше никаких ботов на звонках.",
+        card1_p: "Записывайте микрофон и звук системы. Вживую в офисе или онлайн — сосредоточьтесь на беседе.",
+        card1_status: "Идет запись",
+        card1_sub: "24:08 · Микрофон + система",
+        card2_title: "Приватность встреч. Локальный ИИ.",
+        card2_p: "Аудио и стенограмма обрабатываются на вашем ПК. Делитесь только тем, что сочтете нужным.",
+        card2_device: "Ваш компьютер",
+        card2_active: "Локальная обработка активна",
+        card3_title: "Ваша команда в Telegram?",
+        card3_p: "Проверьте протокол. Выберите чат. Отправьте структурированный отчет в один клик.",
+        card3_chat: "Команда проекта",
+        card3_head: "Итоги недели · 26 сент.",
+        card4_title: "«О чем мы договорились?»",
+        card4_p: "Легко находите решения, даты и договоренности по всем прошлым встречам.",
+        card4_search: "⌕   пилотный проект",
+        card4_res: "Пилотный проект стартует 1 октября."
+      },
+      pricing: {
+        eyebrow: "Простые и понятные тарифы",
+        h2: "Меньше конспектов.<br>Больше результатов.",
+        sub: "14 дней бесплатного доступа ко всем возможностям.",
+        month: "Помесячно",
+        year: "Годовой · Скидка 19%",
+        badge: "Индивидуальный и командный",
+        per_month: "сум / мес",
+        per_year: "сум / год",
+        note_month: "Ежемесячная оплата",
+        note_year: "Экономия 440 000 сум в год",
+        feat1: "Запись без ботов и локальная расшифровка",
+        feat2: "Структурированный протокол и задачи",
+        feat3: "Импорт аудио и экспорт в Telegram",
+        cta: "Начать бесплатный период →"
+      },
+      product: {
+        eyebrow: "Для каждого этапа вашей встречи",
+        h1_1: "Запишите встречу.",
+        h1_2: "Определите следующие шаги.",
+        lede: "Три простых шага. Когда встреча закончится, команда четко знает свои задачи.",
+        s1: "01   Запись",
+        s1_sub: "Микрофон и загрузка аудио",
+        s2: "02   ИИ-протокол",
+        s2_sub: "Решения, ответственные, сроки",
+        s3: "03   Отправка",
+        s3_sub: "Готовый отчет для Telegram",
+        share_ready: "Готово к отправке команде.",
+        recipient: "Получатель",
+        share_disclaimer: "Отправляется только проверенный протокол. Аудио и полная расшифровка остаются приватными."
+      },
+      app: {
+        app_title: "GPTify Meet — Десктоп-приложение",
+        status_local: "Локальный ИИ активен",
+        new_meeting: "Новая встреча",
+        tab_meetings: "Встречи",
+        tab_tasks: "Задачи",
+        tab_search: "Поиск",
+        sec_today: "СЕГОДНЯ",
+        sec_earlier: "ПРЕДЫДУЩИЕ ВСТРЕЧИ",
+        sec_workspace: "ПРОСТРАНСТВО",
+        ws_name: "Личные встречи",
+        status_bottom_1: "Локальный ИИ активен",
+        status_bottom_2: "Данные на вашем устройстве",
+        btn_share: "Поделиться",
+        badge_ready: "ПРОТОКОЛ ГОТОВ",
+        subtab_summary: "ИИ-протокол",
+        subtab_transcript: "Транскрипция",
+        subtab_tasks: "Задачи",
+        h_summary: "Краткое резюме",
+        h_decision: "Ключевое решение",
+        h_tasks: "Следующие шаги",
+        add_task_ph: "+ Добавить задачу...",
+        btn_add: "Добавить",
+        h_about: "О встрече",
+        h_attendees: "Участники",
+        h_open_q: "Открытые вопросы",
+        chip_private: "Видно только вам",
+        privacy_title: "Локальный режим · Контроль данных",
+        privacy_device: "На этом устройстве:",
+        privacy_device_sub: "аудио, расшифровка и ИИ-протокол.",
+        privacy_ext: "Внешние сервисы:",
+        privacy_ext_sub: "только отправка в Telegram по вашей команде.",
+        privacy_cloud: "Облачный ИИ:",
+        privacy_cloud_sub: "отключен.",
+        cleanup_label: "Срок хранения данных",
+        cleanup_opt1: "Хранить до ручного удаления",
+        cleanup_opt2: "Удалять через 30 дней",
+        cleanup_opt3: "Удалять через 90 дней",
+        share_title: "Поделиться в Telegram",
+        open_tg: "Открыть в Telegram",
+        btn_copy: "Копировать",
+        btn_close: "Закрыть",
+        footer_ai: "Подготовлено ИИ · Проверьте перед отправкой",
+        lang_indicator: "Русский"
+      },
+      modal: {
+        modal_title: "Добавить новую встречу",
+        tab_mic: "🎙️ Запись голоса",
+        tab_file: "📁 Аудиофайл",
+        tab_text: "📝 Ввод текста",
+        f_title: "Тема / название встречи",
+        ph_title: "Например: Обсуждение стратегии продукта",
+        rec_ready: "Микрофон готов",
+        rec_active: "🔴 Идет запись (Микрофон активен)...",
+        rec_stop_status: "Запись завершена. ИИ анализирует...",
+        btn_start: "Начать запись",
+        btn_stop: "⏹ Завершить и проанализировать",
+        file_head: "Выберите аудиофайл или перетащите сюда",
+        file_sub: "Форматы MP3, WAV, M4A, WebM (до 50 МБ)",
+        btn_browse: "Выбрать файл",
+        btn_analyze_file: "Анализировать с ИИ",
+        f_text_label: "Транскрипция или конспект встречи",
+        ph_text: "Вставьте расшифровку речи или черновик встречи...",
+        btn_analyze_text: "Составить ИИ-протокол",
+        proc_title: "ИИ анализирует встречу...",
+        proc_step1: "Загрузка аудио...",
+        proc_step2: "Расшифровка аудио через Whisper...",
+        proc_step3: "Грамматическая нормализация...",
+        proc_step4: "Формирование протокола и списка задач..."
+      },
+      lead_modal: {
+        title: "14 дней бесплатно · Доступ к демо",
+        subtitle: "Укажите контактные данные для мгновенного перехода в интерактивное демо",
+        f_name: "Ваше имя и фамилия *",
+        f_contact: "Telegram или номер телефона *",
+        f_company: "Компания или название команды (необязательно)",
+        f_tool: "Основной инструмент для встреч",
+        btn_submit: "Начать бесплатный период / Открыть демо →",
+        trust_note: "Привязка карты не требуется · 14 дней бесплатно",
+        success_title: "Добро пожаловать!",
+        success_desc: "Вам предоставлен 14-дневный бесплатный доступ. Переходим в демо-пространство...",
+        btn_open_demo: "Открыть демо-версию →"
+      },
+      sample_meeting: {
+        title: "Партнерская встреча",
+        date: "26 сентября 2026 г.",
+        duration: "32 минуты",
+        attendees: ["Азиза Каримова", "Сардор Алиев", "Дильшод Рахимов"],
+        summary: "Команда согласовала рамки пилотного проекта с новым партнером. Коммерческое предложение и технические требования будут утверждены до старта работ.",
+        decisions: [{ text: "Пилотный проект стартует 1 октября.", source_time: "12:48" }],
+        tasks: [
+          { text: "Отправить коммерческое предложение", owner: "Азиза", due_date: "28 сен", completed: 0 },
+          { text: "Утвердить технические требования", owner: "Сардор", due_date: "30 сен", completed: 0 },
+          { text: "Оценить результаты пилота", owner: "Не назначен", due_date: "8 окт", completed: 0 }
+        ],
+        open_questions: ["Итоговый бюджет пока не утвержден."]
+      }
+    }
+  };
+
+  const root = document.getElementById('gptify-v2');
+  
+  // App Global State
+  const state = {
+    view: 'landing',
+    lang: localStorage.getItem('gptify_lang') || 'uz',
+    activeMeetingId: null,
+    meetings: [],
+    currentMeeting: null,
+    subtab: 'summary'
+  };
+
+  // Helper escape
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Get deep localized string
+  function t(path) {
+    const keys = path.split('.');
+    let val = I18N[state.lang];
+    for (const k of keys) {
+      if (val && val[k] !== undefined) {
+        val = val[k];
+      } else {
+        // Fallback to UZ
+        let fb = I18N['uz'];
+        for (const fbk of keys) {
+          fb = fb ? fb[fbk] : null;
+        }
+        return fb || path;
+      }
+    }
+    return val;
+  }
+
+  // Apply Language to the entire page
+  function setLanguage(lang) {
+    if (!['uz', 'en', 'ru'].includes(lang)) lang = 'uz';
+    state.lang = lang;
+    localStorage.setItem('gptify_lang', lang);
+    document.documentElement.lang = lang;
+
+    // Update Language Toggle buttons
+    root.querySelectorAll('.g-langtabs button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.lang === lang);
+    });
+
+    // Translate all static nodes with data-i18n
+    root.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      const text = t(key);
+      if (text) {
+        if (text.includes('<br>') || text.includes('&nbsp;')) {
+          el.innerHTML = text;
+        } else {
+          el.textContent = text;
+        }
+      }
+    });
+
+    // Translate placeholder attributes
+    root.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      el.placeholder = t(key);
+    });
+
+    // Translate active language badge in footers
+    root.querySelectorAll('[data-active-lang-badge]').forEach(el => {
+      el.textContent = t('app.lang_indicator');
+    });
+
+    // If showing initial sample meeting, localize its text
+    if (state.currentMeeting && (state.currentMeeting.id === 1 || state.currentMeeting.title.includes("Hamkorlik") || state.currentMeeting.title.includes("Partnership") || state.currentMeeting.title.includes("Партнерская"))) {
+      const sample = I18N[state.lang].sample_meeting;
+      state.currentMeeting.title = sample.title;
+      state.currentMeeting.date = sample.date;
+      state.currentMeeting.duration = sample.duration;
+      state.currentMeeting.summary = sample.summary;
+      state.currentMeeting.attendees = sample.attendees;
+      state.currentMeeting.decisions = sample.decisions;
+      state.currentMeeting.tasks = sample.tasks;
+      state.currentMeeting.open_questions = sample.open_questions;
+    }
+
+    renderAllWorkspaces();
+    renderSidebars();
+
+    if (globalThis.lucide) {
+      setTimeout(() => lucide.createIcons({attrs:{width:15,height:15}}), 50);
+    }
+  }
+
+  // Set top view
+  function setView(v) {
+    state.view = v;
+    root.querySelectorAll('[data-page]').forEach(el => {
+      el.hidden = el.dataset.page !== v;
+    });
+    root.querySelectorAll('.g-viewtabs button[data-view]').forEach(btn => {
+      btn.setAttribute('aria-pressed', btn.dataset.view === v);
+    });
+    if (globalThis.lucide) {
+      setTimeout(() => lucide.createIcons({attrs:{width:15,height:15}}), 50);
+    }
+  }
+
+  // Set product stage
+  function setStage(s) {
+    root.querySelectorAll('[data-stage]').forEach(e => {
+      e.setAttribute('aria-pressed', e.dataset.stage === s);
+    });
+    root.querySelectorAll('[data-stage-panel]').forEach(e => {
+      e.hidden = e.dataset.stagePanel !== s;
+    });
+  }
+
+  // Fetch all meetings from server
+  async function loadMeetings(selectFirst = true) {
+    try {
+      const res = await fetch('/api/meetings');
+      if (res.ok) {
+        state.meetings = await res.json();
+        if (state.meetings.length > 0) {
+          if (!state.activeMeetingId || selectFirst) {
+            state.activeMeetingId = state.meetings[0].id;
+          }
+          await loadMeetingDetail(state.activeMeetingId);
+        }
+        renderSidebars();
+      }
+    } catch (e) {
+      console.warn("Backenddan uchrashuvlarni yuklab bo‘lmadi:", e);
+    }
+  }
+
+  // Fetch meeting detail
+  async function loadMeetingDetail(id) {
+    try {
+      const res = await fetch(`/api/meetings/${id}`);
+      if (res.ok) {
+        state.currentMeeting = await res.json();
+        state.activeMeetingId = id;
+
+        // If it's the seed sample meeting, localize according to active language
+        if (id === 1 || (state.currentMeeting.title && state.currentMeeting.title.includes("Hamkorlik") && state.lang !== 'uz')) {
+          const sample = I18N[state.lang].sample_meeting;
+          state.currentMeeting.title = sample.title;
+          state.currentMeeting.date = sample.date;
+          state.currentMeeting.duration = sample.duration;
+          state.currentMeeting.summary = sample.summary;
+          state.currentMeeting.attendees = sample.attendees;
+          state.currentMeeting.decisions = sample.decisions;
+          state.currentMeeting.tasks = sample.tasks;
+          state.currentMeeting.open_questions = sample.open_questions;
+        }
+
+        renderAllWorkspaces();
+      }
+    } catch (e) {
+      console.error("Uchrashuv yuklashda xatolik:", e);
+    }
+  }
+
+  // Render meeting items in all mounted instances of the sidebar
+  function renderSidebars() {
+    root.querySelectorAll('[data-meetings-today]').forEach(container => {
+      container.innerHTML = '';
+      if (state.meetings.length === 0) {
+        const noText = state.lang === 'en' ? 'No meetings yet' : (state.lang === 'ru' ? 'Нет встреч' : 'Uchrashuvlar yo‘q');
+        container.innerHTML = `<span class="g-micro" style="padding:4px 9px">${noText}</span>`;
+        return;
+      }
+      state.meetings.slice(0, 3).forEach(m => {
+        const btn = document.createElement('button');
+        let titleDisplay = m.title || "Nomsiz uchrashuv";
+        if (m.id === 1 && state.lang !== 'uz') {
+          titleDisplay = I18N[state.lang].sample_meeting.title;
+        }
+        btn.textContent = titleDisplay;
+        btn.title = titleDisplay;
+        if (m.id === state.activeMeetingId) {
+          btn.className = 'g-selected';
+        }
+        btn.onclick = () => {
+          loadMeetingDetail(m.id);
+        };
+        container.appendChild(btn);
+      });
+    });
+
+    root.querySelectorAll('[data-meetings-earlier]').forEach(container => {
+      container.innerHTML = '';
+      const earlier = state.meetings.slice(3);
+      if (earlier.length === 0) {
+        const noEarlier = state.lang === 'en' ? 'No past sessions' : (state.lang === 'ru' ? 'Нет прошлых записей' : 'Oldingi yozuvlar yo‘q');
+        container.innerHTML = `<span class="g-micro" style="padding:4px 9px">${noEarlier}</span>`;
+        return;
+      }
+      earlier.forEach(m => {
+        const btn = document.createElement('button');
+        btn.textContent = m.title || "Nomsiz uchrashuv";
+        btn.title = m.title;
+        if (m.id === state.activeMeetingId) {
+          btn.className = 'g-selected';
+        }
+        btn.onclick = () => {
+          loadMeetingDetail(m.id);
+        };
+        container.appendChild(btn);
+      });
+    });
+  }
+
+  // Render the current meeting in all mounted workspaces (hero preview, product stage, full app)
+  function renderAllWorkspaces() {
+    const m = state.currentMeeting;
+    if (!m) return;
+
+    // Update active highlight in sidebars
+    root.querySelectorAll('.g-meetings-list button').forEach(b => {
+      b.classList.remove('g-selected');
+      if (b.textContent === m.title) b.classList.add('g-selected');
+    });
+
+    root.querySelectorAll('[data-app-mount]').forEach(mount => {
+      // Breadcrumb & Title
+      const breadcrumb = mount.querySelector('[data-app-breadcrumb]');
+      const bPrefix = t('app.tab_meetings');
+      if (breadcrumb) breadcrumb.innerHTML = `${bPrefix} &nbsp; / &nbsp; ${escapeHtml(m.title)}`;
+
+      const titleEl = mount.querySelector('[data-meeting-title]');
+      if (titleEl) titleEl.textContent = m.title;
+
+      // Meta
+      const dateEl = mount.querySelector('[data-meeting-date]');
+      if (dateEl) dateEl.textContent = m.date || 'Bugun';
+
+      const durEl = mount.querySelector('[data-meeting-duration]');
+      if (durEl) durEl.textContent = m.duration || '15 daqiqa';
+
+      // Attendees Avatars Stack
+      const avs = mount.querySelector('[data-meeting-avatars]');
+      if (avs) {
+        avs.innerHTML = '';
+        const list = Array.isArray(m.attendees) ? m.attendees : [];
+        list.slice(0, 3).forEach(att => {
+          const parts = String(att).trim().split(/\s+/);
+          const initials = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+          const av = document.createElement('span');
+          av.className = 'g-av';
+          av.textContent = initials;
+          av.title = att;
+          avs.appendChild(av);
+        });
+      }
+
+      const countEl = mount.querySelector('[data-meeting-count]');
+      if (countEl) {
+        const count = Array.isArray(m.attendees) ? m.attendees.length : 0;
+        const attLabel = state.lang === 'en' ? `${count} attendees` : (state.lang === 'ru' ? `${count} участников` : `${count} ishtirokchi`);
+        countEl.textContent = attLabel;
+      }
+
+      // Audio Player
+      const audioWrap = mount.querySelector('[data-audio-player-wrap]');
+      const audioEl = mount.querySelector('[data-audio-element]');
+      if (audioWrap && audioEl) {
+        if (m.audio_path) {
+          audioWrap.hidden = false;
+          audioEl.src = `/api/audio/${m.id}`;
+        } else {
+          audioWrap.hidden = true;
+          audioEl.src = '';
+        }
+      }
+
+      // Summary
+      const sumText = mount.querySelector('[data-summary-text]');
+      if (sumText) sumText.textContent = m.summary || (state.lang === 'en' ? "No summary available." : (state.lang === 'ru' ? "Резюме отсутствует." : "Xulosa mavjud emas."));
+
+      // Decisions
+      const decContainer = mount.querySelector('[data-decisions-container]');
+      if (decContainer) {
+        decContainer.innerHTML = '';
+        const decs = Array.isArray(m.decisions) ? m.decisions : [];
+        if (decs.length === 0) {
+          const noDec = state.lang === 'en' ? "No key decisions recorded" : (state.lang === 'ru' ? "Решения не зафиксированы" : "Qarorlar qayd etilmagan");
+          decContainer.innerHTML = `<div class="g-micro">${noDec}</div>`;
+        } else {
+          decs.forEach(d => {
+            const row = document.createElement('div');
+            row.className = 'g-decision';
+            row.innerHTML = `
+              <span>${escapeHtml(d.text)}</span>
+              <button class="g-source" data-jump-to-time="${escapeHtml(d.source_time || '')}">${escapeHtml(d.source_time || '00:00')} ↗</button>
+            `;
+            const jumpBtn = row.querySelector('.g-source');
+            jumpBtn.onclick = () => {
+              switchSubtab(mount, 'transcript');
+              highlightTranscriptSegment(mount, d.source_time);
+            };
+            decContainer.appendChild(row);
+          });
+        }
+      }
+
+      // Tasks List
+      renderTasks(mount, m.tasks || []);
+
+      // Transcript
+      renderTranscript(mount, m.transcript_segments || [], m.id);
+
+      // Context Column
+      const chipsContainer = mount.querySelector('[data-chips-container]');
+      if (chipsContainer) {
+        chipsContainer.innerHTML = '';
+        const chips = (m.title.split(' ').slice(0, 2)).concat([t('app.status_local'), t('views.landing')]);
+        chips.slice(0, 3).forEach(c => {
+          const span = document.createElement('span');
+          span.className = 'g-chip';
+          span.textContent = c;
+          chipsContainer.appendChild(span);
+        });
+      }
+
+      const attendeesEl = mount.querySelector('[data-attendees-list]');
+      if (attendeesEl) {
+        const atts = Array.isArray(m.attendees) ? m.attendees : [];
+        const noAtt = state.lang === 'en' ? 'No attendees assigned' : (state.lang === 'ru' ? 'Участники не указаны' : 'Ishtirokchilar belgilanmagan');
+        attendeesEl.innerHTML = atts.length ? atts.map(a => escapeHtml(a)).join('<br>') : noAtt;
+      }
+
+      const openQEl = mount.querySelector('[data-open-questions]');
+      if (openQEl) {
+        const oqs = Array.isArray(m.open_questions) ? m.open_questions : [];
+        const allResolved = state.lang === 'en' ? 'All questions resolved' : (state.lang === 'ru' ? 'Все вопросы решены' : 'Barcha savollar hal etilgan');
+        openQEl.innerHTML = oqs.length ? oqs.map(q => escapeHtml(q)).join('<br>') : allResolved;
+      }
+
+      // Export preview update
+      updateSharePreview(mount, m);
+    });
+
+    if (globalThis.lucide) lucide.createIcons({attrs:{width:15,height:15}});
+  }
+
+  // Switch workspace subtabs
+  function switchSubtab(mount, tabName) {
+    state.subtab = tabName;
+    mount.querySelectorAll('.g-apptabs button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.subtab === tabName);
+    });
+
+    const sumPanel = mount.querySelector('[data-doc-panel="summary"]');
+    const tasksPanel = mount.querySelector('[data-tasks-panel]');
+    const transPanel = mount.querySelector('[data-doc-panel="transcript"]');
+    const searchPanel = mount.querySelector('[data-doc-panel="search"]');
+
+    if (tabName === 'summary') {
+      if (sumPanel) sumPanel.hidden = false;
+      if (tasksPanel) tasksPanel.hidden = false;
+      if (transPanel) transPanel.hidden = true;
+      if (searchPanel) searchPanel.hidden = true;
+    } else if (tabName === 'transcript') {
+      if (sumPanel) sumPanel.hidden = true;
+      if (tasksPanel) tasksPanel.hidden = true;
+      if (transPanel) transPanel.hidden = false;
+      if (searchPanel) searchPanel.hidden = true;
+    } else if (tabName === 'tasks') {
+      if (sumPanel) sumPanel.hidden = true;
+      if (tasksPanel) tasksPanel.hidden = false;
+      if (transPanel) transPanel.hidden = true;
+      if (searchPanel) searchPanel.hidden = true;
+    } else if (tabName === 'search') {
+      if (sumPanel) sumPanel.hidden = true;
+      if (tasksPanel) tasksPanel.hidden = true;
+      if (transPanel) transPanel.hidden = true;
+      if (searchPanel) searchPanel.hidden = false;
+    }
+  }
+
+  // Highlight transcript timestamp
+  function highlightTranscriptSegment(mount, time) {
+    if (!time) return;
+    const segs = mount.querySelectorAll('.g-transcript p');
+    segs.forEach(p => {
+      if (p.textContent.includes(time)) {
+        p.style.background = 'var(--g-tint)';
+        p.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => p.style.background = 'transparent', 2400);
+      }
+    });
+  }
+
+  // Render tasks with dynamic toggle
+  function renderTasks(mount, tasks) {
+    const list = mount.querySelector('[data-tasks-list]');
+    const badge = mount.querySelector('[data-tasks-badge]');
+    const stats = mount.querySelector('[data-tasks-stats]');
+
+    const count = tasks.length;
+    const statsLabel = state.lang === 'en' ? `${count} tasks` : (state.lang === 'ru' ? `${count} задач` : `${count} ta vazifa`);
+    if (badge) badge.textContent = count;
+    if (stats) stats.textContent = statsLabel;
+    if (!list) return;
+
+    list.innerHTML = '';
+    if (tasks.length === 0) {
+      const noTasks = state.lang === 'en' ? 'No tasks yet' : (state.lang === 'ru' ? 'Задач пока нет' : 'Hozircha vazifalar yo‘q');
+      list.innerHTML = `<div class="g-micro" style="padding:8px 0">${noTasks}</div>`;
+      return;
+    }
+
+    tasks.forEach(t => {
+      const label = document.createElement('label');
+      label.className = 'g-task';
+      label.innerHTML = `
+        <input type="checkbox" ${t.completed ? 'checked' : ''}>
+        <span>${escapeHtml(t.text)}</span>
+        <span class="g-owner">${escapeHtml(t.owner)}${t.due_date ? ' · ' + escapeHtml(t.due_date) : ''}</span>
+        <button type="button" title="O‘chirish" style="opacity:0.35;padding:0 4px;font-size:11px" class="g-del-btn">✕</button>
+      `;
+
+      const input = label.querySelector('input');
+      input.onchange = async () => {
+        try {
+          await fetch(`/api/tasks/${t.id}/toggle`, { method: 'POST' });
+          t.completed = input.checked ? 1 : 0;
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      const delBtn = label.querySelector('.g-del-btn');
+      delBtn.onclick = async (e) => {
+        e.preventDefault();
+        try {
+          await fetch(`/api/tasks/${t.id}`, { method: 'DELETE' });
+          if (state.activeMeetingId) loadMeetingDetail(state.activeMeetingId);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      list.appendChild(label);
+    });
+
+    // Wire quick add task
+    const form = mount.querySelector('[data-quick-add-task]');
+    if (form) {
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const inp = form.querySelector('input');
+        const val = inp.value.trim();
+        if (!val || !state.activeMeetingId) return;
+        try {
+          const defaultOwner = state.lang === 'en' ? 'Team' : (state.lang === 'ru' ? 'Команда' : 'Jamoa');
+          const defaultDue = state.lang === 'en' ? 'Today' : (state.lang === 'ru' ? 'Сегодня' : 'Bugun');
+          await fetch(`/api/meetings/${state.activeMeetingId}/tasks`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: val, owner: defaultOwner, due_date: defaultDue })
+          });
+          inp.value = '';
+          loadMeetingDetail(state.activeMeetingId);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+    }
+  }
+
+  // Render Transcript with editable speaker names
+  function renderTranscript(mount, segments, meetingId) {
+    const container = mount.querySelector('[data-transcript-container]');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (segments.length === 0) {
+      const noTrans = state.lang === 'en' ? 'No transcript available' : (state.lang === 'ru' ? 'Транскрипция отсутствует' : 'Transkripsiya mavjud emas');
+      container.innerHTML = `<div class="g-micro" style="padding:12px 0">${noTrans}</div>`;
+      return;
+    }
+
+    segments.forEach(seg => {
+      const p = document.createElement('p');
+      p.innerHTML = `
+        <small style="display:flex;align-items:center;gap:6px">
+          <span style="color:var(--g-muted)">${escapeHtml(seg.time || '00:00')}</span> · 
+          <strong class="g-speaker-name" title="Ismni tahrirlash uchun bosing" style="cursor:pointer;color:var(--g-violet)">
+            ${escapeHtml(seg.speaker || 'Noma’lum')} ✎
+          </strong>
+        </small>
+        ${escapeHtml(seg.text)}
+      `;
+
+      const speakerEl = p.querySelector('.g-speaker-name');
+      speakerEl.onclick = async () => {
+        const promptMsg = state.lang === 'en' ? `Enter new name for "${seg.speaker}":` : (state.lang === 'ru' ? `Введите новое имя для «${seg.speaker}»:` : `"${seg.speaker}" uchun yangi ismni kiriting:`);
+        const newName = prompt(promptMsg, seg.speaker);
+        if (newName && newName.trim() && newName.trim() !== seg.speaker) {
+          try {
+            await fetch(`/api/meetings/${meetingId}/rename-speaker`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ old_speaker: seg.speaker, new_speaker: newName.trim() })
+            });
+            loadMeetingDetail(meetingId);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      };
+
+      container.appendChild(p);
+    });
+  }
+
+  // Update Telegram share preview
+  function updateSharePreview(mount, m) {
+    const previewSlot = mount.querySelector('[data-share-preview-slot]');
+    if (!previewSlot) return;
+
+    const decWord = state.lang === 'en' ? 'Decision' : (state.lang === 'ru' ? 'Решение' : 'Qaror');
+    let tasksText = (m.tasks || []).map(t => `${t.owner}: ${t.text}`).join('\n');
+    let decisionsText = (m.decisions || []).map(d => `${decWord}: ${d.text}`).join('\n');
+
+    const previewHead = state.lang === 'en' ? 'Export Text' : (state.lang === 'ru' ? 'Текст для отправки' : 'Yuboriladigan matn');
+    const previewNotice = state.lang === 'en' ? 'Audio and full transcript are never sent.' : (state.lang === 'ru' ? 'Аудио и полная стенограмма не отправляются.' : 'Audio va to‘liq transkripsiya yuborilmaydi.');
+
+    previewSlot.innerHTML = `
+      <div class="g-exporttext">
+        <strong>${previewHead}</strong><br>
+        ${escapeHtml(m.title)} · ${escapeHtml(m.date)}<br>
+        ${escapeHtml(decisionsText || '')}<br>
+        ${escapeHtml(tasksText || '')}<br>
+        <hr style="border:0;border-top:1px solid var(--g-line);margin:8px 0">
+        <span style="color:var(--g-muted)">${previewNotice}</span>
+      </div>
+    `;
+
+    const tgLinkBtn = mount.querySelector('[data-telegram-link]');
+    if (tgLinkBtn) {
+      const decHeader = state.lang === 'en' ? '📌 *Key Decisions:*' : (state.lang === 'ru' ? '📌 *Ключевые решения:*' : '📌 *Asosiy qarorlar:*');
+      const taskHeader = state.lang === 'en' ? '✅ *Tasks & Next Steps:*' : (state.lang === 'ru' ? '✅ *Задачи:*' : '✅ *Vazifalar:*');
+      const footerTag = state.lang === 'en' ? '_Prepared via GPTify Meet_' : (state.lang === 'ru' ? '_Подготовлено через GPTify Meet_' : '_GPTify Meet orqali tayyorlandi_');
+
+      const message = `📋 *${m.title}*\n📅 ${m.date}\n\n${decHeader}\n${decisionsText}\n\n${taskHeader}\n${tasksText}\n\n${footerTag}`;
+      tgLinkBtn.href = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
+    }
+
+    const copyBtn = mount.querySelector('[data-copy-telegram]');
+    const toastEl = mount.querySelector('[data-share-toast]');
+    if (copyBtn) {
+      copyBtn.onclick = () => {
+        const text = `📋 ${m.title}\n📅 ${m.date}\n\n${decisionsText}\n\n${tasksText}`;
+        navigator.clipboard.writeText(text);
+        if (toastEl) {
+          const copiedMsg = state.lang === 'en' ? 'Copied to clipboard!' : (state.lang === 'ru' ? 'Скопировано в буфер!' : 'Nusxa olindi!');
+          toastEl.textContent = copiedMsg;
+          setTimeout(() => toastEl.textContent = '', 2500);
+        }
+      };
+    }
+  }
+
+  // Mount template into target containers
+  function mountDesktopApps() {
+    const template = document.getElementById('gptify-app-template');
+    const privacyTpl = document.getElementById('gptify-privacy-detail');
+
+    root.querySelectorAll('[data-app-mount]').forEach(m => {
+      m.innerHTML = '';
+      const clone = template.content.cloneNode(true);
+      
+      // Inject privacy detail accordion into context
+      const privSlot = clone.querySelector('[data-privacy-accordion-slot]');
+      if (privSlot) {
+        privSlot.appendChild(privacyTpl.content.cloneNode(true));
+      }
+
+      m.appendChild(clone);
+
+      // Subtabs wiring
+      m.querySelectorAll('.g-apptabs button').forEach(btn => {
+        btn.onclick = () => switchSubtab(m, btn.dataset.subtab);
+      });
+
+      // Sidebar buttons wiring
+      m.querySelectorAll('.g-side button[data-app-tab]').forEach(btn => {
+        btn.onclick = () => {
+          m.querySelectorAll('.g-side button[data-app-tab]').forEach(b => b.classList.remove('g-selected'));
+          btn.classList.add('g-selected');
+          switchSubtab(m, btn.dataset.appTab);
+        };
+      });
+
+      // "+ Yangi uchrashuv" button inside desktop window
+      const newBtn = m.querySelector('[data-app-action="new-meeting"]');
+      if (newBtn) {
+        newBtn.onclick = () => openNewMeetingModal();
+      }
+
+      // Share button in header
+      const shareBtn = m.querySelector('[data-app-action="share"]');
+      const sharePanel = m.querySelector('[data-workspace-share]');
+      const closeShareBtn = m.querySelector('[data-close-share]');
+      if (shareBtn && sharePanel) {
+        shareBtn.onclick = () => {
+          sharePanel.hidden = false;
+          sharePanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        };
+      }
+      if (closeShareBtn && sharePanel) {
+        closeShareBtn.onclick = () => sharePanel.hidden = true;
+      }
+
+      // Search input live filtering
+      const searchInp = m.querySelector('[data-search-input]');
+      const searchRes = m.querySelector('[data-search-results]');
+      if (searchInp && searchRes) {
+        searchInp.oninput = (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          if (!q) {
+            searchRes.textContent = state.lang === 'en' ? 'e.g., pilot, budget, Aziza' : (state.lang === 'ru' ? 'Например: пилот, бюджет, Азиза' : 'Masalan: sinov, Aziza yoki budjet.');
+            return;
+          }
+          if (!state.currentMeeting) return;
+          const found = [];
+          if ((state.currentMeeting.summary || '').toLowerCase().includes(q)) found.push(`Summary: ${state.currentMeeting.summary}`);
+          (state.currentMeeting.decisions || []).forEach(d => {
+            if (d.text.toLowerCase().includes(q)) found.push(`Decision: ${d.text}`);
+          });
+          (state.currentMeeting.tasks || []).forEach(t => {
+            if (t.text.toLowerCase().includes(q)) found.push(`Task: ${t.text}`);
+          });
+          (state.currentMeeting.transcript_segments || []).forEach(s => {
+            if (s.text.toLowerCase().includes(q)) found.push(`${s.speaker}: ${s.text}`);
+          });
+          searchRes.innerHTML = found.length ? found.map(f => `• ${escapeHtml(f)}`).join('<br><br>') : (state.lang === 'en' ? 'No results found.' : (state.lang === 'ru' ? 'Ничего не найдено.' : 'Natija topilmadi.'));
+        };
+      }
+    });
+  }
+
+  // Language Selector buttons wiring
+  root.querySelectorAll('.g-langtabs button').forEach(btn => {
+    btn.onclick = () => setLanguage(btn.dataset.lang);
+  });
+
+  // Top Views Switching
+  root.querySelectorAll('.g-viewtabs button[data-view]').forEach(btn => {
+    btn.onclick = () => setView(btn.dataset.view);
+  });
+
+  root.querySelectorAll('[data-nav]').forEach(btn => {
+    btn.onclick = () => setView(btn.dataset.nav);
+  });
+
+  // Demo Lead Capture System
+  const leadModal = document.getElementById('g-demo-lead-modal');
+  const leadCloseBtn = document.getElementById('lead-modal-close-btn');
+  const leadForm = document.getElementById('g-lead-capture-form');
+  const leadSuccess = document.getElementById('lead-success-state');
+  const leadGotoAppBtn = document.getElementById('lead-goto-app-btn');
+
+  function openDemoSignupModal() {
+    if (leadModal) {
+      if (leadForm) leadForm.hidden = false;
+      if (leadSuccess) leadSuccess.hidden = true;
+      leadModal.hidden = false;
+    }
+  }
+
+  function closeDemoSignupModal() {
+    if (leadModal) leadModal.hidden = true;
+  }
+
+  if (leadCloseBtn) leadCloseBtn.onclick = closeDemoSignupModal;
+  if (leadGotoAppBtn) {
+    leadGotoAppBtn.onclick = () => {
+      closeDemoSignupModal();
+      setView('app');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  }
+
+  function handleDemoAccess() {
+    const existing = localStorage.getItem('gptify_demo_user');
+    if (existing) {
+      setView('app');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      openDemoSignupModal();
+    }
+  }
+
+  root.querySelectorAll('[data-open-app]').forEach(btn => {
+    btn.onclick = () => {
+      handleDemoAccess();
+    };
+  });
+
+  if (leadForm) {
+    leadForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('lead-name-input').value.trim();
+      const contact = document.getElementById('lead-contact-input').value.trim();
+      const company = document.getElementById('lead-company-input').value.trim();
+      const tool = document.getElementById('lead-tool-select').value;
+      const submitBtn = document.getElementById('lead-submit-btn');
+
+      if (!name || !contact) return;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>...</span>';
+
+      try {
+        await fetch('/api/leads', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, contact, company, meeting_tool: tool })
+        });
+      } catch (err) {
+        console.warn("Lead save fallback to local:", err);
+      }
+
+      // Persist signup state
+      localStorage.setItem('gptify_demo_user', JSON.stringify({ name, contact, company }));
+
+      // Show success
+      leadForm.hidden = true;
+      leadSuccess.hidden = false;
+
+      // Auto redirect to demo after 1.6s
+      setTimeout(() => {
+        closeDemoSignupModal();
+        setView('app');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1600);
+    };
+  }
+
+  // Jump Anchors
+  root.querySelectorAll('[data-jump]').forEach(btn => {
+    btn.onclick = () => {
+      const target = root.querySelector(`[data-section="${btn.dataset.jump}"]`);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  });
+
+  // Privacy Share CTA jump to stage 3
+  root.querySelectorAll('[data-privacy-share]').forEach(btn => {
+    btn.onclick = () => {
+      setView('product');
+      setStage('share');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  });
+
+  // Billing Toggle
+  root.querySelectorAll('[data-bill]').forEach(btn => {
+    btn.onclick = () => {
+      const isYear = btn.dataset.bill === 'year';
+      root.querySelectorAll('[data-bill]').forEach(b => b.setAttribute('aria-pressed', b === btn));
+      const priceEl = root.querySelector('[data-price]');
+      const noteEl = root.querySelector('[data-billing-note]');
+      if (priceEl) {
+        const per = isYear ? t('pricing.per_year') : t('pricing.per_month');
+        priceEl.innerHTML = isYear ? `1 900 000 <small>${per}</small>` : `195 000 <small>${per}</small>`;
+      }
+      if (noteEl) noteEl.textContent = isYear ? t('pricing.note_year') : t('pricing.note_month');
+    };
+  });
+
+  // Theme Toggle Button
+  const themeToggle = document.getElementById('g-theme-toggle');
+  if (themeToggle) {
+    themeToggle.onclick = () => {
+      if (document.documentElement.style.colorScheme === 'dark') {
+        document.documentElement.style.colorScheme = 'light';
+        themeToggle.textContent = '☀️ Light';
+      } else {
+        document.documentElement.style.colorScheme = 'dark';
+        themeToggle.textContent = '🌙 Dark';
+      }
+    };
+  }
+
+  // ==========================================
+  // REAL AUDIO RECORDING & UPLOAD IMPLEMENTATION
+  // ==========================================
+  const modal = document.getElementById('g-new-meeting-modal');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+
+  function openNewMeetingModal() {
+    if (modal) modal.hidden = false;
+  }
+  function closeNewMeetingModal() {
+    if (modal) modal.hidden = true;
+  }
+  if (modalCloseBtn) modalCloseBtn.onclick = closeNewMeetingModal;
+
+  // Modal Mode Switcher
+  let modalActiveMode = 'mic';
+  root.querySelectorAll('[data-modal-mode]').forEach(btn => {
+    btn.onclick = () => {
+      modalActiveMode = btn.dataset.modalMode;
+      root.querySelectorAll('[data-modal-mode]').forEach(b => b.setAttribute('aria-pressed', b === btn));
+      document.getElementById('modal-mic-section').hidden = modalActiveMode !== 'mic';
+      document.getElementById('modal-file-section').hidden = modalActiveMode !== 'file';
+      document.getElementById('modal-text-section').hidden = modalActiveMode !== 'text';
+    };
+  });
+
+  // Product Stage 1 Mode Switcher
+  let prodActiveMode = 'mic';
+  root.querySelectorAll('[data-capture-mode]').forEach(btn => {
+    btn.onclick = () => {
+      prodActiveMode = btn.dataset.captureMode;
+      root.querySelectorAll('[data-capture-mode]').forEach(b => b.setAttribute('aria-pressed', b === btn));
+      document.getElementById('prod-mic-box').hidden = prodActiveMode !== 'mic';
+      document.getElementById('prod-file-box').hidden = prodActiveMode !== 'file';
+      document.getElementById('prod-text-box').hidden = prodActiveMode !== 'text';
+    };
+  });
+
+  // MediaRecorder State
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let recordTimer = null;
+  let recordSeconds = 0;
+
+  function formatTime(s) {
+    const mins = Math.floor(s / 60).toString().padStart(2, '0');
+    const secs = (s % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  }
+
+  async function startRecording(timerDisplayEl, statusEl, startBtn, stopBtn) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => {
+        if (e.data.size > 0) audioChunks.push(e.data);
+      };
+
+      mediaRecorder.start();
+      recordSeconds = 0;
+      timerDisplayEl.textContent = '00:00';
+      statusEl.textContent = t('modal.rec_active');
+      startBtn.hidden = true;
+      stopBtn.hidden = false;
+
+      recordTimer = setInterval(() => {
+        recordSeconds++;
+        timerDisplayEl.textContent = formatTime(recordSeconds);
+      }, 1000);
+    } catch (err) {
+      alert(state.lang === 'en' ? "Microphone access denied or not available: " + err.message : (state.lang === 'ru' ? "Доступ к микрофону отклонен: " + err.message : "Mikrofonga ruxsat berilmadi: " + err.message));
+    }
+  }
+
+  function stopRecording(timerDisplayEl, statusEl, startBtn, stopBtn, onComplete) {
+    if (!mediaRecorder) return;
+    clearInterval(recordTimer);
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      onComplete(audioBlob);
+    };
+    mediaRecorder.stop();
+    startBtn.hidden = false;
+    stopBtn.hidden = true;
+    statusEl.textContent = t('modal.rec_stop_status');
+  }
+
+  // Wire Modal Mic
+  const mStartBtn = document.getElementById('modal-start-rec-btn');
+  const mStopBtn = document.getElementById('modal-stop-rec-btn');
+  const mTimerDisplay = document.getElementById('modal-timer-display');
+  const mStatusText = document.getElementById('modal-status-text');
+
+  if (mStartBtn && mStopBtn) {
+    mStartBtn.onclick = () => startRecording(mTimerDisplay, mStatusText, mStartBtn, mStopBtn);
+    mStopBtn.onclick = () => {
+      stopRecording(mTimerDisplay, mStatusText, mStartBtn, mStopBtn, async (blob) => {
+        const defTitle = state.lang === 'en' ? 'New Audio Meeting' : (state.lang === 'ru' ? 'Новая аудиовстреча' : 'Yangi audio uchrashuv');
+        const title = document.getElementById('modal-title-input').value.trim() || defTitle;
+        await sendAudioToBackend(blob, title, 'recording.webm', 'modal');
+      });
+    };
+  }
+
+  // Wire Product Stage 1 Mic
+  const pStartBtn = document.getElementById('prod-start-rec');
+  const pStopBtn = document.getElementById('prod-stop-rec');
+  const pTimerDisplay = document.getElementById('prod-rec-time');
+  const pStatusText = document.getElementById('prod-rec-status-text');
+
+  if (pStartBtn && pStopBtn) {
+    pStartBtn.onclick = () => startRecording(pTimerDisplay, pStatusText, pStartBtn, pStopBtn);
+    pStopBtn.onclick = () => {
+      stopRecording(pTimerDisplay, pStatusText, pStartBtn, pStopBtn, async (blob) => {
+        const defTitle = state.lang === 'en' ? 'New Audio Meeting' : (state.lang === 'ru' ? 'Новая аудиовстреча' : 'Yangi audio uchrashuv');
+        const title = document.getElementById('prod-meeting-title').value.trim() || defTitle;
+        await sendAudioToBackend(blob, title, 'recording.webm', 'product');
+      });
+    };
+  }
+
+  // Wire Modal File Picker
+  const mFilePicker = document.getElementById('modal-file-picker');
+  const mAnalyzeFileBtn = document.getElementById('modal-analyze-file-btn');
+  const mSelectedFileName = document.getElementById('modal-selected-filename');
+  let modalSelectedFile = null;
+
+  if (mFilePicker) {
+    mFilePicker.onchange = (e) => {
+      if (e.target.files.length) {
+        modalSelectedFile = e.target.files[0];
+        mSelectedFileName.textContent = `${modalSelectedFile.name} (${Math.round(modalSelectedFile.size / 1024)} KB)`;
+        mAnalyzeFileBtn.disabled = false;
+      }
+    };
+  }
+  if (mAnalyzeFileBtn) {
+    mAnalyzeFileBtn.onclick = async () => {
+      if (!modalSelectedFile) return;
+      const title = document.getElementById('modal-title-input').value.trim() || modalSelectedFile.name;
+      await sendAudioToBackend(modalSelectedFile, title, modalSelectedFile.name, 'modal');
+    };
+  }
+
+  // Wire Product Stage File Picker
+  const pFilePicker = document.getElementById('prod-file-input');
+  const pAnalyzeFileBtn = document.getElementById('prod-upload-btn');
+  const pSelectedFileName = document.getElementById('prod-file-name');
+  let prodSelectedFile = null;
+
+  if (pFilePicker) {
+    pFilePicker.onchange = (e) => {
+      if (e.target.files.length) {
+        prodSelectedFile = e.target.files[0];
+        pSelectedFileName.textContent = `${prodSelectedFile.name} (${Math.round(prodSelectedFile.size / 1024)} KB)`;
+        pAnalyzeFileBtn.disabled = false;
+      }
+    };
+  }
+  if (pAnalyzeFileBtn) {
+    pAnalyzeFileBtn.onclick = async () => {
+      if (!prodSelectedFile) return;
+      const title = document.getElementById('prod-meeting-title').value.trim() || prodSelectedFile.name;
+      await sendAudioToBackend(prodSelectedFile, title, prodSelectedFile.name, 'product');
+    };
+  }
+
+  // Wire Modal Text Submit
+  const mAnalyzeTextBtn = document.getElementById('modal-analyze-text-btn');
+  if (mAnalyzeTextBtn) {
+    mAnalyzeTextBtn.onclick = async () => {
+      const text = document.getElementById('modal-transcript-text').value.trim();
+      const defTitle = state.lang === 'en' ? 'Text Meeting Notes' : (state.lang === 'ru' ? 'Текстовый конспект' : 'Matnli uchrashuv');
+      const title = document.getElementById('modal-title-input').value.trim() || defTitle;
+      if (!text) {
+        alert(state.lang === 'en' ? "Please enter transcript text!" : (state.lang === 'ru' ? "Пожалуйста, введите текст встречи!" : "Iltimos, suhbat matnini kiriting!"));
+        return;
+      }
+      await sendTextToBackend(text, title, 'modal');
+    };
+  }
+
+  // Wire Product Text Submit
+  const pAnalyzeTextBtn = document.getElementById('prod-text-btn');
+  if (pAnalyzeTextBtn) {
+    pAnalyzeTextBtn.onclick = async () => {
+      const text = document.getElementById('prod-text-input').value.trim();
+      const defTitle = state.lang === 'en' ? 'Text Meeting Notes' : (state.lang === 'ru' ? 'Текстовый конспект' : 'Matnli uchrashuv');
+      const title = document.getElementById('prod-meeting-title').value.trim() || defTitle;
+      if (!text) {
+        alert(state.lang === 'en' ? "Please enter transcript text!" : (state.lang === 'ru' ? "Пожалуйста, введите текст встречи!" : "Iltimos, suhbat matnini kiriting!"));
+        return;
+      }
+      await sendTextToBackend(text, title, 'product');
+    };
+  }
+
+  // Unified Audio Sender with language pass
+  async function sendAudioToBackend(blobOrFile, title, filename, origin) {
+    const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
+    const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
+
+    if (processingBox) processingBox.hidden = false;
+    if (stepEl) stepEl.textContent = t('modal.proc_step1');
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('file', blobOrFile, filename);
+    formData.append('audio', blobOrFile, filename);
+    formData.append('lang', state.lang);
+
+    try {
+      if (stepEl) stepEl.textContent = t('modal.proc_step2');
+      const res = await fetch('/api/meetings/upload-audio', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Server error");
+      }
+
+      if (stepEl) stepEl.textContent = t('modal.proc_step4');
+      const newMeeting = await res.json();
+
+      await loadMeetings(false);
+      await loadMeetingDetail(newMeeting.id);
+
+      if (origin === 'modal') {
+        closeNewMeetingModal();
+        setView('app');
+      } else {
+        setView('product');
+        setStage('review');
+      }
+    } catch (e) {
+      alert("AI Error: " + e.message);
+    } finally {
+      if (processingBox) processingBox.hidden = true;
+    }
+  }
+
+  // Unified Text Sender with language pass
+  async function sendTextToBackend(text, title, origin) {
+    const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
+    const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
+
+    if (processingBox) processingBox.hidden = false;
+    if (stepEl) stepEl.textContent = t('modal.proc_step4');
+
+    try {
+      const res = await fetch('/api/meetings/process-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, text, duration: '15 min', lang: state.lang })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.detail || "Server error");
+      }
+
+      const newMeeting = await res.json();
+      await loadMeetings(false);
+      await loadMeetingDetail(newMeeting.id);
+
+      if (origin === 'modal') {
+        closeNewMeetingModal();
+        setView('app');
+      } else {
+        setView('product');
+        setStage('review');
+      }
+    } catch (e) {
+      alert("AI Error: " + e.message);
+    } finally {
+      if (processingBox) processingBox.hidden = true;
+    }
+  }
+
+  // Product Stage 3 Share wiring
+  const pShareTgBtn = document.getElementById('prod-share-tg-btn');
+  const pShareCopyBtn = document.getElementById('prod-share-copy-btn');
+  const pShareStatus = document.getElementById('prod-share-status');
+
+  if (pShareTgBtn) {
+    pShareTgBtn.onclick = () => {
+      if (!state.currentMeeting) return;
+      const m = state.currentMeeting;
+      const decWord = state.lang === 'en' ? 'Decision' : (state.lang === 'ru' ? 'Решение' : 'Qaror');
+      let text = `📋 ${m.title} · ${m.date}\n\n`;
+      (m.decisions || []).forEach(d => text += `${decWord}: ${d.text}\n`);
+      (m.tasks || []).forEach(t => text += `${t.owner}: ${t.text}\n`);
+      const link = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+      window.open(link, '_blank');
+      if (pShareStatus) pShareStatus.textContent = state.lang === 'en' ? 'Opening Telegram...' : (state.lang === 'ru' ? 'Открытие Telegram...' : 'Telegram ochilmoqda...');
+    };
+  }
+
+  if (pShareCopyBtn) {
+    pShareCopyBtn.onclick = () => {
+      if (!state.currentMeeting) return;
+      const m = state.currentMeeting;
+      const decWord = state.lang === 'en' ? 'Decision' : (state.lang === 'ru' ? 'Решение' : 'Qaror');
+      let text = `📋 ${m.title} · ${m.date}\n\n`;
+      (m.decisions || []).forEach(d => text += `${decWord}: ${d.text}\n`);
+      (m.tasks || []).forEach(t => text += `${t.owner}: ${t.text}\n`);
+      navigator.clipboard.writeText(text);
+      if (pShareStatus) {
+        pShareStatus.textContent = state.lang === 'en' ? 'Copied to clipboard!' : (state.lang === 'ru' ? 'Скопировано в буфер!' : 'Hisobot matni nusxalandi!');
+        setTimeout(() => pShareStatus.textContent = '', 2500);
+      }
+    };
+  }
+
+  // Stage Buttons
+  root.querySelectorAll('.g-stages button[data-stage]').forEach(btn => {
+    btn.onclick = () => setStage(btn.dataset.stage);
+  });
+
+  // Initialization
+  mountDesktopApps();
+  setLanguage(state.lang);
+  loadMeetings();
+
+  if (globalThis.lucide) {
+    lucide.createIcons({attrs:{width:15,height:15}});
+  }
+})();
+</script>
+
+</body>
+</html>
