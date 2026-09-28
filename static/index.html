@@ -1689,7 +1689,7 @@
         <p class="g-sub" data-i18n="pricing.sub">14 kun barcha asosiy imkoniyatlarni sinab ko‘ring.</p>
         <div class="g-viewtabs" style="width:fit-content">
           <button data-bill="month" aria-pressed="true" data-i18n="pricing.month">Oylik</button>
-          <button data-bill="year" aria-pressed="false" data-i18n="pricing.year">Yillik · 19% tejam</button>
+          <button data-bill="year" aria-pressed="false" data-i18n="pricing.year">Yillik · 17% tejam</button>
         </div>
       </div>
       <div class="g-pricebox">
@@ -1697,7 +1697,7 @@
           <strong>GPTify Pro</strong>
           <span class="g-pill" data-i18n="pricing.badge">Shaxsiy foydalanish</span>
         </div>
-        <div class="g-price" data-price>195 000 <small data-i18n="pricing.per_month">so‘m / oy</small></div>
+        <div class="g-price" data-price>99 000 <small data-i18n="pricing.per_month">so‘m / oy</small></div>
         <div class="g-micro" data-billing-note data-i18n="pricing.note_month">Oylik to‘lov</div>
         <div class="g-checklist">
           <span>✓ &nbsp; <span data-i18n="pricing.feat1">Botlarsiz yozuv va lokal transkripsiya</span></span>
@@ -2383,12 +2383,12 @@
         h2: "Kamroq konspekt.<br>Ko‘proq natija.",
         sub: "14 kun barcha asosiy imkoniyatlarni sinab ko‘ring.",
         month: "Oylik",
-        year: "Yillik · 19% tejam",
+        year: "Yillik · 17% tejam",
         badge: "Shaxsiy foydalanish",
         per_month: "so‘m / oy",
         per_year: "so‘m / yil",
         note_month: "Oylik to‘lov",
-        note_year: "Yiliga 440 000 so‘m tejaysiz",
+        note_year: "Yiliga 198 000 so‘m tejaysiz",
         feat1: "Botlarsiz yozuv va lokal transkripsiya",
         feat2: "Aniq bayonnoma va vazifalar",
         feat3: "Audio import va Telegram eksport",
@@ -2612,12 +2612,12 @@
         h2: "Less note-taking.<br>More momentum.",
         sub: "Try all core capabilities free for 14 days.",
         month: "Monthly",
-        year: "Annual · Save 19%",
+        year: "Annual · Save 17%",
         badge: "Individual & Team",
         per_month: "UZS / mo",
         per_year: "UZS / yr",
         note_month: "Billed monthly",
-        note_year: "Save 440,000 UZS per year",
+        note_year: "Save 198,000 UZS per year",
         feat1: "Bot-free recording & local speech engine",
         feat2: "Structured minutes & clear action items",
         feat3: "Audio import & one-click Telegram export",
@@ -2841,12 +2841,12 @@
         h2: "Меньше конспектов.<br>Больше результатов.",
         sub: "14 дней бесплатного доступа ко всем возможностям.",
         month: "Помесячно",
-        year: "Годовой · Скидка 19%",
+        year: "Годовой · Скидка 17%",
         badge: "Индивидуальный и командный",
         per_month: "сум / мес",
         per_year: "сум / год",
         note_month: "Ежемесячная оплата",
-        note_year: "Экономия 440 000 сум в год",
+        note_year: "Экономия 198 000 сум в год",
         feat1: "Запись без ботов и локальная расшифровка",
         feat2: "Структурированный протокол и задачи",
         feat3: "Импорт аудио и экспорт в Telegram",
@@ -3782,7 +3782,7 @@
       const noteEl = root.querySelector('[data-billing-note]');
       if (priceEl) {
         const per = isYear ? t('pricing.per_year') : t('pricing.per_month');
-        priceEl.innerHTML = isYear ? `1 900 000 <small>${per}</small>` : `195 000 <small>${per}</small>`;
+        priceEl.innerHTML = isYear ? `990 000 <small>${per}</small>` : `99 000 <small>${per}</small>`;
       }
       if (noteEl) noteEl.textContent = isYear ? t('pricing.note_year') : t('pricing.note_month');
     };
