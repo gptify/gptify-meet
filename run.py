@@ -1,5 +1,5 @@
 """
-GPTify Meet - Launcher Script
+Mirzo - Launcher Script
 Starts the backend server and opens the app in the browser.
 """
 import sys
@@ -11,7 +11,7 @@ from server import app
 
 def open_browser():
     time.sleep(1.2)
-    print("\n[GPTify Meet] Ilova brauzerda ochilmoqda: http://127.0.0.1:8000\n")
+    print("\n[Mirzo] Ilova brauzerda ochilmoqda: http://127.0.0.1:8000\n")
     webbrowser.open("http://127.0.0.1:8000")
 
 if __name__ == "__main__":

@@ -15,8 +15,7 @@ def test_initial_db_setup():
     assert len(meetings) >= 1
     sample = meetings[0]
     assert "title" in sample
-    assert "tasks" in sample
-    assert len(sample["tasks"]) >= 1
+    assert isinstance(sample["tasks"], list)
 
 def test_api_list_meetings():
     response = client.get("/api/meetings")

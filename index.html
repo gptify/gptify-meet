@@ -3925,6 +3925,8 @@
     return `${mins}:${secs}`;
   }
 
+  let wakeLock = null;
+
   async function startRecording(timerDisplayEl, statusEl, startBtn, stopBtn) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -3934,12 +3936,17 @@
         if (e.data.size > 0) audioChunks.push(e.data);
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(1000);
       recordSeconds = 0;
       timerDisplayEl.textContent = '00:00';
       statusEl.textContent = t('modal.rec_active');
       startBtn.hidden = true;
       stopBtn.hidden = false;
+
+      // Keep laptop screen awake during meeting
+      if ('wakeLock' in navigator) {
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+      }
 
       recordTimer = setInterval(() => {
         recordSeconds++;
@@ -3953,6 +3960,10 @@
   function stopRecording(timerDisplayEl, statusEl, startBtn, stopBtn, onComplete) {
     if (!mediaRecorder) return;
     clearInterval(recordTimer);
+    if (wakeLock) {
+      try { wakeLock.release(); } catch (e) {}
+      wakeLock = null;
+    }
     mediaRecorder.onstop = () => {
       const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
       mediaRecorder.stream.getTracks().forEach(track => track.stop());
@@ -4178,29 +4189,56 @@
     }
   }
 
-  // Unified Audio Sender with realistic AI simulation
+  // Unified Audio Sender: connects to live backend on localhost, or uses safe demo on public web
   async function sendAudioToBackend(blobOrFile, title, filename, origin) {
     const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
     const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
 
     if (processingBox) processingBox.hidden = false;
 
+    const isLocalBackend = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const defTitle = state.lang === 'en' ? 'Voice Recording' : (state.lang === 'ru' ? 'Аудиозапись встречи' : 'Ovozli uchrashuv yozuvi');
+    const meetingTitle = title && title.trim() ? title.trim() : defTitle;
+
     try {
-      if (stepEl) stepEl.textContent = t('modal.proc_step1') || "Yuklanmoqda...";
-      await delay(700);
+      let newMeeting = null;
 
-      if (stepEl) stepEl.textContent = t('modal.proc_step2') || "Groq Whisper orqali ovoz transkripsiya qilinmoqda...";
-      await delay(800);
+      if (isLocalBackend) {
+        if (stepEl) stepEl.textContent = "Audio serverga yuklanmoqda...";
+        const formData = new FormData();
+        formData.append('file', blobOrFile, filename || 'meeting.webm');
+        formData.append('title', meetingTitle);
+        formData.append('lang', state.lang || 'uz');
+        formData.append('template', 'general');
 
-      if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va dialektlar me’yorlashtirilmoqda...";
-      await delay(700);
+        if (stepEl) stepEl.textContent = "Ovoz transkripsiya qilinmoqda (Groq Whisper)...";
+        const resp = await fetch('/api/meetings/upload-audio', {
+          method: 'POST',
+          body: formData
+        });
 
-      if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
-      await delay(600);
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.detail || "Server xatoligi yuz berdi");
+        }
 
-      const defTitle = state.lang === 'en' ? 'Voice Recording' : (state.lang === 'ru' ? 'Аудиозапись встречи' : 'Ovozli uchrashuv yozuvi');
-      const meetingTitle = title && title.trim() ? title.trim() : defTitle;
-      const newMeeting = createSimulatedMeeting(meetingTitle, "14 min");
+        if (stepEl) stepEl.textContent = "Bayonnoma, qarorlar va vazifalar shakllantirilmoqda...";
+        newMeeting = await resp.json();
+      } else {
+        if (stepEl) stepEl.textContent = t('modal.proc_step1') || "Yuklanmoqda...";
+        await delay(700);
+
+        if (stepEl) stepEl.textContent = t('modal.proc_step2') || "Groq Whisper orqali ovoz transkripsiya qilinmoqda...";
+        await delay(800);
+
+        if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va dialektlar me’yorlashtirilmoqda...";
+        await delay(700);
+
+        if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
+        await delay(600);
+
+        newMeeting = createSimulatedMeeting(meetingTitle, "14 min");
+      }
 
       if (!state.meetings) state.meetings = [];
       state.meetings.unshift(newMeeting);
@@ -4218,29 +4256,56 @@
         setStage('review');
       }
     } catch (e) {
-      console.error("Simulyatsiya xatoligi:", e);
+      console.error("Audio tahlilida xatolik:", e);
+      alert("Xatolik: " + e.message);
     } finally {
       if (processingBox) processingBox.hidden = true;
     }
   }
 
-  // Unified Text Sender with realistic AI simulation
+  // Unified Text Sender: connects to live backend on localhost, or uses safe demo on public web
   async function sendTextToBackend(text, title, origin) {
     const processingBox = origin === 'modal' ? document.getElementById('modal-processing-box') : document.getElementById('prod-process-overlay');
     const stepEl = origin === 'modal' ? document.getElementById('modal-processing-step') : document.getElementById('prod-process-step');
 
     if (processingBox) processingBox.hidden = false;
 
+    const isLocalBackend = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const defTitle = state.lang === 'en' ? 'Text Notes Analysis' : (state.lang === 'ru' ? 'Анализ конспекта' : 'Matnli tahlil');
+    const meetingTitle = title && title.trim() ? title.trim() : defTitle;
+
     try {
-      if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va mantiqiy tuzilma tahlil qilinmoqda...";
-      await delay(700);
+      let newMeeting = null;
 
-      if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
-      await delay(700);
+      if (isLocalBackend) {
+        if (stepEl) stepEl.textContent = "Matn tahlilga yuborilmoqda...";
+        const resp = await fetch('/api/meetings/process-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: meetingTitle,
+            text: text,
+            lang: state.lang || 'uz',
+            template: 'general'
+          })
+        });
 
-      const defTitle = state.lang === 'en' ? 'Text Notes Analysis' : (state.lang === 'ru' ? 'Анализ конспекта' : 'Matnli tahlil');
-      const meetingTitle = title && title.trim() ? title.trim() : defTitle;
-      const newMeeting = createSimulatedMeeting(meetingTitle, "10 min", text);
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.detail || "Server xatoligi yuz berdi");
+        }
+
+        if (stepEl) stepEl.textContent = "Bayonnoma va vazifalar shakllantirilmoqda...";
+        newMeeting = await resp.json();
+      } else {
+        if (stepEl) stepEl.textContent = t('modal.proc_step3') || "Grammatika va mantiqiy tuzilma tahlil qilinmoqda...";
+        await delay(700);
+
+        if (stepEl) stepEl.textContent = t('modal.proc_step4') || "Bayonnoma va vazifalar shakllantirilmoqda...";
+        await delay(700);
+
+        newMeeting = createSimulatedMeeting(meetingTitle, "10 min", text);
+      }
 
       if (!state.meetings) state.meetings = [];
       state.meetings.unshift(newMeeting);
@@ -4258,7 +4323,8 @@
         setStage('review');
       }
     } catch (e) {
-      console.error("Simulyatsiya xatoligi:", e);
+      console.error("Matn tahlilida xatolik:", e);
+      alert("Xatolik: " + e.message);
     } finally {
       if (processingBox) processingBox.hidden = true;
     }
