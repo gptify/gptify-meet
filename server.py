@@ -33,9 +33,11 @@ BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
 RECORDINGS_DIR = DATA_DIR / "recordings"
 STATIC_DIR = BASE_DIR / "static"
+ASSETS_DIR = BASE_DIR / "assets"
 
 RECORDINGS_DIR.mkdir(parents=True, exist_ok=True)
 STATIC_DIR.mkdir(parents=True, exist_ok=True)
+ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Initialize database
 database.init_db()
@@ -314,12 +316,23 @@ async def create_lead(req: CreateLeadRequest):
 def list_leads():
     return database.get_all_leads()
 
-# Serve static frontend
+# Serve static frontend & assets
+if ASSETS_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=str(ASSETS_DIR)), name="assets")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+@app.get("/favicon.ico")
+def serve_favicon():
+    fav = ASSETS_DIR / "mirzo-app-icon.png"
+    if fav.exists():
+        return FileResponse(str(fav), media_type="image/png")
+    return JSONResponse({"status": "not found"}, status_code=404)
 
 @app.get("/")
 def serve_index():
-    index_file = STATIC_DIR / "index.html"
+    index_file = BASE_DIR / "index.html"
+    if not index_file.exists():
+        index_file = STATIC_DIR / "index.html"
     if index_file.exists():
         return FileResponse(str(index_file))
     return JSONResponse({"status": "Mirzo Server Running", "version": "1.0.0"})
