@@ -2974,9 +2974,13 @@
 
   const root = document.getElementById('gptify-v2');
   
+  const isLocalApp = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialView = urlParams.get('view') || (isLocalApp ? 'app' : 'landing');
+
   // App Global State
   const state = {
-    view: 'landing',
+    view: initialView,
     lang: localStorage.getItem('gptify_lang') || 'uz',
     activeMeetingId: null,
     meetings: [],
@@ -3756,7 +3760,12 @@
 
   root.querySelectorAll('[data-open-app]').forEach(btn => {
     btn.onclick = () => {
-      openLeadModal('demo');
+      if (isLocalApp) {
+        setView('app');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        openLeadModal('demo');
+      }
     };
   });
 
@@ -4373,6 +4382,7 @@
   // Initialization
   mountDesktopApps();
   setLanguage(state.lang);
+  setView(state.view);
   loadMeetings();
 
   if (globalThis.lucide) {

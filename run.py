@@ -11,8 +11,8 @@ from server import app
 
 def open_browser():
     time.sleep(1.2)
-    print("\n[Mirzo] Ilova brauzerda ochilmoqda: http://127.0.0.1:8000\n")
-    webbrowser.open("http://127.0.0.1:8000")
+    print("\n[Mirzo] Ilova brauzerda ochilmoqda: http://127.0.0.1:8000/?view=app\n")
+    webbrowser.open("http://127.0.0.1:8000/?view=app")
 
 if __name__ == "__main__":
     threading.Thread(target=open_browser, daemon=True).start()
