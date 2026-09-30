@@ -1,5 +1,5 @@
 """
-GPTify Meet - High-Accuracy Audio & Meeting Intelligence Engine
+Mirzo - High-Accuracy Audio & Meeting Intelligence Engine
 Primary: Gemini 3.8 Flash (native Uzbek dialect understanding)
 Secondary: Groq Whisper-large-v3 with Uzbek language biasing and context prompt.
 """
@@ -25,7 +25,7 @@ TELEGRAM_BOT_TOKEN = ENV_KEYS.get("TELEGRAM_BOT_TOKEN") or os.environ.get("TELEG
 TELEGRAM_DEFAULT_CHAT = ENV_KEYS.get("TELEGRAM_GROUP_ID") or ENV_KEYS.get("TELEGRAM_ADMIN_CHAT_ID")
 
 SYSTEM_INSTRUCTIONS = {
-    "uz": """Siz GPTify Meet tizimining professional AI bayonnoma ekspertisiz.
+    "uz": """Siz Mirzo (mirzo.gptify.uz) tizimining professional AI bayonnoma ekspertisiz.
 Vazifangiz: uchrashuv yoki audio transkripsiyasini tahlil qilib, o'zbek tilida aniq, qisqa va qat'iy tuzilmali (structured JSON) bayonnoma shakllantirish.
 
 TALABLAR:
@@ -46,7 +46,7 @@ TALABLAR:
   ]
 }
 """,
-    "en": """You are a senior AI meeting intelligence expert for GPTify Meet.
+    "en": """You are a senior AI meeting intelligence expert for Mirzo (mirzo.gptify.uz).
 Your task: Analyze the meeting transcript or audio notes and generate a concise, highly structured meeting summary, key decisions, and actionable next steps in English.
 
 REQUIREMENTS:
@@ -66,7 +66,7 @@ REQUIREMENTS:
   ]
 }
 """,
-    "ru": """Вы профессиональный эксперт по анализу встреч системы GPTify Meet.
+    "ru": """Вы профессиональный эксперт по анализу встреч системы Mirzo (mirzo.gptify.uz).
 Ваша задача: проанализировать транскрипцию или аудиозапись встречи и составить четкий, структурированный протокол на русском языке.
 
 ТРЕБОВАНИЯ:
@@ -107,7 +107,7 @@ def transcribe_with_gemini(audio_path: Path, mime_type: str) -> Optional[Dict[st
             audio_bytes = f.read()
 
         audio_part = types.Part.from_bytes(data=audio_bytes, mime_type=mime_type)
-        prompt = """Ushbu audioda inson o'zbek tilida (GPTify Meet, uchrashuv, biznes yoki texnik sinov mavzusida) gapirmoqda.
+        prompt = """Ushbu audioda inson o'zbek tilida (Mirzo, uchrashuv, biznes yoki texnik sinov mavzusida) gapirmoqda.
 Iltimos, audio yozuvni to'liq tinglab, aniq so'zma-so'z o'zbekcha transkripsiyasini yozing.
 So'zlovchi aynan nima degan bo'lsa, so'zma-so'z to'g'ri o'zbek adabiy tilida yozing. Hech qanday boshqa izohsiz, faqat transkripsiyani qaytaring."""
 
@@ -142,9 +142,9 @@ def transcribe_with_groq_whisper(audio_path: Path, lang: str = "uz") -> Optional
         client = Groq(api_key=GROQ_API_KEY)
         
         prompt_map = {
-            "uz": "O‘zbek tilida so‘zlashuv: uchrashuv, sinov, mikrofon, ovoz yozish, GPTify Meet, ilova, dizayn, sifatini tekshirish...",
-            "en": "Business meeting and discussion: project updates, decisions, deliverables, action items, GPTify Meet...",
-            "ru": "Деловая встреча и обсуждение: проект, задачи, сроки, ответственные, решения, GPTify Meet..."
+            "uz": "O‘zbek tilida so‘zlashuv: uchrashuv, sinov, mikrofon, ovoz yozish, Mirzo, ilova, dizayn, sifatini tekshirish...",
+            "en": "Business meeting and discussion: project updates, decisions, deliverables, action items, Mirzo...",
+            "ru": "Деловая встреча и обсуждение: проект, задачи, сроки, ответственные, решения, Mirzo..."
         }
         whisper_lang = lang if lang in ["uz", "en", "ru"] else "uz"
         whisper_prompt = prompt_map.get(whisper_lang, prompt_map["uz"])
@@ -430,7 +430,7 @@ def format_telegram_message(meeting: Dict[str, Any]) -> str:
             lines.append(f"• {q}")
         lines.append("")
 
-    lines.append("🔒 _GPTify Meet orqali lokal qayta ishlangan._")
+    lines.append("🔒 _Mirzo (mirzo.gptify.uz) orqali tayyorlangan._")
     return "\n".join(lines)
 
 def send_telegram_direct(text: str, chat_id: Optional[str] = None) -> Dict[str, Any]:

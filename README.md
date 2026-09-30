@@ -1,4 +1,4 @@
-# GPTify Meet — approved design handoff
+# Mirzo — AI notes without the bot (mirzo.gptify.uz)
 
 ## What you have
 

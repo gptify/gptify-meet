@@ -1,5 +1,5 @@
 """
-GPTify Meet - Production Application Server
+Mirzo - Production Application Server
 FastAPI backend with local SQLite persistence, audio processing, and Telegram delivery.
 """
 import os
@@ -19,7 +19,7 @@ import httpx
 import database
 import ai_engine
 
-app = FastAPI(title="GPTify Meet API", version="1.0.0")
+app = FastAPI(title="Mirzo API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -322,7 +322,7 @@ def serve_index():
     index_file = STATIC_DIR / "index.html"
     if index_file.exists():
         return FileResponse(str(index_file))
-    return JSONResponse({"status": "GPTify Meet Server Running", "version": "1.0.0"})
+    return JSONResponse({"status": "Mirzo Server Running", "version": "1.0.0"})
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,5 +1,5 @@
 """
-GPTify Meet - Automated Backend and Integration Tests
+Mirzo - Automated Backend and Integration Tests
 Verifies SQLite storage, text processing, task toggling, Telegram export, and API routes.
 """
 import pytest

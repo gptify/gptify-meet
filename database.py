@@ -1,5 +1,5 @@
 """
-GPTify Meet - Local SQLite Database Layer
+Mirzo - Local SQLite Database Layer
 Stores meetings, transcriptions, decisions, and tasks locally.
 """
 import sqlite3

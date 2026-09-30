@@ -3,10 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GPTify Meet — Uchrashuvingiz — o‘zingizda. Natijasi — jamoangizga.</title>
+<title>Mirzo — Botsiz AI uchrashuv kotibi · mirzo.gptify.uz</title>
+<meta name="description" content="Mirzo — botsiz AI uchrashuv kotibi. Zoom, Meet, Teams va jonli suhbatlaringizni xavfsiz transkripsiya qiladi, bayonnoma va topshiriqlarni tayyorlaydi.">
+<link rel="canonical" href="https://mirzo.gptify.uz">
+<link rel="icon" type="image/svg+xml" href="assets/mirzo-mark.svg">
+<link rel="alternate icon" type="image/png" href="assets/mirzo-app-icon.png">
+<link rel="apple-touch-icon" href="assets/mirzo-app-icon.png">
+<meta property="og:title" content="Mirzo — Botsiz AI uchrashuv kotibi">
+<meta property="og:description" content="Mirzo uchrashuvlaringizni botlarsiz yozib oladi va xulosalarni tayyorlaydi. Suhbatlaringiz maxfiy qoladi.">
+<meta property="og:url" content="https://mirzo.gptify.uz">
+<meta property="og:image" content="https://mirzo.gptify.uz/assets/mirzo-avatar.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&family=Lora:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
   :root {
@@ -108,40 +117,28 @@
     border-bottom: 1px solid var(--g-line);
   }
   #gptify-v2 .g-logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 9px;
-    font-size: 20px;
-    font-weight: 750;
-    letter-spacing: -.8px;
-    white-space: nowrap;
+    gap: 10px;
+    text-decoration: none;
+    color: inherit;
+    line-height: 1;
   }
-  #gptify-v2 .g-logo span:last-child {
-    font-weight: 450;
-    color: var(--g-muted);
-  }
-  #gptify-v2 .g-symbol {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-    background: var(--g-accent);
-    color: white;
-    transform: rotate(-7deg);
-    flex-shrink: 0;
-  }
-  #gptify-v2 .g-symbol b {
+  #gptify-v2 .g-mirzo-logo {
+    height: 36px;
+    width: auto;
     display: block;
-    width: 4px;
-    height: 12px;
-    border-radius: 3px;
-    background: currentColor;
+    object-fit: contain;
   }
-  #gptify-v2 .g-symbol b:nth-child(2) { height: 21px; }
-  #gptify-v2 .g-symbol b:nth-child(3) { height: 16px; }
+  #gptify-v2 .g-logo-dark {
+    display: none !important;
+  }
+  @media (prefers-color-scheme: dark) {
+    #gptify-v2 .g-logo-light { display: none !important; }
+    #gptify-v2 .g-logo-dark { display: block !important; }
+  }
+  :root[style*="color-scheme: dark"] #gptify-v2 .g-logo-light { display: none !important; }
+  :root[style*="color-scheme: dark"] #gptify-v2 .g-logo-dark { display: block !important; }
   #gptify-v2 .g-navlinks {
     display: flex;
     align-items: center;
@@ -1392,15 +1389,15 @@
 </head>
 <body>
 
-<div id="gptify-v2" aria-label="GPTify Meet">
+<div id="gptify-v2" aria-label="Mirzo — AI notes without the bot">
 
   <!-- 1. LANDING PAGE -->
   <div class="g-site" data-page="landing">
     <nav class="g-nav">
-      <div class="g-logo">
-        <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
-        gptify<span>meet</span>
-      </div>
+      <a href="/" class="g-logo" title="Mirzo · mirzo.gptify.uz">
+        <img src="assets/mirzo-logo.svg" alt="Mirzo" class="g-mirzo-logo g-logo-light" height="36">
+        <img src="assets/mirzo-logo-reversed.svg" alt="Mirzo" class="g-mirzo-logo g-logo-dark" height="36">
+      </a>
       <div class="g-navlinks">
         <button data-nav="product" data-i18n="nav.features">Imkoniyatlar</button>
         <button data-jump="dataflow" data-i18n="nav.privacy">Maxfiylik</button>
@@ -1430,7 +1427,7 @@
           <span class="g-green-highlight" data-i18n="hero.h1_line2">Bayonnoma<br>tayyor.</span>
         </h1>
         <p class="g-lede" data-i18n="hero.lede">
-          Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. GPTify Meet o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.
+          Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. Mirzo o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.
         </p>
         <div class="g-hero-cta">
           <button class="g-btn-green" data-open-app>
@@ -1447,7 +1444,7 @@
         <div class="g-live-mockup" data-open-app style="cursor:pointer" title="Desktop ilovani ochish">
           <div class="g-live-topbar">
             <div class="g-live-dots"><b></b><b></b><b></b></div>
-            <span data-i18n="hero.preview_top">GPTify Meet · Jonli uchrashuv</span>
+            <span data-i18n="hero.preview_top">Mirzo · Jonli uchrashuv</span>
             <span>12:48</span>
           </div>
           <div class="g-live-body">
@@ -1694,7 +1691,7 @@
       </div>
       <div class="g-pricebox">
         <div style="display:flex;justify-content:space-between">
-          <strong>GPTify Pro</strong>
+          <strong>Mirzo Pro</strong>
           <span class="g-pill" data-i18n="pricing.badge">Shaxsiy foydalanish</span>
         </div>
         <div class="g-price" data-price>99 000 <small data-i18n="pricing.per_month">so‘m / oy</small></div>
@@ -1712,19 +1709,22 @@
 
     <!-- Footer -->
     <footer class="g-website-footer">
-      <div class="g-logo">gptify<span>meet</span></div>
+      <a href="/" class="g-logo" title="Mirzo · mirzo.gptify.uz">
+        <img src="assets/mirzo-logo.svg" alt="Mirzo" class="g-mirzo-logo g-logo-light" height="28" style="height:28px">
+        <img src="assets/mirzo-logo-reversed.svg" alt="Mirzo" class="g-mirzo-logo g-logo-dark" height="28" style="height:28px">
+      </a>
       <small>Windows · macOS</small>
-      <small>GPTify.co · B2B AI yechimlari</small>
+      <small>mirzo.gptify.uz · <a href="https://gptify.co" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">GPTify</a></small>
     </footer>
   </div>
 
   <!-- 2. PRODUCT STAGES WALKTHROUGH -->
   <div class="g-site" data-page="product" hidden>
     <nav class="g-nav">
-      <div class="g-logo">
-        <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
-        gptify<span>meet</span>
-      </div>
+      <a href="/" class="g-logo" title="Mirzo · mirzo.gptify.uz">
+        <img src="assets/mirzo-logo.svg" alt="Mirzo" class="g-mirzo-logo g-logo-light" height="34" style="height:34px">
+        <img src="assets/mirzo-logo-reversed.svg" alt="Mirzo" class="g-mirzo-logo g-logo-dark" height="34" style="height:34px">
+      </a>
       <button class="g-button g-dark" data-nav="app">
         <span data-i18n="nav.app_btn">Ilovani ko‘rish ↗</span>
       </button>
@@ -1862,40 +1862,35 @@
 
   <!-- 4. BRAND IDENTITY VIEW -->
   <div class="g-site" data-page="brand" hidden>
-    <div class="g-brandhero">
+    <div class="g-brandhero" style="background:var(--g-surface);border:1px solid var(--g-line);border-radius:14px;padding:32px;display:flex;align-items:center;justify-content:space-around;gap:24px;flex-wrap:wrap">
       <div class="g-brandcell">
-        <div class="g-logo">
-          <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
-          gptify<span>meet</span>
-        </div>
+        <img src="assets/mirzo-logo.svg" alt="Mirzo Primary Logo" style="height:54px;max-width:100%">
       </div>
       <div class="g-brandcell">
-        <div class="g-appicon">
-          <span class="g-symbol" aria-label="Three-bar voice mark"><b></b><b></b><b></b></span>
-        </div>
+        <img src="assets/mirzo-app-icon.svg" alt="Mirzo App Icon" style="width:72px;height:72px;border-radius:18px;box-shadow:0 8px 24px rgba(28,35,64,0.12)">
       </div>
     </div>
     <div class="g-section">
-      <div class="g-eyebrow">Identity system</div>
-      <h2>Clear. Focused. Intelligent.</h2>
+      <div class="g-eyebrow">Mirzo — Brend qo‘llanmasi</div>
+      <h2>AI notes without the bot.</h2>
       <div class="g-brandgrid">
         <div>
-          <h3>A voice-first symbol</h3>
-          <p>Three rounded audio bars, tilted slightly forward. A compact signature that works in the menu bar, app icon, and recording control.</p>
-          <h3>Inter / 450 · 550 · 650</h3>
-          <p>Confident headlines, readable notes, and compact controls. Consistent 8 px spacing and restrained corner radii.</p>
+          <h3>Ovoz muhr belgisi (The Sound Seal)</h3>
+          <p>Doira ichida «m» harfini hosil qiluvchi 9 ta audio to‘lqin ustunlari. O‘rtadagi za’faron (saffron) ustuni — yozib olingan bir lahza va xos kotib qalamining uchi ramzi.</p>
+          <h3>Lora & Inter shriftlari</h3>
+          <p>Sarlavhalar va logotip uchun ishonchli Lora SemiBold (600), interfeys va ma’lumotlar uchun aniq Inter shrifti.</p>
         </div>
         <div>
-          <h3>Violet, ink, and white</h3>
+          <h3>Ink, Parchment & Saffron</h3>
           <div class="g-swatches">
-            <span style="background:#7051ef"></span>
-            <span style="background:#17171f"></span>
-            <span style="background:#f8f8fb"></span>
-            <span style="background:#f1edff"></span>
+            <span style="background:#1C2340" title="Ink #1C2340"></span>
+            <span style="background:#F6F1E7;border:1px solid #ddd" title="Parchment #F6F1E7"></span>
+            <span style="background:#D9962B" title="Saffron #D9962B"></span>
+            <span style="background:#FFFFFF;border:1px solid #ddd" title="White #FFFFFF"></span>
           </div>
-          <p>#7051EF · #17171F · #F8F8FB · #F1EDFF</p>
-          <h3>GPTify Meet</h3>
-          <p>Pragmatic B2B AI workflow systems by GPTify.co.</p>
+          <p>Ink #1C2340 · Parchment #F6F1E7 · Saffron #D9962B · White #FFFFFF</p>
+          <h3>Mirzo — mirzo.gptify.uz</h3>
+          <p>O‘zbek va sharq an’anasida «mirzo» — xos kotib: barchasini yozib boradigan va sir saqlaydigan ishonchli inson.</p>
         </div>
       </div>
     </div>
@@ -1907,7 +1902,7 @@
       <!-- Titlebar -->
       <div class="g-titlebar">
         <span class="g-dots"><b></b><b></b><b></b></span>
-        <span data-i18n="app.app_title">GPTify Meet — Ish stoli ilovasi</span>
+        <span data-i18n="app.app_title">Mirzo — Ish stoli ilovasi</span>
         <span class="g-app-status-badge" data-i18n="app.status_local">Lokal AI faol</span>
       </div>
 
@@ -1915,9 +1910,9 @@
       <div class="g-shell">
         <!-- Sidebar -->
         <aside class="g-side">
-          <div class="g-logo">
-            <span class="g-symbol" aria-hidden="true"><b></b><b></b><b></b></span>
-            gptify<span>meet</span>
+          <div class="g-logo" style="margin-bottom:14px">
+            <img src="assets/mirzo-logo.svg" alt="Mirzo" class="g-mirzo-logo g-logo-light" height="30" style="height:30px">
+            <img src="assets/mirzo-logo-reversed.svg" alt="Mirzo" class="g-mirzo-logo g-logo-dark" height="30" style="height:30px">
           </div>
           
           <button class="g-new" data-app-action="new-meeting">
@@ -2295,11 +2290,11 @@
       hero: {
         h1_line1: "Uchrashuv<br>tugaydi.",
         h1_line2: "Bayonnoma<br>tayyor.",
-        lede: "Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. GPTify Meet o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.",
+        lede: "Zoom, Meet, Teams yoki oflayn suhbatlarni botlarsiz yozib oling. Mirzo o‘zbekcha transkripsiya, qarorlar va topshiriqlarni kompyuteringizning o‘zida tayyorlaydi.",
         cta_trial: "Bepul sinab ko‘rish →",
         cta_privacy: "Qanday ishlashini ko‘ring",
         micro: "Windows va macOS uchun · Karta talab qilinmaydi",
-        preview_top: "GPTify Meet · Jonli uchrashuv",
+        preview_top: "Mirzo · Jonli uchrashuv",
         preview_title: "Haftalik savdo yig‘ilishi",
         preview_recording: "yozilmoqda",
         preview_speaker1: "Shukhrat:",
@@ -2410,7 +2405,7 @@
         share_disclaimer: "Faqat tekshirilgan bayonnoma yuboriladi. Audio va to‘liq transkripsiya ulashilmaydi."
       },
       app: {
-        app_title: "GPTify Meet — Ish stoli ilovasi",
+        app_title: "Mirzo — Ish stoli ilovasi",
         status_local: "Lokal AI faol",
         new_meeting: "Yangi uchrashuv",
         tab_meetings: "Uchrashuvlar",
@@ -2524,11 +2519,11 @@
       hero: {
         h1_line1: "Meeting<br>ends.",
         h1_line2: "Minutes<br>ready.",
-        lede: "Capture Zoom, Meet, Teams, or in-person meetings with zero bots. GPTify Meet extracts multilingual transcripts, decisive outcomes, and action items locally on your computer.",
+        lede: "Capture Zoom, Meet, Teams, or in-person meetings with zero bots. Mirzo extracts multilingual transcripts, decisive outcomes, and action items locally on your computer.",
         cta_trial: "Try for free →",
         cta_privacy: "See how it works",
         micro: "For Windows & macOS · No credit card required",
-        preview_top: "GPTify Meet · Live meeting",
+        preview_top: "Mirzo · Live meeting",
         preview_title: "Weekly Sales Review",
         preview_recording: "recording",
         preview_speaker1: "Shukhrat:",
@@ -2639,7 +2634,7 @@
         share_disclaimer: "Only verified meeting minutes are sent. Audio and raw transcripts remain private."
       },
       app: {
-        app_title: "GPTify Meet — Desktop App",
+        app_title: "Mirzo — Desktop App",
         status_local: "Local AI active",
         new_meeting: "New meeting",
         tab_meetings: "Meetings",
@@ -2753,11 +2748,11 @@
       hero: {
         h1_line1: "Встреча<br>завершена.",
         h1_line2: "Протокол<br>готов.",
-        lede: "Записывайте Zoom, Meet, Teams или живые встречи без сторонних ботов. GPTify Meet готовит точную расшифровку, решения и задачи прямо на вашем компьютере.",
+        lede: "Записывайте Zoom, Meet, Teams или живые встречи без сторонних ботов. Mirzo готовит точную расшифровку, решения и задачи прямо на вашем компьютере.",
         cta_trial: "Попробовать бесплатно →",
         cta_privacy: "Как это работает",
         micro: "Для Windows и macOS · Без привязки карты",
-        preview_top: "GPTify Meet · Живая встреча",
+        preview_top: "Mirzo · Живая встреча",
         preview_title: "Еженедельный созвон по продажам",
         preview_recording: "идет запись",
         preview_speaker1: "Шухрат:",
@@ -2868,7 +2863,7 @@
         share_disclaimer: "Отправляется только проверенный протокол. Аудио и полная расшифровка остаются приватными."
       },
       app: {
-        app_title: "GPTify Meet — Десктоп-приложение",
+        app_title: "Mirzo — Десктоп-приложение",
         status_local: "Локальный ИИ активен",
         new_meeting: "Новая встреча",
         tab_meetings: "Встречи",
@@ -3588,7 +3583,7 @@
     if (tgLinkBtn) {
       const decHeader = state.lang === 'en' ? '📌 *Key Decisions:*' : (state.lang === 'ru' ? '📌 *Ключевые решения:*' : '📌 *Asosiy qarorlar:*');
       const taskHeader = state.lang === 'en' ? '✅ *Tasks & Next Steps:*' : (state.lang === 'ru' ? '✅ *Задачи:*' : '✅ *Vazifalar:*');
-      const footerTag = state.lang === 'en' ? '_Prepared via GPTify Meet_' : (state.lang === 'ru' ? '_Подготовлено через GPTify Meet_' : '_GPTify Meet orqali tayyorlandi_');
+      const footerTag = state.lang === 'en' ? '_Prepared via Mirzo (mirzo.gptify.uz)_' : (state.lang === 'ru' ? '_Подготовлено через Mirzo (mirzo.gptify.uz)_' : '_Mirzo (mirzo.gptify.uz) orqali tayyorlandi_');
 
       const message = `📋 *${m.title}*\n📅 ${m.date}\n\n${decHeader}\n${decisionsText}\n\n${taskHeader}\n${tasksText}\n\n${footerTag}`;
       tgLinkBtn.href = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
@@ -3791,12 +3786,13 @@
       } catch (err) {
         console.warn("API leads fallback, sending directly to Telegram:", err);
         try {
-          const fallbackText = `🔔 <b>Yangi murojaat! (GPTify Meet)</b>\n\n` +
+          const fallbackText = `🔔 <b>Yangi murojaat! (Mirzo · mirzo.gptify.uz)</b>\n\n` +
             `📌 <b>Turi:</b> ${sourceName}\n` +
             `👤 <b>Ism:</b> ${name}\n` +
             `📱 <b>Kontakt:</b> ${contact}\n` +
             `🏢 <b>Kompaniya:</b> ${company || 'Ko‘rsatilmagan'}\n` +
             `🎙 <b>Asosiy vosita:</b> ${tool}\n` +
+            `🌐 <b>Sayt:</b> https://mirzo.gptify.uz\n` +
             `⏰ <b>Vaqt:</b> ${new Date().toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent' })}`;
           await fetch('https://api.telegram.org/bot8652296582:AAGr4AShAy8dHKBil5pM3R07t4m8upOjNhM/sendMessage', {
             method: 'POST',
