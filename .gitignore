@@ -5,3 +5,8 @@ __pycache__/
 *.png
 .pytest_cache/
 data/recordings/
+bin/
+*.mp3
+*.m4a
+*.wav
+

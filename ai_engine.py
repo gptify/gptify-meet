@@ -6,8 +6,10 @@ Secondary: Groq Whisper-large-v3 with Uzbek language biasing and context prompt.
 import os
 import json
 import re
+import shutil
+import subprocess
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple
 import httpx
 from dotenv import dotenv_values
 
@@ -95,9 +97,84 @@ def format_timestamp(seconds: float) -> str:
     s = int(seconds % 60)
     return f"{m:02d}:{s:02d}"
 
+def get_ffmpeg_path() -> Optional[Path]:
+    """Finds ffmpeg binary in local bin or system path."""
+    candidates = [
+        Path(__file__).parent / "bin" / "ffmpeg.exe",
+        Path("C:/Users/Shuxrat/Documents/AI Newsletter/02_commercial_clients/topdim_bot/bin/ffmpeg.exe"),
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    which_bin = shutil.which("ffmpeg")
+    return Path(which_bin) if which_bin else None
+
+def compress_audio_if_needed(audio_path: Path) -> Path:
+    """
+    Compresses audio to 16kHz mono 32kbps MP3 if file size > 20MB or non-standard format.
+    1 hour of 32kbps MP3 is ~14.4MB, which safely fits under Groq's 25MB limit.
+    """
+    ffmpeg_bin = get_ffmpeg_path()
+    if not ffmpeg_bin:
+        return audio_path
+
+    file_size_mb = audio_path.stat().st_size / (1024 * 1024)
+    # If already small MP3, reuse
+    if file_size_mb < 20 and audio_path.suffix.lower() == ".mp3":
+        return audio_path
+
+    compressed_path = audio_path.with_name(f"{audio_path.stem}_compressed.mp3")
+    try:
+        cmd = [
+            str(ffmpeg_bin), "-y",
+            "-i", str(audio_path),
+            "-ac", "1",
+            "-ar", "16000",
+            "-b:a", "32k",
+            str(compressed_path)
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if res.returncode == 0 and compressed_path.exists() and compressed_path.stat().st_size > 0:
+            return compressed_path
+    except Exception as e:
+        print(f"Audio compression error: {e}")
+    return audio_path
+
+def split_audio_into_chunks(audio_path: Path, chunk_minutes: int = 15) -> List[Tuple[Path, float]]:
+    """Splits audio into segments of chunk_minutes and returns (chunk_path, start_offset_seconds)."""
+    ffmpeg_bin = get_ffmpeg_path()
+    if not ffmpeg_bin:
+        return [(audio_path, 0.0)]
+    
+    chunk_dir = audio_path.parent / f"{audio_path.stem}_chunks"
+    chunk_dir.mkdir(parents=True, exist_ok=True)
+    chunk_pattern = str(chunk_dir / "chunk_%03d.mp3")
+    
+    seg_seconds = chunk_minutes * 60
+    try:
+        cmd = [
+            str(ffmpeg_bin), "-y",
+            "-i", str(audio_path),
+            "-f", "segment",
+            "-segment_time", str(seg_seconds),
+            "-c", "copy",
+            chunk_pattern
+        ]
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if res.returncode == 0:
+            chunks = sorted(list(chunk_dir.glob("chunk_*.mp3")))
+            if chunks:
+                return [(c, float(idx * seg_seconds)) for idx, c in enumerate(chunks)]
+    except Exception as e:
+        print(f"Audio splitting error: {e}")
+    return [(audio_path, 0.0)]
+
 def transcribe_with_gemini(audio_path: Path, mime_type: str) -> Optional[Dict[str, Any]]:
     """Native Gemini 3.8 Flash audio transcription with deep Uzbek understanding."""
     if not GEMINI_API_KEY:
+        return None
+    # Gemini inline Part limit is 20MB
+    if audio_path.stat().st_size > 20 * 1024 * 1024:
         return None
     try:
         from google import genai
@@ -119,7 +196,6 @@ So'zlovchi aynan nima degan bo'lsa, so'zma-so'z to'g'ri o'zbek adabiy tilida yoz
         if text.startswith("Audio yozuvning matni:"):
             text = text.replace("Audio yozuvning matni:", "").strip()
         if text:
-            # Build clean segments
             segments = []
             sentences = [s.strip() for s in re.split(r'(?<=[.?!])\s+', text) if s.strip()]
             for i, sent in enumerate(sentences):
@@ -133,8 +209,8 @@ So'zlovchi aynan nima degan bo'lsa, so'zma-so'z to'g'ri o'zbek adabiy tilida yoz
         print(f"Gemini transcription error: {e}")
     return None
 
-def transcribe_with_groq_whisper(audio_path: Path, lang: str = "uz") -> Optional[Dict[str, Any]]:
-    """Groq Whisper-large-v3 transcription with explicit language bias and domain prompt."""
+def transcribe_single_chunk_groq(audio_path: Path, lang: str = "uz", time_offset: float = 0.0) -> Optional[Dict[str, Any]]:
+    """Transcribes a single audio chunk via Groq Whisper."""
     if not GROQ_API_KEY:
         return None
     try:
@@ -166,7 +242,7 @@ def transcribe_with_groq_whisper(audio_path: Path, lang: str = "uz") -> Optional
             if txt.strip():
                 speaker_label = "Speaker" if lang == "en" else ("Спикер" if lang == "ru" else "So‘zlovchi")
                 segments.append({
-                    "time": format_timestamp(start_sec),
+                    "time": format_timestamp(start_sec + time_offset),
                     "speaker": speaker_label,
                     "text": txt.strip()
                 })
@@ -174,12 +250,42 @@ def transcribe_with_groq_whisper(audio_path: Path, lang: str = "uz") -> Optional
         full_text = getattr(tr, "text", "").strip()
         if not segments and full_text:
             speaker_label = "Speaker" if lang == "en" else ("Спикер" if lang == "ru" else "So‘zlovchi")
-            segments.append({"time": "00:00", "speaker": speaker_label, "text": full_text})
+            segments.append({"time": format_timestamp(time_offset), "speaker": speaker_label, "text": full_text})
 
         return {"text": full_text, "segments": segments}
     except Exception as e:
-        print(f"Groq Whisper transcription error: {e}")
+        print(f"Groq Whisper transcription error on {audio_path.name}: {e}")
     return None
+
+def transcribe_with_groq_whisper(audio_path: Path, lang: str = "uz") -> Optional[Dict[str, Any]]:
+    """
+    Groq Whisper-large-v3 transcription with automatic chunking for long audio files (>24MB).
+    Can process 30min, 1 hour, or 2 hours effortlessly.
+    """
+    file_size_mb = audio_path.stat().st_size / (1024 * 1024)
+    if file_size_mb > 24:
+        # Split into 15-minute segments
+        chunks = split_audio_into_chunks(audio_path, chunk_minutes=15)
+    else:
+        chunks = [(audio_path, 0.0)]
+
+    all_segments = []
+    text_parts = []
+    for chunk_path, offset in chunks:
+        res = transcribe_single_chunk_groq(chunk_path, lang=lang, time_offset=offset)
+        if res:
+            if res.get("text"):
+                text_parts.append(res["text"])
+            if res.get("segments"):
+                all_segments.extend(res["segments"])
+    
+    if not text_parts:
+        return None
+
+    return {
+        "text": " ".join(text_parts),
+        "segments": all_segments
+    }
 
 TEMPLATE_INSTRUCTIONS = {
     "general": {
@@ -324,15 +430,20 @@ Natijani FAQAT quyidagi JSON formatida qaytaring:
 def process_audio_file(audio_path: Path, mime_type: str = "audio/wav", template: str = "general", lang: str = "uz") -> Dict[str, Any]:
     """
     Complete audio pipeline:
-    1. Audio-to-text via Gemini / Groq Whisper (with language biasing).
-    2. Grammar & dialect normalization pass into literary text.
-    3. Structured meeting analysis into summary, decisions, tasks in requested language.
+    1. Audio compression (16kHz mono 32kbps MP3) if file > 20MB or non-mp3.
+    2. Audio-to-text via Gemini 3.8 Flash / Groq Whisper with chunking.
+    3. Grammar & dialect normalization pass into literary text.
+    4. Structured meeting analysis into summary, decisions, tasks in requested language.
     """
+    # 1. Compress / normalize audio format
+    prepared_audio = compress_audio_if_needed(audio_path)
+    prep_mime = "audio/mp3" if prepared_audio.suffix.lower() == ".mp3" else mime_type
+
     transcription = None
-    if lang == "uz":
-        transcription = transcribe_with_gemini(audio_path, mime_type)
+    if lang == "uz" and prepared_audio.stat().st_size < 18 * 1024 * 1024:
+        transcription = transcribe_with_gemini(prepared_audio, prep_mime)
     if not transcription or not transcription.get("text"):
-        transcription = transcribe_with_groq_whisper(audio_path, lang=lang)
+        transcription = transcribe_with_groq_whisper(prepared_audio, lang=lang)
 
     if not transcription or not transcription.get("text"):
         fallback_titles = {"uz": "Ovozli yozuv", "en": "Voice Recording", "ru": "Голосовая запись"}
