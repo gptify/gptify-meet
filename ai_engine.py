@@ -218,9 +218,9 @@ def transcribe_single_chunk_groq(audio_path: Path, lang: str = "uz", time_offset
         client = Groq(api_key=GROQ_API_KEY)
         
         prompt_map = {
-            "uz": "O‘zbek tilida so‘zlashuv: uchrashuv, sinov, mikrofon, ovoz yozish, Mirzo, ilova, dizayn, sifatini tekshirish...",
-            "en": "Business meeting and discussion: project updates, decisions, deliverables, action items, Mirzo...",
-            "ru": "Деловая встреча и обсуждение: проект, задачи, сроки, ответственные, решения, Mirzo..."
+            "uz": "Ushbu audio yozuvda o‘zbek tilida biznes uchrashuv, loyiha muhokamasi va rejalashtirish bo‘yicha suhbat yozilgan.",
+            "en": "A business meeting discussing project updates, decisions, roadmap, and action items.",
+            "ru": "Деловая встреча и обсуждение проекта, задач, дорожной карты и решений."
         }
         whisper_lang = lang if lang in ["uz", "en", "ru"] else "uz"
         whisper_prompt = prompt_map.get(whisper_lang, prompt_map["uz"])
@@ -310,6 +310,49 @@ TEMPLATE_INSTRUCTIONS = {
     }
 }
 
+def filter_whisper_hallucinations(segments: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """
+    Strips silence hallucination loops, Whisper prompt echoes,
+    and degenerate repetitive phrases.
+    """
+    if not segments:
+        return []
+    
+    clean = []
+    seen_texts = []
+    
+    # Prompt and silence nonsense tokens
+    banned_keywords = [
+        "mirzashuv", "barachafun", "ikrgatf", "nishafu", "zihch",
+        "sifatini tekshirish", "ovoz yozish, mirzo", "mishko, uchrashuv",
+        "private metinotekir"
+    ]
+    
+    for s in segments:
+        txt = s.get("text", "").strip()
+        txt_lower = txt.lower()
+        
+        # 1. Skip empty or pure punctuation / ellipsis
+        if not txt or txt in ["...", "A,", "..", "."] or (len(txt) < 3 and not txt.isalpha()):
+            continue
+            
+        # 2. Skip banned prompt echoes & whisper silence tokens
+        if any(b in txt_lower for b in banned_keywords):
+            continue
+            
+        # 3. Detect repetitive word loops (e.g. "soz soz soz" or "soz, soz, soz")
+        if re.search(r'(\b\w+\b)(?:[\s,]+\1){2,}', txt, re.IGNORECASE):
+            continue
+            
+        # 4. Skip consecutive identical segment repetitions
+        if seen_texts and txt == seen_texts[-1]:
+            continue
+            
+        seen_texts.append(txt)
+        clean.append(s)
+        
+    return clean
+
 def analyze_transcript(text: str, segments: List[Dict[str, str]], template: str = "general", lang: str = "uz") -> Dict[str, Any]:
     """Analyzes transcribed text and produces structured meeting intelligence in specified language."""
     tpl = TEMPLATE_INSTRUCTIONS.get(template, TEMPLATE_INSTRUCTIONS["general"])
@@ -317,66 +360,66 @@ def analyze_transcript(text: str, segments: List[Dict[str, str]], template: str 
     base_sys = SYSTEM_INSTRUCTIONS.get(lang, SYSTEM_INSTRUCTIONS["uz"])
     active_sys_instruction = f"{base_sys}\n\nSPECIAL TEMPLATE GUIDANCE:\n{context_hint}"
 
-
-    # 1. Try Groq Qwen (ultra-fast and reliable)
+    # 1. Try Groq Qwen (ultra-fast and reliable) with max_tokens=850
     if GROQ_API_KEY:
-        try:
-            from groq import Groq
-            client = Groq(api_key=GROQ_API_KEY)
-            resp = client.chat.completions.create(
-                model="qwen/qwen3.8-27b",
-                messages=[
-                    {"role": "system", "content": active_sys_instruction},
-                    {"role": "user", "content": f"Quyidagi audio transkripsiyasini tahlil qiling:\n\n{text}"}
-                ],
-                temperature=0.2,
-                response_format={"type": "json_object"}
-            )
-            raw = resp.choices[0].message.content.strip()
-            data = json.loads(raw)
-            return build_final_structure(data, text, segments)
-        except Exception as e:
-            print(f"Groq Qwen analysis error: {e}")
-
-    # 2. Try Gemini 3.8 Flash
-    if GEMINI_API_KEY:
-        try:
-            from google import genai
-            from google.genai import types
-            client = genai.Client(api_key=GEMINI_API_KEY)
-            resp = client.models.generate_content(
-                model="gemini-3.8-flash",
-                contents=f"Quyidagi audio transkripsiyasini tahlil qiling va qat'iy talab qilingan JSON formatida qaytaring:\n\n{text}",
-                config=types.GenerateContentConfig(
-                    system_instruction=active_sys_instruction,
-                    response_mime_type="application/json",
-                    temperature=0.1
+        import time
+        for attempt in range(2):
+            try:
+                from groq import Groq
+                client = Groq(api_key=GROQ_API_KEY)
+                resp = client.chat.completions.create(
+                    model="qwen/qwen3.8-27b",
+                    messages=[
+                        {"role": "system", "content": active_sys_instruction},
+                        {"role": "user", "content": f"Quyidagi audio transkripsiyasini tahlil qiling:\n\n{text}"}
+                    ],
+                    temperature=0.2,
+                    max_tokens=850,
+                    response_format={"type": "json_object"}
                 )
-            )
-            clean = clean_json_string(resp.text)
-            data = json.loads(clean)
-            return build_final_structure(data, text, segments)
-        except Exception as e:
-            print(f"Gemini text analysis error: {e}")
+                raw = resp.choices[0].message.content.strip()
+                data = json.loads(raw)
+                return build_final_structure(data, text, segments)
+            except Exception as e:
+                print(f"Groq Qwen analysis attempt {attempt+1} error: {e}")
+                time.sleep(2.0)
+
+    # 2. Try Gemini 3.8 Flash (with retry)
+    if GEMINI_API_KEY:
+        import time
+        for attempt in range(2):
+            try:
+                from google import genai
+                from google.genai import types
+                client = genai.Client(api_key=GEMINI_API_KEY)
+                resp = client.models.generate_content(
+                    model="gemini-3.8-flash",
+                    contents=f"Quyidagi audio transkripsiyasini tahlil qiling va qat'iy talab qilingan JSON formatida qaytaring:\n\n{text}",
+                    config=types.GenerateContentConfig(
+                        system_instruction=active_sys_instruction,
+                        response_mime_type="application/json",
+                        temperature=0.1
+                    )
+                )
+                clean = clean_json_string(resp.text)
+                data = json.loads(clean)
+                return build_final_structure(data, text, segments)
+            except Exception as e:
+                print(f"Gemini text analysis attempt {attempt+1} error: {e}")
+                time.sleep(2.0)
 
     return build_final_structure({}, text, segments)
 
-def normalize_segments(segments: List[Dict[str, str]]) -> List[Dict[str, str]]:
-    """
-    Cleans up colloquial phonetics, dialect quirks, speech-to-text slips,
-    multilingual phrases, and punctuates raw speech segments into polished,
-    grammatically correct literary text.
-    """
-    if not segments:
-        return segments
-
-    prompt = """Siz professional transkripsiya va til muharririsiz.
+def normalize_segments_batch(batch: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Helper to normalize a single small batch of segments."""
+    prompt = """Siz professional transkripsiya va o'zbek adabiy tili muharririsiz.
 Foydalanuvchi jonli audio yozuvda gapirgan va xom fonetik transkripsiya olingan.
 Vazifangiz: har bir segmentdagi nutqni grammatik jihatdan to'g'ri, adabiy va aniq shaklga keltirish:
-1. Shevaviy, fonetik va orfoepik buzilishlarni to'g'rilang (masalan: 'bygen' -> 'bugun', 'kemiyapti/kemi yapti' -> 'kelmayapti', 'nama xisami' -> 'nima qilsam', 'uju' -> 'uje', 'boldi' -> 'bo‘ldi').
-2. Boshqa tildagi (nemischa, inglizcha, ruscha) so'z yoki iboralarni to'g'ri orfografiyada yozing (masalan: 'Ich mis shlafen' -> 'Ich muss schlafen', 'Uzbek tili, ingilisli, nemisli, ruschi' -> 'O‘zbek tili, ingliz tili, nemis tili, rus tili').
+1. Shevaviy, fonetik va orfoepik buzilishlarni to'g'rilang (masalan: 'bygen' -> 'bugun', 'kemiyapti/kemi yapti' -> 'kelmayapti', 'kiliyatdirgan' -> 'qilayotgan', 'diba' -> 'deb', 'boldi' -> 'bo‘ldi', 'bina' -> 'mana', 'gorub' -> 'ko‘rib').
+2. Texnik atamalarni to'g'ri orfografiyada yozing (masalan: 'Dimaet'/'dimet' -> 'D-Med', 'aydent' -> 'iDent', 'CRM', 'API', 'pitch deck', 'e-prescription', 'roadmap').
 3. Tinish belgilarini va bosh harflarni to'g'ri qo'ying.
-4. Har bir segmentning 'time' va 'speaker' maydonlarini saqlang.
+4. "yaratish" so'zini aslo ishlatmang (o'rniga 'qurish', 'ishlab chiqish', 'tuzish' ishlating).
+5. Har bir segmentning 'time' va 'speaker' maydonlarini saqlang.
 
 Natijani FAQAT quyidagi JSON formatida qaytaring:
 {
@@ -385,7 +428,7 @@ Natijani FAQAT quyidagi JSON formatida qaytaring:
   ]
 }"""
 
-    # 1. Try Groq Qwen (super fast)
+    # 1. Try Groq Qwen with max_tokens=650
     if GROQ_API_KEY:
         try:
             from groq import Groq
@@ -394,16 +437,26 @@ Natijani FAQAT quyidagi JSON formatida qaytaring:
                 model="qwen/qwen3.8-27b",
                 messages=[
                     {"role": "system", "content": prompt},
-                    {"role": "user", "content": json.dumps(segments, ensure_ascii=False)}
+                    {"role": "user", "content": json.dumps(batch, ensure_ascii=False)}
                 ],
                 temperature=0.1,
+                max_tokens=650,
                 response_format={"type": "json_object"}
             )
-            data = json.loads(resp.choices[0].message.content.strip())
-            if data.get("segments") and len(data["segments"]) == len(segments):
-                return data["segments"]
+            raw = resp.choices[0].message.content.strip()
+            data = json.loads(raw)
+            b_res = data.get("segments", [])
+            if isinstance(b_res, list) and len(b_res) > 0:
+                result = []
+                for idx, orig in enumerate(batch):
+                    if idx < len(b_res):
+                        b_res[idx]["time"] = orig["time"]
+                        result.append(b_res[idx])
+                    else:
+                        result.append(orig)
+                return result
         except Exception as e:
-            print(f"Normalization with Groq error: {e}")
+            print(f"Batch normalization with Groq error: {e}")
 
     # 2. Try Gemini
     if GEMINI_API_KEY:
@@ -413,19 +466,54 @@ Natijani FAQAT quyidagi JSON formatida qaytaring:
             client = genai.Client(api_key=GEMINI_API_KEY)
             resp = client.models.generate_content(
                 model="gemini-3.8-flash",
-                contents=f"{prompt}\n\nSegmentlar:\n{json.dumps(segments, ensure_ascii=False)}",
+                contents=f"{prompt}\n\nSegmentlar:\n{json.dumps(batch, ensure_ascii=False)}",
                 config=types.GenerateContentConfig(
                     response_mime_type="application/json",
                     temperature=0.1
                 )
             )
-            data = json.loads(clean_json_string(resp.text))
-            if data.get("segments") and len(data["segments"]) == len(segments):
-                return data["segments"]
+            clean = clean_json_string(resp.text)
+            data = json.loads(clean)
+            b_res = data.get("segments", [])
+            if isinstance(b_res, list) and len(b_res) > 0:
+                result = []
+                for idx, orig in enumerate(batch):
+                    if idx < len(b_res):
+                        b_res[idx]["time"] = orig["time"]
+                        result.append(b_res[idx])
+                    else:
+                        result.append(orig)
+                return result
         except Exception as e:
-            print(f"Normalization with Gemini error: {e}")
+            print(f"Batch normalization with Gemini error: {e}")
 
-    return segments
+    return batch
+
+def normalize_segments(segments: List[Dict[str, str]], batch_size: int = 10) -> List[Dict[str, str]]:
+    """
+    Cleans up colloquial phonetics, dialect quirks, speech-to-text slips,
+    and punctuates raw speech segments into polished literary text in safe batches.
+    """
+    if not segments:
+        return segments
+
+    # Filter out silence hallucinations and prompt echoes first
+    filtered = filter_whisper_hallucinations(segments)
+    if not filtered:
+        return segments
+
+    # Batch process
+    import time
+    batches = [filtered[i:i + batch_size] for i in range(0, len(filtered), batch_size)]
+    normalized = []
+    
+    for idx, b in enumerate(batches):
+        norm_b = normalize_segments_batch(b)
+        normalized.extend(norm_b)
+        if idx < len(batches) - 1:
+            time.sleep(1.2)  # Respect OTPM limits
+
+    return normalized
 
 def process_audio_file(audio_path: Path, mime_type: str = "audio/wav", template: str = "general", lang: str = "uz") -> Dict[str, Any]:
     """

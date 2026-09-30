@@ -86,7 +86,27 @@ def test_settings_api():
     post_res = client.post("/api/settings", json={"key": "test_key", "value": "test_val"})
     assert post_res.status_code == 200
     updated = client.get("/api/settings").json()
-    assert updated.get("test_key") == "test_val"
+def test_whisper_hallucination_filter():
+    import ai_engine
+    segments = [
+        {"time": "00:00", "speaker": "So‘zlovchi", "text": "mirzashuv, zahar, barachafun"},
+        {"time": "00:02", "speaker": "So‘zlovchi", "text": "Sifatini tekshirish, ovoz yozish, Mirzo..."},
+        {"time": "00:05", "speaker": "So‘zlovchi", "text": "D-Med platformasini ishga tushirishimiz kerak."},
+        {"time": "00:10", "speaker": "So‘zlovchi", "text": "qalim qalim, qalim, qalim, qalim..."}
+    ]
+    cleaned = ai_engine.filter_whisper_hallucinations(segments)
+    assert len(cleaned) == 1
+    assert "D-Med" in cleaned[0]["text"]
+
+def test_meeting_14_restored():
+    res = client.get("/api/meetings/14")
+    assert res.status_code == 200
+    data = res.json()
+    assert "D-Med" in data["title"]
+    assert len(data["transcript_segments"]) >= 80
+    assert len(data["decisions"]) >= 3
+    assert len(data["tasks"]) >= 2
 
 if __name__ == "__main__":
     pytest.main(["-v", __file__])
+

@@ -9,4 +9,5 @@ bin/
 *.mp3
 *.m4a
 *.wav
-
+data/*.json
+data/mirzo.db
